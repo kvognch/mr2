@@ -1,0 +1,2733 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <title>МНОГОРЕСУРСОВ</title>
+  </head>
+  <body
+    x-data="{ mobileMenuOpen: false }"
+    x-effect="document.body.style.overflow = mobileMenuOpen ? 'hidden' : ''"
+  >
+    <!-- Shared SVG symbols (select chevron) -->
+    <svg class="absolute w-0 h-0 overflow-hidden" aria-hidden="true">
+      <symbol id="icon-select-chevron" viewBox="0 0 17 10">
+        <path
+          d="M15.7945 1L8.39726 9L1 1"
+          stroke="#8695AA"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          fill="none"
+        />
+      </symbol>
+    </svg>
+    <!-- HEADER -->
+    <header
+      class="sticky top-0 z-50 bg-white pt-1 sm:pt-3 lg:pt-6 xl:pt-10 2xl:pt-12 3xl:pt-20 transition-[transform,box-shadow] duration-300 ease-in-out"
+      :class="[
+        ($store.scroll.y > 64 || mobileMenuOpen) && 'shadow-lg',
+        $store.scroll.y > 64 && '-translate-y-1 sm:-translate-y-3 lg:-translate-y-6 xl:-translate-y-10 2xl:-translate-y-12 3xl:-translate-y-20'
+      ]"
+    >
+      <nav
+        class="container-base flex-between transition-[padding] duration-300 ease-in-out"
+        :class="$store.scroll.y > 64 ? 'py-3 xs:py-3.75 3xl:py-5' : 'py-3.75'"
+      >
+        <!-- Logo -->
+        <h4>
+          <a href="/"> МНОГОРЕСУРСОВ </a>
+        </h4>
+        <!-- Links & Login/Register Button -->
+        <div class="flex-base gap-11">
+          <!-- Links -->
+          <ul class="text_4 hidden lg:flex-base gap-6 3xl:gap-10">
+            <li>
+              <a href="/" class="hover:underline underline-offset-1">
+                О платформе
+              </a>
+            </li>
+            <li>
+              <a href="/" class="hover:underline underline-offset-1">
+                Присоединиться
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="hover:underline underline-offset-1"
+                @click.prevent="requestModalOpen = true"
+                >Помощь в подборе</a
+              >
+            </li>
+          </ul>
+
+          <!-- Login/Register Button -->
+          <button class="button_1 hidden lg:block">Вход / Регистрация</button>
+
+          <!-- Mobile menu: button + overlay & panel -->
+          <div class="relative lg:hidden">
+            <button
+              type="button"
+              class="p-1 -mr-1 rounded-2xl hover:bg-brand-gray-light smooth"
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              :aria-expanded="mobileMenuOpen"
+              aria-label="Меню"
+            >
+              <svg
+                x-show="!mobileMenuOpen"
+                x-cloak
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
+              <svg
+                x-show="mobileMenuOpen"
+                x-cloak
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 18.998L12 11.998M12 11.998L19 4.99805M12 11.998L5 4.99805M12 11.998L19 18.998"
+                  stroke="#193760"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Mobile menu overlay & panel (outside header so fixed works when header has transform) -->
+    <div
+      class="fixed inset-0 z-50 top-15.5 sm:top-18 lg:hidden"
+      :class="mobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'"
+    >
+      <div
+        x-show="mobileMenuOpen"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-x-0 bottom-0 top-15.5 sm:top-18 bg-black/50"
+        @click="mobileMenuOpen = false"
+        aria-hidden="true"
+      ></div>
+      <div
+        x-show="mobileMenuOpen"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-x-full"
+        x-transition:enter-end="opacity-100 translate-x-0"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-x-0"
+        x-transition:leave-end="opacity-0 translate-x-full"
+        class="fixed top-15.5 sm:top-18 right-0 h-screen w-full max-w-[min(20rem,85vw)] bg-white shadow-xl flex flex-col py-8 px-6"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Меню"
+      >
+        <ul class="text_4 flex flex-col gap-6">
+          <li>
+            <a
+              href="/"
+              class="hover:underline underline-offset-1 block py-1"
+              @click="mobileMenuOpen = false"
+              >О платформе</a
+            >
+          </li>
+          <li>
+            <a
+              href="/"
+              class="hover:underline underline-offset-1 block py-1"
+              @click="mobileMenuOpen = false"
+              >Присоединиться</a
+            >
+          </li>
+          <li>
+            <a
+              href="/"
+              class="hover:underline underline-offset-1 block py-1"
+              @click.prevent="mobileMenuOpen = false; requestModalOpen = true"
+              >Помощь в подборе</a
+            >
+          </li>
+        </ul>
+        <button class="button_1 mt-8 w-full" @click="mobileMenuOpen = false">
+          Вход / Регистрация
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <main class="bg-brand-gray-light-2 pb-20 lg:pb-30">
+      <!-- Search -->
+      <section id="search" class="pt-15 pb-30">
+        <div class="container-base space-y-10">
+          <div class="space-y-6 sm:space-y-8 lg:space-y-10">
+            <h4>Поиск организации</h4>
+
+            <!-- Filters -->
+            <div class="grid lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
+              <label for="name" class="sm:col-span-2">
+                <input
+                  type="text"
+                  class="h-12.5 w-full text_6 placeholder:text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                  placeholder="Название организации"
+                />
+              </label>
+
+              <!-- Select a territory -->
+              <div
+                class="relative"
+                x-data="{
+                  open: false,
+                  selectedLabel: '',
+                  expandedSpb: false,
+                  expandedLo: false,
+                  expandedVsevolozhsk: false,
+                  spbLabels: ['Василеостровский район','Выборгский район','Калининский район','Кировский район','Колпинский район','Красногвардейский район','Красносельский район','Кронштадтский район','Курортный район','Московский район','Невский район','Петроградский район','Петродворцовый район','Фрунзенский район','Центральный район'],
+                  loLabels: ['Бокситогорский район','Волосовский район','Волховский район','Всеволожский район','Выборгский район','Гатчинский район','Кингисепский район','Киришский район','Кировский район','Лодейнопольский район','Ломоносовский район','Лужский район','Подпорожский район','Приозерский район','Сланцевский район','Сосновоборский район','Агалатовское СП','Бугровское СП','Всеволожское ГП','Дубровское ГП','Заневское ГП','Колтушское СП','Кузьмоловское ГП','Куйвозовское СП','Лесколовское СП','Морозовское ГП','Муринское ГП','Новодевяткинское СП','Рахьинское ГП','Романовское СП','Свердловское ГП','Сертоловское ГП','Токсовское ГП','Щегловское СП','Юкковское СП'],
+                  vsevolozhskLabels: ['Всеволожский район','Агалатовское СП','Бугровское СП','Всеволожское ГП','Дубровское ГП','Заневское ГП','Колтушское СП','Кузьмоловское ГП','Куйвозовское СП','Лесколовское СП','Морозовское ГП','Муринское ГП','Новодевяткинское СП','Рахьинское ГП','Романовское СП','Свердловское ГП','Сертоловское ГП','Токсовское ГП','Щегловское СП','Юкковское СП'],
+                  isSpbSelected() { return this.spbLabels.includes(this.selectedLabel); },
+                  isLoSelected() { return this.loLabels.includes(this.selectedLabel); },
+                  isVsevolozhskSelected() { return this.vsevolozhskLabels.includes(this.selectedLabel); },
+                  select(label) {
+                    this.selectedLabel = label;
+                    this.open = false;
+                  },
+                  toggleSpb() { this.expandedSpb = !this.expandedSpb; },
+                  toggleLo() { this.expandedLo = !this.expandedLo; },
+                  toggleVsevolozhsk() { this.expandedVsevolozhsk = !this.expandedVsevolozhsk; }
+                }"
+                @click.outside="open = false"
+              >
+                <button
+                  type="button"
+                  class="h-12.5 w-full text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                  @click="open = !open"
+                  :aria-expanded="open"
+                  aria-haspopup="listbox"
+                >
+                  <span
+                    class="line-clamp-1"
+                    :class="selectedLabel ? 'text-brand-dark' : ''"
+                    x-text="selectedLabel || 'Выберите территорию'"
+                  ></span>
+                  <svg
+                    width="17"
+                    height="10"
+                    class="shrink-0 transition-transform duration-200"
+                    :class="open && 'rotate-180'"
+                    aria-hidden="true"
+                  >
+                    <use href="#icon-select-chevron" />
+                  </svg>
+                </button>
+
+                <!-- Options -->
+                <div class="relative">
+                  <ul
+                    x-show="open"
+                    x-cloak
+                    x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 -translate-y-1"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100 translate-y-0"
+                    x-transition:leave-end="opacity-0 -translate-y-1"
+                    class="w-full max-h-96 2xl:max-h-120 absolute top-full left-0 space-y-0.75 text_8 bg-white rounded-xl overflow-y-auto mt-4 z-20 shadow-lg"
+                  >
+                    <li>
+                      <button
+                        type="button"
+                        class="w-full flex-between cursor-pointer hover:bg-brand-blue hover:text-white smooth px-5 py-2.5"
+                        @click.stop="toggleSpb()"
+                      >
+                        <span>Санкт-Петербург</span>
+                        <svg
+                          x-show="isSpbSelected()"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="shrink-0 size-5"
+                        >
+                          <path
+                            d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </button>
+
+                      <!-- Submenu Of Districts of Saint Petersburg -->
+                      <ul x-show="expandedSpb">
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Василеостровский район')"
+                          >
+                            <span>Василеостровский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Василеостровский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Выборгский район')"
+                          >
+                            <span>Выборгский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Выборгский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Калининский район')"
+                          >
+                            <span>Калининский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Калининский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Кировский район')"
+                          >
+                            <span>Кировский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Кировский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Колпинский район')"
+                          >
+                            <span>Колпинский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Колпинский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Красногвардейский район')"
+                          >
+                            <span>Красногвардейский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Красногвардейский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Красносельский район')"
+                          >
+                            <span>Красносельский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Красносельский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Кронштадтский район')"
+                          >
+                            <span>Кронштадтский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Кронштадтский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Курортный район')"
+                          >
+                            <span>Курортный район</span>
+                            <svg
+                              x-show="selectedLabel === 'Курортный район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Московский район')"
+                          >
+                            <span>Московский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Московский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Невский район')"
+                          >
+                            <span>Невский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Невский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Петроградский район')"
+                          >
+                            <span>Петроградский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Петроградский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Петродворцовый район')"
+                          >
+                            <span>Петродворцовый район</span>
+                            <svg
+                              x-show="selectedLabel === 'Петродворцовый район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Фрунзенский район')"
+                          >
+                            <span>Фрунзенский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Фрунзенский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Центральный район')"
+                          >
+                            <span>Центральный район</span>
+                            <svg
+                              x-show="selectedLabel === 'Центральный район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        class="w-full flex-between cursor-pointer hover:bg-brand-blue hover:text-white smooth px-5 py-2.5"
+                        @click.stop="toggleLo()"
+                      >
+                        <span>Ленинградская область</span>
+                        <svg
+                          x-show="isLoSelected()"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="shrink-0 size-5"
+                        >
+                          <path
+                            d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </button>
+                      <!-- Submenu of Districts of Leningrad Region -->
+                      <ul x-show="expandedLo">
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Бокситогорский район')"
+                          >
+                            <span>Бокситогорский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Бокситогорский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Волосовский район')"
+                          >
+                            <span>Волосовский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Волосовский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Волховский район')"
+                          >
+                            <span>Волховский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Волховский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click.stop="toggleVsevolozhsk()"
+                          >
+                            <span>Всеволожский район</span>
+                            <svg
+                              x-show="isVsevolozhskSelected()"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+
+                          <!-- Submenu of Allowed Territories of Vsevolozhsk District -->
+                          <ul x-show="expandedVsevolozhsk">
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Агалатовское СП')"
+                              >
+                                <span>Агалатовское СП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Агалатовское СП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Бугровское СП')"
+                              >
+                                <span>Бугровское СП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Бугровское СП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Всеволожское ГП')"
+                              >
+                                <span>Всеволожское ГП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Всеволожское ГП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Дубровское ГП')"
+                              >
+                                <span>Дубровское ГП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Дубровское ГП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Заневское ГП')"
+                              >
+                                <span>Заневское ГП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Заневское ГП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Колтушское СП')"
+                              >
+                                <span>Колтушское СП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Колтушское СП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Кузьмоловское ГП')"
+                              >
+                                <span>Кузьмоловское ГП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Кузьмоловское ГП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Куйвозовское СП')"
+                              >
+                                <span>Куйвозовское СП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Куйвозовское СП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Лесколовское СП')"
+                              >
+                                <span>Лесколовское СП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Лесколовское СП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Морозовское ГП')"
+                              >
+                                <span>Морозовское ГП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Морозовское ГП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Муринское ГП')"
+                              >
+                                <span>Муринское ГП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Муринское ГП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Новодевяткинское СП')"
+                              >
+                                <span>Новодевяткинское СП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Новодевяткинское СП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Рахьинское ГП')"
+                              >
+                                <span>Рахьинское ГП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Рахьинское ГП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Романовское СП')"
+                              >
+                                <span>Романовское СП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Романовское СП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Свердловское ГП')"
+                              >
+                                <span>Свердловское ГП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Свердловское ГП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Сертоловское ГП')"
+                              >
+                                <span>Сертоловское ГП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Сертоловское ГП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Токсовское ГП')"
+                              >
+                                <span>Токсовское ГП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Токсовское ГП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Щегловское СП')"
+                              >
+                                <span>Щегловское СП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Щегловское СП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-20 pr-5 py-2.5"
+                                @click="select('Юкковское СП')"
+                              >
+                                <span>Юкковское СП</span>
+                                <svg
+                                  x-show="selectedLabel === 'Юкковское СП'"
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  class="shrink-0 size-5"
+                                >
+                                  <path
+                                    d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Выборгский район')"
+                          >
+                            <span>Выборгский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Выборгский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Гатчинский район')"
+                          >
+                            <span>Гатчинский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Гатчинский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Кингисепский район')"
+                          >
+                            <span>Кингисепский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Кингисепский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Киришский район')"
+                          >
+                            <span>Киришский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Киришский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Кировский район')"
+                          >
+                            <span>Кировский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Кировский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Лодейнопольский район')"
+                          >
+                            <span>Лодейнопольский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Лодейнопольский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Ломоносовский район')"
+                          >
+                            <span>Ломоносовский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Ломоносовский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Лужский район')"
+                          >
+                            <span>Лужский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Лужский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Подпорожский район')"
+                          >
+                            <span>Подпорожский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Подпорожский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Приозерский район')"
+                          >
+                            <span>Приозерский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Приозерский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Сланцевский район')"
+                          >
+                            <span>Сланцевский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Сланцевский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth pl-10 pr-5 py-2.5"
+                            @click="select('Сосновоборский район')"
+                          >
+                            <span>Сосновоборский район</span>
+                            <svg
+                              x-show="selectedLabel === 'Сосновоборский район'"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 size-5"
+                            >
+                              <path
+                                d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </button>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Resource -->
+              <div
+                class="relative"
+                x-data="{ open: false, selectedLabel: '', options: ['Вода', 'Газ', 'Канализация', 'Отопление', 'Электричество'], placeholder: 'Выберите ресурс' }"
+                @click.outside="open = false"
+              >
+                <button
+                  type="button"
+                  class="h-12.5 w-full text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                  @click="open = !open"
+                  :aria-expanded="open"
+                >
+                  <span
+                    class="line-clamp-1"
+                    :class="selectedLabel ? 'text-brand-dark' : ''"
+                    x-text="selectedLabel || placeholder"
+                  ></span>
+                  <svg
+                    width="17"
+                    height="10"
+                    class="shrink-0 transition-transform duration-200"
+                    :class="open && 'rotate-180'"
+                    aria-hidden="true"
+                  >
+                    <use href="#icon-select-chevron" />
+                  </svg>
+                </button>
+                <ul
+                  x-show="open"
+                  x-cloak
+                  x-transition:enter="transition ease-out duration-200"
+                  x-transition:enter-start="opacity-0 -translate-y-1"
+                  x-transition:enter-end="opacity-100 translate-y-0"
+                  x-transition:leave="transition ease-in duration-150"
+                  x-transition:leave-start="opacity-100 translate-y-0"
+                  x-transition:leave-end="opacity-0 -translate-y-1"
+                  class="w-full max-h-60 absolute top-full left-0 text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2"
+                >
+                  <template x-for="opt in options" :key="opt">
+                    <li>
+                      <button
+                        type="button"
+                        class="w-full text-left px-5 py-2.5 smooth"
+                        :class="selectedLabel === opt ? 'bg-brand-blue text-white' : 'hover:bg-brand-blue hover:text-white text-brand-dark'"
+                        @click="selectedLabel = opt; open = false"
+                      >
+                        <span x-text="opt"></span>
+                      </button>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+
+              <!-- Category -->
+              <div
+                class="relative"
+                x-data="{ open: false, selectedLabel: '', options: ['Гарантирующий поставщик', 'Ресурсо-снабжающая организация', 'Подрядчик'], placeholder: 'Выберите категорию' }"
+                @click.outside="open = false"
+              >
+                <button
+                  type="button"
+                  class="h-12.5 w-full text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                  @click="open = !open"
+                  :aria-expanded="open"
+                >
+                  <span
+                    class="line-clamp-1"
+                    :class="selectedLabel ? 'text-brand-dark' : ''"
+                    x-text="selectedLabel || placeholder"
+                  ></span>
+                  <svg
+                    width="17"
+                    height="10"
+                    class="shrink-0 transition-transform duration-200"
+                    :class="open && 'rotate-180'"
+                    aria-hidden="true"
+                  >
+                    <use href="#icon-select-chevron" />
+                  </svg>
+                </button>
+                <ul
+                  x-show="open"
+                  x-cloak
+                  x-transition:enter="transition ease-out duration-200"
+                  x-transition:enter-start="opacity-0 -translate-y-1"
+                  x-transition:enter-end="opacity-100 translate-y-0"
+                  x-transition:leave="transition ease-in duration-150"
+                  x-transition:leave-start="opacity-100 translate-y-0"
+                  x-transition:leave-end="opacity-0 -translate-y-1"
+                  class="w-full max-h-60 absolute top-full left-0 text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2"
+                >
+                  <template x-for="opt in options" :key="opt">
+                    <li>
+                      <button
+                        type="button"
+                        class="w-full text-left px-5 py-2.5 smooth"
+                        :class="selectedLabel === opt ? 'bg-brand-blue text-white' : 'hover:bg-brand-blue hover:text-white text-brand-dark'"
+                        @click="selectedLabel = opt; open = false"
+                      >
+                        <span x-text="opt"></span>
+                      </button>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+
+              <!-- Work -->
+              <div
+                class="relative"
+                x-data="{ open: false, selectedLabel: '', options: ['CMP', 'ПИР / ПСД', 'Все работы'], placeholder: 'Выполняемые работы' }"
+                @click.outside="open = false"
+              >
+                <button
+                  type="button"
+                  class="h-12.5 w-full text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                  @click="open = !open"
+                  :aria-expanded="open"
+                >
+                  <span
+                    class="line-clamp-1"
+                    :class="selectedLabel ? 'text-brand-dark' : ''"
+                    x-text="selectedLabel || placeholder"
+                  ></span>
+                  <svg
+                    width="17"
+                    height="10"
+                    class="shrink-0 transition-transform duration-200"
+                    :class="open && 'rotate-180'"
+                    aria-hidden="true"
+                  >
+                    <use href="#icon-select-chevron" />
+                  </svg>
+                </button>
+                <ul
+                  x-show="open"
+                  x-cloak
+                  x-transition:enter="transition ease-out duration-200"
+                  x-transition:enter-start="opacity-0 -translate-y-1"
+                  x-transition:enter-end="opacity-100 translate-y-0"
+                  x-transition:leave="transition ease-in duration-150"
+                  x-transition:leave-start="opacity-100 translate-y-0"
+                  x-transition:leave-end="opacity-0 -translate-y-1"
+                  class="w-full max-h-60 absolute top-full left-0 text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2"
+                >
+                  <template x-for="opt in options" :key="opt">
+                    <li>
+                      <button
+                        type="button"
+                        class="w-full text-left px-5 py-2.5 smooth"
+                        :class="selectedLabel === opt ? 'bg-brand-blue text-white' : 'hover:bg-brand-blue hover:text-white text-brand-dark'"
+                        @click="selectedLabel = opt; open = false"
+                      >
+                        <span x-text="opt"></span>
+                      </button>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+
+              <!-- Business segment -->
+              <div
+                class="relative"
+                x-data="{ open: false, selectedLabel: '', options: ['В2В - для бизнеса', 'В2С - для клиента', 'В2В / В2С - для всех'], placeholder: 'Выберите сегмент бизнеса' }"
+                @click.outside="open = false"
+              >
+                <button
+                  type="button"
+                  class="h-12.5 w-full text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                  @click="open = !open"
+                  :aria-expanded="open"
+                >
+                  <span
+                    class="line-clamp-1"
+                    :class="selectedLabel ? 'text-brand-dark' : ''"
+                    x-text="selectedLabel || placeholder"
+                  ></span>
+                  <svg
+                    width="17"
+                    height="10"
+                    class="shrink-0 transition-transform duration-200"
+                    :class="open && 'rotate-180'"
+                    aria-hidden="true"
+                  >
+                    <use href="#icon-select-chevron" />
+                  </svg>
+                </button>
+                <ul
+                  x-show="open"
+                  x-cloak
+                  x-transition:enter="transition ease-out duration-200"
+                  x-transition:enter-start="opacity-0 -translate-y-1"
+                  x-transition:enter-end="opacity-100 translate-y-0"
+                  x-transition:leave="transition ease-in duration-150"
+                  x-transition:leave-start="opacity-100 translate-y-0"
+                  x-transition:leave-end="opacity-0 -translate-y-1"
+                  class="w-full max-h-60 absolute top-full left-0 text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2"
+                >
+                  <template x-for="opt in options" :key="opt">
+                    <li>
+                      <button
+                        type="button"
+                        class="w-full text-left px-5 py-2.5 smooth"
+                        :class="selectedLabel === opt ? 'bg-brand-blue text-white' : 'hover:bg-brand-blue hover:text-white text-brand-dark'"
+                        @click="selectedLabel = opt; open = false"
+                      >
+                        <span x-text="opt"></span>
+                      </button>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+
+              <!-- Button -->
+              <button class="h-12.5 button_6">Начать поиск</button>
+            </div>
+
+            <!-- Map -->
+            <div class="grid lg:grid-cols-2 gap-5">
+              <div class="min-h-96 lg:min-h-150 3xl:min-h-207.5">
+                <iframe
+                  src="https://yandex.com/map-widget/v1/?um=constructor%3Abc2cccf0f62ef1b73fccf722170757cf6513ccabd963d6de9d0bb71a2bcf4f31&amp;source=constructor"
+                  width="507"
+                  height="720"
+                  frameborder="0"
+                  class="size-full object-cover"
+                ></iframe>
+              </div>
+              <div class="space-y-7 bg-white p-5 lg:p-6 3xl:p-10">
+                <!-- Placeholder for empy content -->
+                <div class="hidden size-full flex-center">
+                  <div class="max-w-65 flex-center flex-col space-y-2.5">
+                    <svg
+                      width="80"
+                      height="80"
+                      viewBox="0 0 80 80"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M64.95 67.1792L44.0767 46.3058C42.41 47.7258 40.4934 48.8247 38.3267 49.6025C36.16 50.3803 33.9822 50.7692 31.7934 50.7692C26.4556 50.7692 21.9378 48.9214 18.24 45.2258C14.5422 41.5303 12.6934 37.0136 12.6934 31.6758C12.6934 26.3381 14.54 21.8192 18.2334 18.1192C21.9267 14.4192 26.4422 12.567 31.78 12.5625C37.1178 12.5581 41.6378 14.407 45.34 18.1092C49.0422 21.8114 50.8934 26.3303 50.8934 31.6658C50.8934 33.9814 50.4834 36.2225 49.6634 38.3892C48.8434 40.5558 47.7656 42.4092 46.43 43.9492L67.3034 64.8192L64.95 67.1792ZM31.7967 47.4325C36.2189 47.4325 39.9522 45.9103 42.9967 42.8658C46.0411 39.8214 47.5634 36.087 47.5634 31.6625C47.5634 27.2381 46.0411 23.5047 42.9967 20.4625C39.9522 17.4203 36.2189 15.8981 31.7967 15.8958C27.3745 15.8936 23.64 17.4158 20.5934 20.4625C17.5467 23.5092 16.0245 27.2425 16.0267 31.6625C16.0289 36.0825 17.5511 39.8158 20.5934 42.8625C23.6356 45.9092 27.3689 47.4314 31.7934 47.4292"
+                        fill="#C7CED7"
+                      />
+                    </svg>
+
+                    <p class="text_6 text-center text-brand-gray">
+                      Наведите на карту или начните поиск, информация появится
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Content after selecting map -->
+                <div class="">
+                  <div class="space-y-5">
+                    <div class="space-y-4">
+                      <div
+                        class="flex-between flex-col items-start xs:items-center xs:flex-row gap-3"
+                      >
+                        <p class="text_1">Петроградский район</p>
+                        <span class="text_8 text-brand-gray"
+                          >1690 организаций</span
+                        >
+                      </div>
+                      <div class="flex-base gap-5">
+                        <!-- Filters -->
+                        <div
+                          class="relative"
+                          x-data="{
+                            filtersOpen: false,
+                            filters: {
+                              water: false,
+                              gas: false,
+                              sewerage: false,
+                              heating: false,
+                              electricity: false,
+                              category_guarantee: false,
+                              business: false,
+                              business_client: false,
+                              business_all: false,
+                              work_psd: false
+                            },
+                            get filterCount() {
+                              return Object.values(this.filters).filter(Boolean).length;
+                            },
+                            clearFilters() {
+                              Object.keys(this.filters).forEach(k => this.filters[k] = false);
+                              this.filtersOpen = false;
+                            }
+                          }"
+                          @click.outside="filtersOpen = false"
+                        >
+                          <button
+                            type="button"
+                            class="flex-base gap-2.5 hover:text-brand-gray-dark smooth"
+                            @click="filtersOpen = !filtersOpen"
+                            :aria-expanded="filtersOpen"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M10 8H20M4 16H14"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                              />
+                              <path
+                                d="M4 8C4 9.65685 5.34315 11 7 11C8.65685 11 10 9.65685 10 8C10 6.34315 8.65685 5 7 5C5.34315 5 4 6.34315 4 8Z"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                              />
+                              <path
+                                d="M14 16C14 17.6569 15.3431 19 17 19C18.6569 19 20 17.6569 20 16C20 14.3431 18.6569 13 17 13C15.3431 13 14 14.3431 14 16Z"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                              />
+                            </svg>
+                            <span class="text_8">Фильтры</span>
+                            <span
+                              x-show="filterCount > 0"
+                              x-cloak
+                              x-text="filterCount"
+                              class="bg-brand-blue text-white text-lg/4.5 rounded-full py-1.5 px-2.25 min-w-[1.5rem] flex-center"
+                            ></span>
+                          </button>
+
+                          <!-- Filters dropdown -->
+                          <div
+                            x-show="filtersOpen"
+                            x-cloak
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 -translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 -translate-y-1"
+                            class="absolute left-0 top-full mt-2 z-20 h-120 overflow-y-auto lg:h-auto w-72 2xs:w-80 xs:w-max max-w-125 space-y-8 bg-white border border-brand-gray/50 rounded-brand-base lg:rounded-b-brand-3xl shadow-2xl p-4 2xs:p-5 lg:p-6 3xl:p-10"
+                          >
+                            <!-- Header -->
+                            <div>
+                              <!-- Close button -->
+                              <div class="flex-end">
+                                <button
+                                  type="button"
+                                  @click="filtersOpen = false"
+                                  aria-label="Закрыть"
+                                >
+                                  <svg
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M5 18.998L12 11.998M12 11.998L19 4.99805M12 11.998L5 4.99805M12 11.998L19 18.998"
+                                      stroke="#193760"
+                                      stroke-width="2"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                              <div class="flex-base gap-5">
+                                <h4>Фильтры</h4>
+
+                                <button
+                                  type="button"
+                                  class="text_8 text-brand-gray hover:text-brand-gray-dark smooth disabled:opacity-50 disabled:cursor-not-allowed"
+                                  :disabled="filterCount === 0"
+                                  @click="clearFilters()"
+                                >
+                                  сбросить
+                                </button>
+                              </div>
+                            </div>
+
+                            <!-- Filters content -->
+                            <div class="space-y-5">
+                              <!-- Resource type -->
+                              <div class="space-y-3.75">
+                                <p class="text_1">Вид ресурса</p>
+
+                                <ul class="text_9 space-y-4">
+                                  <li>
+                                    <label
+                                      for="water"
+                                      class="flex-base gap-3.25 cursor-pointer"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="water"
+                                          class="hidden peer"
+                                          x-model="filters.water"
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>Вода</span>
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <label
+                                      for="gas"
+                                      class="flex-base gap-3.25 cursor-pointer"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="gas"
+                                          class="hidden peer"
+                                          x-model="filters.gas"
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>Газ</span>
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <label
+                                      for="sewerage"
+                                      class="flex-base gap-3.25 cursor-pointer"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="sewerage"
+                                          class="hidden peer"
+                                          x-model="filters.sewerage"
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>Канализация</span>
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <label
+                                      for="heating"
+                                      class="flex-base gap-3.25 cursor-pointer"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="heating"
+                                          class="hidden peer"
+                                          x-model="filters.heating"
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>Отопление</span>
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <label
+                                      for="electricity"
+                                      class="flex-base gap-3.25 cursor-pointer"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="electricity"
+                                          class="hidden peer"
+                                          x-model="filters.electricity"
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>Электричество</span>
+                                    </label>
+                                  </li>
+                                </ul>
+                              </div>
+
+                              <!-- Category -->
+                              <div class="space-y-3.75">
+                                <p class="text_1">Категория</p>
+
+                                <ul class="text_9 space-y-4">
+                                  <li>
+                                    <label
+                                      for="filter_guarantee"
+                                      class="flex-base gap-3.25 cursor-pointer"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="filter_guarantee"
+                                          class="hidden peer"
+                                          x-model="filters.category_guarantee"
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>Гарантирующий поставщик</span>
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <label
+                                      for="category_resource"
+                                      class="flex-base gap-3.25 group text-brand-gray-dark cursor-not-allowed"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-gray-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="category_resource"
+                                          class="hidden peer"
+                                          disabled
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span
+                                        >Ресурсо-снабжающая организация</span
+                                      >
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <label
+                                      for="category_contractor"
+                                      class="flex-base gap-3.25 group text-brand-gray-dark cursor-not-allowed"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-gray-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="category_contractor"
+                                          class="hidden peer"
+                                          disabled
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>Подрядчик</span>
+                                    </label>
+                                  </li>
+                                </ul>
+                              </div>
+
+                              <!-- Business segment -->
+                              <div class="space-y-3.75">
+                                <p class="text_1">Сегмент бизнеса</p>
+
+                                <ul class="text_9 space-y-4">
+                                  <li>
+                                    <label
+                                      for="business"
+                                      class="flex-base gap-3.25 cursor-pointer"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="business"
+                                          class="hidden peer"
+                                          x-model="filters.business"
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>В2В - для бизнеса</span>
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <label
+                                      for="business_client"
+                                      class="flex-base gap-3.25 cursor-pointer"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="business_client"
+                                          class="hidden peer"
+                                          x-model="filters.business_client"
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>В2С - для клиента</span>
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <label
+                                      for="business_all"
+                                      class="flex-base gap-3.25 group"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="business_all"
+                                          class="hidden peer"
+                                          x-model="filters.business_all"
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>В2В / В2С - для всех</span>
+                                    </label>
+                                  </li>
+                                </ul>
+                              </div>
+
+                              <!-- Executed works -->
+                              <div class="space-y-3.75">
+                                <p class="text_1">Выполняемые работы</p>
+
+                                <ul class="text_9 space-y-4">
+                                  <li>
+                                    <label
+                                      for="work_cmp"
+                                      class="flex-base gap-3.25 group text-brand-gray-dark cursor-not-allowed"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-gray-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="work_cmp"
+                                          class="hidden peer"
+                                          disabled
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>СМР</span>
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <label
+                                      for="work_psd"
+                                      class="flex-base gap-3.25 group cursor-pointer"
+                                    >
+                                      <div
+                                        class="size-6 flex-center border border-brand-dark"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          id="work_psd"
+                                          class="hidden peer"
+                                          x-model="filters.work_psd"
+                                        />
+                                        <svg
+                                          width="17"
+                                          height="13"
+                                          viewBox="0 0 17 13"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="opacity-0 peer-checked:opacity-100 smooth"
+                                        >
+                                          <path
+                                            d="M1.5 7.5L5.5 11.5L15.5 1.5"
+                                            stroke="#399C41"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                          />
+                                        </svg>
+                                      </div>
+
+                                      <span>ПИР / ПСД</span>
+                                    </label>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+
+                            <button class="button_poppup_filter">
+                              Показать 1690 организаций
+                            </button>
+                          </div>
+                        </div>
+
+                        <!-- By Name / By Rating sort dropdown -->
+                        <div
+                          class="relative"
+                          x-data="{ open: false, selectedLabel: 'По названию', options: ['По названию', 'По рейтингу'] }"
+                          @click.outside="open = false"
+                        >
+                          <button
+                            type="button"
+                            class="flex-base gap-2.5 hover:text-brand-gray-dark smooth xs:px-5"
+                            @click="open = !open"
+                            :aria-expanded="open"
+                          >
+                            <span class="text_8" x-text="selectedLabel"></span>
+                            <svg
+                              width="16"
+                              height="8"
+                              viewBox="0 0 16 8"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="shrink-0 transition-transform duration-200"
+                              :class="open && 'rotate-180'"
+                            >
+                              <path
+                                d="M14.3151 1.55957L7.65753 6.99957L1 1.55957"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-miterlimit="10"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </button>
+                          <ul
+                            x-show="open"
+                            x-cloak
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 -translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 -translate-y-1"
+                            class="absolute top-full right-0 mt-2 min-w-40 text_8 bg-white rounded-xl shadow-lg overflow-hidden z-20"
+                          >
+                            <template x-for="opt in options" :key="opt">
+                              <li>
+                                <button
+                                  type="button"
+                                  class="w-full text-left px-5 py-2.5 text-brand-dark hover:bg-brand-blue hover:text-white smooth"
+                                  @click="selectedLabel = opt; open = false"
+                                >
+                                  <span x-text="opt"></span>
+                                </button>
+                              </li>
+                            </template>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <ul class="text_8 divide-y divide-brand-gray">
+                      <li class="flex-between items-start py-4 3xl:py-6">
+                        <span>ООО «МачЭнерджи» </span>
+                        <span>ААА</span>
+                      </li>
+                      <li class="flex-between items-start py-4 3xl:py-6">
+                        <span>ПАО «Россети Ленэнерго» </span>
+                        <span>ААА</span>
+                      </li>
+                      <li class="flex-between items-start py-4 3xl:py-6">
+                        <span>OOО «ГазЭлектроКанал» </span>
+                        <span>BB</span>
+                      </li>
+                      <li class="flex-between items-start py-4 3xl:py-6">
+                        <span>ООО «Дельта»</span>
+                        <span>АА</span>
+                      </li>
+                      <li class="flex-between items-start py-4 3xl:py-6">
+                        <span>АО «ГазпромРаспределение»</span>
+                        <span>ААА</span>
+                      </li>
+                      <li class="flex-between items-start py-4 3xl:py-6">
+                        <span>ПЭУ №4 «ПетербургГаз»</span>
+                        <span>ААА</span>
+                      </li>
+                      <li class="flex-between items-start py-4 3xl:py-6">
+                        <span>ООО «ПетербургГаз»</span>
+                        <span>ААА</span>
+                      </li>
+                      <li class="flex-between items-start py-4 3xl:py-6">
+                        <span>ООО «ТеплоГазСервис»</span>
+                        <span>CCC</span>
+                      </li>
+                      <li class="flex-between items-start py-4 3xl:py-6">
+                        <span>ООО «СПБВЕРГАЗ»</span>
+                        <span>CCC</span>
+                      </li>
+                      <li class="flex-between items-start py-4 3xl:py-6">
+                        <span>ООО «СПБВЕРГАЗ»</span>
+                        <span>B</span>
+                      </li>
+                      <li class="flex-between items-start py-4 3xl:py-6">
+                        <span>ООО «Газпром межрегионгаз Санкт-Петербург»</span>
+                        <span>ААА</span>
+                      </li>
+                    </ul>
+
+                    <!-- Pagination -->
+                    <div class="flex-end gap-2.5 text_8 -mt-5">
+                      <button
+                        class="text-brand-gray hover:text-brand-gray smooth"
+                      >
+                        1
+                      </button>
+                      <button class="hover:text-brand-gray smooth">2</button>
+                      <button class="hover:text-brand-gray smooth">3</button>
+                      <button class="hover:text-brand-gray smooth">4</button>
+                      <button class="hover:text-brand-gray smooth">5</button>
+                      <button class="hover:text-brand-gray smooth">6</button>
+                      <button class="hover:text-brand-gray smooth">7</button>
+                      <button class="hover:text-brand-gray smooth">8</button>
+                      <button class="hover:text-brand-gray smooth">9</button>
+                      <button class="hover:text-brand-gray smooth">10</button>
+                      <button class="hover:text-brand-gray smooth">...</button>
+                    </div>
+                  </div>
+
+                  <button
+                    class="text_8 text-brand-blue hover:underline underline-offset-1"
+                  >
+                    Скачать схемы по видам ресурсов
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer
+      class="bg-brand-gray-light-2 border-t border-brand-gray py-10 sm:py-16 lg:py-20"
+    >
+      <div class="container-base space-y-10 lg:space-y-14">
+        <div
+          class="flex flex-col lg:flex-row justify-between gap-10 lg:gap-0 md:px-32 lg:px-0"
+        >
+          <h4 class="xs:text-center lg:text-left">МНОГОРЕСУРСОВ</h4>
+
+          <div class="flex-1 flex flex-col xs:flex-row justify-evenly gap-10">
+            <div class="space-y-5 lg:space-y-8">
+              <h5 class="text_5">Сотрудн ичество</h5>
+              <ul
+                class="text_6 space-y-2.5 lg:space-y-3.5 text-brand-gray-dark"
+              >
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >О платформе</a
+                  >
+                </li>
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Правовые вопросы</a
+                  >
+                </li>
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Присоединиться</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="space-y-5 lg:space-y-8">
+              <h5 class="text_5">Пользователям</h5>
+              <ul
+                class="text_6 space-y-2.5 lg:space-y-3.5 text-brand-gray-dark"
+              >
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Услуги</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="hover:underline underline-offset-1"
+                    @click.prevent="requestModalOpen = true"
+                    >Помощь в подборе</a
+                  >
+                </li>
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Блог</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="flex xs:items-center lg:items-end flex-col gap-10">
+            <div class="flex xs:items-center lg:items-end flex-col gap-2.25">
+              <a
+                href="mailto:muchresources@yandex.ru"
+                class="text_5 hover:underline underline-offset-1"
+                >muchresources@yandex.ru</a
+              >
+              <a
+                href="tel:+79219837215"
+                class="text_5 hover:underline underline-offset-1"
+                >+7 (921) 983-72-15</a
+              >
+            </div>
+
+            <!-- Socials -->
+            <div class="flex-base gap-6">
+              <a href="#" class="hover:scale-125 smooth">
+                <img
+                  src="./assets/svgs/telegram.svg"
+                  alt="Telegram"
+                  class="size-6 shrink-0"
+                />
+              </a>
+              <a href="#" class="hover:scale-125 smooth">
+                <img
+                  src="./assets/svgs/wk.svg"
+                  alt="WK"
+                  class="size-6 shrink-0"
+                />
+              </a>
+              <a href="#" class="hover:scale-125 smooth">
+                <img
+                  src="./assets/svgs/whatsapp.svg"
+                  alt="Whatsapp"
+                  class="size-6 shrink-0"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="text-sm 2xs:text_6 xs:text-center lg:text-left text-brand-gray"
+        >
+          © 2025 МногоРесурсов. Все права защищены <br />
+          Правообладатель ООО “МР”. Заявка № 2025756515
+        </div>
+      </div>
+    </footer>
+
+    <!-- Request modal: Оставить заявку -->
+    <div
+      x-show="requestModalOpen"
+      x-cloak
+      class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="request-modal-title-search"
+      @keydown.escape.window="requestModalOpen = false"
+    >
+      <div
+        class="absolute inset-0 bg-brand-gray-dark/40"
+        @click="requestModalOpen = false"
+      ></div>
+      <div
+        x-show="requestModalOpen"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
+        class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden"
+        @click.stop
+      >
+        <div class="p-6 xs:p-8">
+          <div class="flex justify-end mb-2">
+            <button
+              type="button"
+              class="p-1 -mr-1 rounded-lg hover:bg-brand-gray-light smooth text-brand-dark"
+              aria-label="Закрыть"
+              @click="requestModalOpen = false"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 18.998L12 11.998M12 11.998L19 4.99805M12 11.998L5 4.99805M12 11.998L19 18.998"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+          <h2
+            id="request-modal-title-search"
+            class="text-xl font-semibold text-brand-dark text-center mb-6"
+          >
+            Оставить заявку
+          </h2>
+          <form class="space-y-4" @submit.prevent="requestModalOpen = false">
+            <div>
+              <label for="request-name-search" class="sr-only">Имя</label>
+              <input
+                type="text"
+                id="request-name-search"
+                required
+                placeholder="Имя*"
+                class="w-full px-4 py-3 bg-brand-gray-light rounded-xl text-brand-dark placeholder:text-brand-gray-dark border-0 text_2"
+              />
+            </div>
+            <div>
+              <label for="request-phone-search" class="sr-only">Телефон</label>
+              <input
+                type="tel"
+                id="request-phone-search"
+                required
+                placeholder="Телефон*"
+                class="w-full px-4 py-3 bg-brand-gray-light rounded-xl text-brand-dark placeholder:text-brand-gray-dark border-0 text_2"
+              />
+            </div>
+            <div>
+              <label for="request-email-search" class="sr-only">Почта</label>
+              <input
+                type="email"
+                id="request-email-search"
+                placeholder="Почта"
+                class="w-full px-4 py-3 bg-brand-gray-light rounded-xl text-brand-dark placeholder:text-brand-gray-dark border-0 text_2"
+              />
+            </div>
+            <div>
+              <label for="request-comment-search" class="sr-only"
+                >Комментарий</label
+              >
+              <textarea
+                id="request-comment-search"
+                rows="4"
+                placeholder="Комментарий"
+                class="w-full px-4 py-3 bg-brand-gray-light rounded-xl text-brand-dark placeholder:text-brand-gray-dark border-0 text_2 resize-none"
+              ></textarea>
+            </div>
+            <div class="flex justify-center py-2">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-2 bg-brand-gray-light rounded-lg text_2 text-brand-gray-dark"
+                role="presentation"
+              >
+                <span
+                  class="size-5 border-2 border-brand-gray-dark rounded-sm flex-shrink-0"
+                  aria-hidden="true"
+                ></span>
+                <span>I'm not a robot</span>
+              </div>
+            </div>
+            <button type="submit" class="button_3 w-full justify-center py-3.5">
+              Отправить
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="js/script.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+  </body>
+</html>

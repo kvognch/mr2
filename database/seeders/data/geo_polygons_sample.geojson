@@ -1,0 +1,50 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "osm_relation_1",
+      "properties": {
+        "name": "Москва",
+        "admin_level": "4",
+        "fias_guid": "123e4567-e89b-12d3-a456-426614174001",
+        "oktmo": "45000000",
+        "okato": "45000000000"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[37.35,55.55],[37.35,55.95],[37.95,55.95],[37.95,55.55],[37.35,55.55]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "osm_relation_2",
+      "properties": {
+        "name": "Центральный административный округ",
+        "admin_level": "6",
+        "fias_guid": "123e4567-e89b-12d3-a456-426614174002",
+        "oktmo": "45382000",
+        "okato": "45286555000"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[37.50,55.70],[37.50,55.82],[37.72,55.82],[37.72,55.70],[37.50,55.70]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "osm_relation_3",
+      "properties": {
+        "name": "Тверской район",
+        "admin_level": "8",
+        "fias_guid": "123e4567-e89b-12d3-a456-426614174003",
+        "oktmo": "45382000",
+        "okato": "45286585000"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[37.58,55.74],[37.58,55.79],[37.64,55.79],[37.64,55.74],[37.58,55.74]]]
+      }
+    }
+  ]
+}

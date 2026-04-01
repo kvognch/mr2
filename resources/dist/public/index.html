@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <!-- Alpine.js + Swiper.js: Users Reviews -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="js/script.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <title>МНОГОРЕСУРСОВ</title>
+  </head>
+  <body
+    x-data="{ mobileMenuOpen: false, requestModalOpen: false }"
+    x-effect="document.body.style.overflow = (mobileMenuOpen || $store.reviewModalOpen || requestModalOpen) ? 'hidden' : ''"
+  >
+    <!-- HEADER -->
+    <header
+      class="sticky top-0 z-50 bg-white pt-1 sm:pt-3 lg:pt-6 xl:pt-10 2xl:pt-12 3xl:pt-20 transition-[transform,box-shadow] duration-300 ease-in-out"
+      :class="[
+        ($store.scroll.y > 64 || mobileMenuOpen) && 'shadow-lg',
+        $store.scroll.y > 64 && '-translate-y-1 sm:-translate-y-3 lg:-translate-y-6 xl:-translate-y-10 2xl:-translate-y-12 3xl:-translate-y-20'
+      ]"
+    >
+      <nav
+        class="container-base flex-between transition-[padding] duration-300 ease-in-out"
+        :class="$store.scroll.y > 64 ? 'py-3 xs:py-3.75 3xl:py-5' : 'py-3.75'"
+      >
+        <!-- Logo -->
+        <h4>
+          <a href="/"> МНОГОРЕСУРСОВ </a>
+        </h4>
+        <!-- Links & Login/Register Button -->
+        <div class="flex-base gap-11">
+          <!-- Links -->
+          <ul class="text_4 hidden lg:flex-base gap-6 3xl:gap-10">
+            <li>
+              <a href="/" class="hover:underline underline-offset-1">
+                О платформе
+              </a>
+            </li>
+            <li>
+              <a href="/" class="hover:underline underline-offset-1">
+                Присоединиться
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="hover:underline underline-offset-1"
+                @click.prevent="requestModalOpen = true"
+                >Помощь в подборе</a
+              >
+            </li>
+          </ul>
+
+          <!-- Login/Register Button -->
+          <button class="button_1 hidden lg:block">Вход / Регистрация</button>
+
+          <!-- Mobile menu: button + overlay & panel -->
+          <div class="relative lg:hidden">
+            <button
+              type="button"
+              class="p-1 -mr-1 rounded-lg hover:bg-brand-gray-light smooth"
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              :aria-expanded="mobileMenuOpen"
+              aria-label="Меню"
+            >
+              <svg
+                x-show="!mobileMenuOpen"
+                x-cloak
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
+              <svg
+                x-show="mobileMenuOpen"
+                x-cloak
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 18.998L12 11.998M12 11.998L19 4.99805M12 11.998L5 4.99805M12 11.998L19 18.998"
+                  stroke="#193760"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Mobile menu overlay & panel (outside header so fixed works when header has transform) -->
+    <div
+      class="fixed inset-0 z-50 top-15.5 sm:top-18 lg:hidden"
+      :class="mobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'"
+    >
+      <div
+        x-show="mobileMenuOpen"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-x-0 bottom-0 top-15.5 sm:top-18 bg-black/50"
+        @click="mobileMenuOpen = false"
+        aria-hidden="true"
+      ></div>
+      <div
+        x-show="mobileMenuOpen"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-x-full"
+        x-transition:enter-end="opacity-100 translate-x-0"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-x-0"
+        x-transition:leave-end="opacity-0 translate-x-full"
+        class="fixed top-15.5 sm:top-18 right-0 h-screen w-full max-w-[min(20rem,85vw)] bg-white shadow-xl flex flex-col py-8 px-6"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Меню"
+      >
+        <ul class="text_4 flex flex-col gap-6">
+          <li>
+            <a
+              href="/"
+              class="hover:underline underline-offset-1 block py-1"
+              @click="mobileMenuOpen = false"
+              >О платформе</a
+            >
+          </li>
+          <li>
+            <a
+              href="/"
+              class="hover:underline underline-offset-1 block py-1"
+              @click="mobileMenuOpen = false"
+              >Присоединиться</a
+            >
+          </li>
+          <li>
+            <a
+              href="/"
+              class="hover:underline underline-offset-1 block py-1"
+              @click.prevent="mobileMenuOpen = false; requestModalOpen = true"
+              >Помощь в подборе</a
+            >
+          </li>
+        </ul>
+        <button class="button_1 mt-8 w-full" @click="mobileMenuOpen = false">
+          Вход / Регистрация
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <main>
+      <!-- Hero -->
+      <section
+        id="hero"
+        class="bg-hero bg-no-repeat bg-cover bg-center relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-1/8 after:bg-linear-to-t after:from-white after:to-transparent after:pointer-events-none before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-1/8 before:bg-linear-to-b before:from-white before:to-transparent before:pointer-events-none"
+      >
+        <div class="container-base pt-28 3xl:pt-32 pb-16 md:pb-25 lg:pb-50">
+          <div>
+            <h1
+              class="lg:max-w-2/3 3xl:max-w-348 font-semibold text-3xl/8.75 sm:text-4xl/11.25 md:text-4xl/11.25 lg:text-[40px]/12.5 xl:text-[54px]/16.25 2xl:text-[64px]/19.25 3xl:text-[70px]/20"
+            >
+              Поиск и подбор ресурсоснабжающих, сбытовых компаний и подрядчиков
+            </h1>
+            <p
+              class="text_2 lg:max-w-2/3 3xl:max-w-315 text-brand-gray-dark mt-2 3xl:mt-5"
+            >
+              для выполнения подключений к инженерной инфраструктуре по всем
+              видам строительных работ, необходимых частным клиентам и
+              профессионалам рынка
+            </p>
+          </div>
+
+          <div
+            class="flex-base flex-col md:flex-row items-center sm:items-start md:items-center gap-6 3xl:gap-10 mt-16 3xl:mt-25"
+          >
+            <div class="w-full md:w-auto grid xs:grid-cols-2 gap-4 md:gap-6">
+              <button class="button_2">Начать поиск</button>
+              <button class="button_2">Присоединиться</button>
+            </div>
+            <button
+              class="flex-center sm:flex-base gap-4 group text-brand-gray-dark hover:text-brand-blue smooth"
+            >
+              <svg
+                width="60"
+                height="60"
+                viewBox="0 0 60 60"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M25 20L40 30L25 40V20Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span class="text_8 text-left"
+                >Как пользоваться <br />
+                платформой</span
+              >
+            </button>
+          </div>
+
+          <div
+            class="max-w-278 mx-auto grid sm:grid-cols-3 gap-20 sm:gap-10 3xl:gap-40 text-center mt-20 3xl:mt-45"
+          >
+            <div class="space-y-2.5">
+              <h3 class="text-3xl/6.25 sm:text-4xl/11.25 3xl:text-[50px]/15">
+                <span class="text_4 text-brand-gray-dark">с</span> 2018
+              </h3>
+              <p class="text_4 text-brand-gray-dark">
+                года работаем <br />
+                на рынке
+              </p>
+            </div>
+
+            <div class="space-y-2.5">
+              <h3 class="text-3xl/6.25 sm:text-4xl/11.25 3xl:text-[50px]/15">
+                400+
+              </h3>
+              <p class="text_4 text-brand-gray-dark">
+                организаций <br />
+                в реестре
+              </p>
+            </div>
+
+            <div class="space-y-2.5">
+              <h3 class="text-3xl/6.25 sm:text-4xl/11.25 3xl:text-[50px]/15">
+                1400 км2
+              </h3>
+              <p class="text_4 text-brand-gray-dark">
+                территория <br />
+                охвата
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Searching Organization -->
+      <section
+        id="searching-organization"
+        class="container-base pb-10 sm:pb-16 md:pb-25 lg:pb-50"
+      >
+        <div class="space-y-2 lg:space-y-5 text-center">
+          <h2>Поиск организации занимает много времени?</h2>
+          <p
+            class="md:max-w-2/3 lg:max-w-5xl mx-auto text_2 text-brand-gray-dark xl:px-20"
+          >
+            На платформе мы собрали полезную информацию об организациях по
+            направлениям, чтобы Вы меньше времени тратили на поиски
+          </p>
+        </div>
+
+        <!-- Cards -->
+        <div
+          class="grid xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 md:gap-8 mt-20"
+        >
+          <div
+            class="flex flex-col items-center justify-center gap-5 bg-brand-gray-light-2 rounded-brand-3xl p-10"
+          >
+            <img src="./assets/svgs/water.svg" alt="Water" class="size-20" />
+            <h4>Вода</h4>
+          </div>
+
+          <div
+            class="flex flex-col items-center justify-center gap-5 bg-brand-gray-light-2 rounded-brand-3xl p-10"
+          >
+            <img
+              src="./assets/svgs/pipe-thin.svg"
+              alt="Pipe Thin"
+              class="size-20"
+            />
+            <h4>Канализация</h4>
+          </div>
+
+          <div
+            class="flex flex-col items-center justify-center gap-5 bg-brand-gray-light-2 rounded-brand-3xl p-10"
+          >
+            <img
+              src="./assets/svgs/heating-square.svg"
+              alt="Heat"
+              class="size-20"
+            />
+            <h4>Отопление</h4>
+          </div>
+
+          <div
+            class="flex flex-col items-center justify-center gap-5 bg-brand-gray-light-2 rounded-brand-3xl p-10"
+          >
+            <img
+              src="./assets/svgs/electricity.svg"
+              alt="Electricity"
+              class="size-20"
+            />
+            <h4>Электричество</h4>
+          </div>
+
+          <div
+            class="flex flex-col items-center justify-center gap-5 bg-brand-gray-light-2 rounded-brand-3xl p-10"
+          >
+            <img src="./assets/svgs/gas-pipe.svg" alt="Gas" class="size-20" />
+            <h4>Газ</h4>
+          </div>
+        </div>
+      </section>
+
+      <!-- Be Pro -->
+      <section id="be-pro" class="pb-10 sm:pb-16 md:pb-25 lg:pb-50">
+        <div class="container-base">
+          <div class="flex-base flex-col lg:flex-row gap-10 3xl:gap-17 pb-20">
+            <div class="space-y-3 lg:space-y-5">
+              <div class="space-y-2 2xs:space-y-5 3xl:pr-10">
+                <h2>
+                  Будте профессионалом в своем деле − а мы поможем Вас найти
+                </h2>
+                <p class="text_2 text-brand-gray-dark">
+                  Используйте платформу для быстрого поиска надежных поставщиков
+                  или зарегистрируйте организацию, чтобы о вас узнало как можно
+                  больше потенциальных клиентов
+                </p>
+              </div>
+            </div>
+            <div class="lg:max-w-130 w-full">
+              <img
+                src="./assets/images/be-pro.png"
+                alt="Be Pro"
+                class="size-full object-cover"
+              />
+            </div>
+          </div>
+
+          <!-- Cards -->
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 3xl:gap-14">
+            <div
+              class="flex flex-col items-center justify-center gap-4 3xl:gap-5 text-center bg-brand-gray-light-2 rounded-brand-3xl p-7.5"
+            >
+              <img
+                src="./assets/svgs/time.svg"
+                alt="Time"
+                class="size-20 lg:size-25"
+              />
+              <div class="space-y-2 sm:space-y-4">
+                <h4>Экономия времени</h4>
+                <p class="text_2 text-brand-gray-dark">
+                  Не нужно искать информацию на разных сайтах, спрашивать у
+                  коллег и знакомых
+                </p>
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-center justify-center gap-4 3xl:gap-5 text-center bg-brand-gray-light-2 rounded-brand-3xl p-7.5"
+            >
+              <img
+                src="./assets/svgs/graph-down.svg"
+                alt="Graph Down"
+                class="size-20 lg:size-25"
+              />
+              <div class="space-y-2 sm:space-y-4">
+                <h4>Ниже риски</h4>
+                <p class="text_2 text-brand-gray-dark">
+                  Наши специалисты проверяют каждую компанию и присваивают
+                  рейтинг надежности
+                </p>
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-center justify-center gap-4 3xl:gap-5 text-center bg-brand-gray-light-2 rounded-brand-3xl p-7.5"
+            >
+              <img
+                src="./assets/svgs/handshake-light.svg"
+                alt="Handshake"
+                class="size-20 lg:size-25"
+              />
+              <div class="space-y-2 sm:space-y-4">
+                <h4>Новые связи</h4>
+                <p class="text_2 text-brand-gray-dark">
+                  Целевая аудитория платформы частные клиенты и профессионалы
+                  рынка
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Join the Platform -->
+      <section id="join-the-platform" class="pb-10 sm:pb-16 md:pb-25 lg:pb-50">
+        <div class="bg-brand-gray-light-2 py-20">
+          <div class="container-base space-y-20 lg:space-y-15">
+            <h2 class="text-center">Присоединятесь к платформе</h2>
+
+            <!-- Steps -->
+            <div class="relative">
+              <!-- Step Lines Desktop -->
+              <div
+                class="max-w-300 w-full absolute top-0 xl:top-[6%] 2xl:top-1/9 left-1/2 -translate-x-1/2 flex-between flex-col lg:flex-row"
+              >
+                <div
+                  class="size-30 shrink-0 bg-brand-gray-light-2 rounded-full"
+                ></div>
+                <div class="h-0.5 xl:h-0.75 flex-1 bg-brand-gray"></div>
+                <div
+                  class="size-30 shrink-0 bg-brand-gray-light-2 rounded-full"
+                ></div>
+                <div class="h-0.5 xl:h-0.75 flex-1 bg-brand-gray"></div>
+                <div
+                  class="size-30 shrink-0 bg-brand-gray-light-2 rounded-full"
+                ></div>
+              </div>
+
+              <!-- Step Descriptions -->
+              <div
+                class="relative z-10 max-w-410 mx-auto grid lg:grid-cols-3 gap-32 lg:gap-15 mt-5 lg:mt-10"
+              >
+                <div class="flex-base flex-col text-center">
+                  <div class="bg-brand-gray-light-2 rounded-full p-5 xl:p-10">
+                    <div
+                      class="size-16 xs:size-20 2xl:size-30 shrink-0 flex-center border-2 xl:border-[3px] border-brand-gray-dark rounded-full"
+                    >
+                      <h2>1</h2>
+                    </div>
+                  </div>
+                  <div
+                    class="xs:max-w-2/3 sm:max-w-1/2 lg:max-w-none space-y-3 sm:space-y-5"
+                  >
+                    <h4 class="text-2xl/8 md:text-3xl/6.25">Регистрация</h4>
+                    <p
+                      class="text-base/6 sm:text_2 text-brand-gray-dark 3xl:px-6"
+                    >
+                      Предоставьте максимально точную и полную информацию об
+                      организации
+                    </p>
+                  </div>
+                </div>
+                <div class="relative flex-base flex-col text-center">
+                  <div
+                    class="w-0.5 h-28 lg:hidden shrink-0 absolute -top-1/2 3xs:-top-[55%] xs:-top-1/2 sm:-top-[45%] md:-top-1/2 left-1/2 -translate-x-1/2 bg-brand-gray"
+                  ></div>
+                  <div class="bg-brand-gray-light-2 rounded-full p-5 xl:p-10">
+                    <div
+                      class="size-16 xs:size-20 2xl:size-30 shrink-0 flex-center border-2 xl:border-[3px] border-brand-gray-dark rounded-full"
+                    >
+                      <h2>2</h2>
+                    </div>
+                  </div>
+                  <div
+                    class="xs:max-w-2/3 sm:max-w-1/2 lg:max-w-none space-y-3 sm:space-y-5"
+                  >
+                    <h4 class="text-2xl/8 md:text-3xl/6.25">Проверка</h4>
+                    <p
+                      class="text-base/6 sm:text_2 text-brand-gray-dark 3xl:px-6"
+                    >
+                      Наши специалисты проверят информацию о вашей организации и
+                      внесут ее в реестр
+                    </p>
+                  </div>
+                </div>
+                <div class="relative flex-base flex-col text-center">
+                  <div
+                    class="w-0.5 h-28 lg:hidden shrink-0 absolute -top-1/2 3xs:-top-[55%] xs:-top-1/2 sm:-top-[45%] md:-top-1/2 left-1/2 -translate-x-1/2 bg-brand-gray"
+                  ></div>
+                  <div class="bg-brand-gray-light-2 rounded-full p-5 xl:p-10">
+                    <div
+                      class="size-16 xs:size-20 2xl:size-30 shrink-0 flex-center border-2 xl:border-[3px] border-brand-gray-dark rounded-full"
+                    >
+                      <h2>3</h2>
+                    </div>
+                  </div>
+                  <div
+                    class="xs:max-w-2/3 sm:max-w-1/2 lg:max-w-none space-y-3 sm:space-y-5"
+                  >
+                    <h4 class="text-2xl/8 md:text-3xl/6.25">Размещение</h4>
+                    <p
+                      class="text-base/6 sm:text_2 text-brand-gray-dark 3xl:px-6"
+                    >
+                      Информация размещена на платформе, взаимодействуйте с
+                      другими пользователями
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-center">
+              <button class="button_3 max-w-125 w-full">Присоединиться</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Users Reviews -->
+      <section id="users-reviews" class="pb-10 sm:pb-16 md:pb-25 lg:pb-50">
+        <div
+          class="container-base"
+          x-data="homeReviewsSwiper()"
+          x-init="$nextTick(() => initSwiper())"
+        >
+          <div class="xl:space-y-15">
+            <h2 class="text-center lg:text-left">Отзывы пользователей</h2>
+
+            <div class="swiper reviews-swiper overflow-hidden mt-8 xs:mt-15">
+              <div class="swiper-wrapper">
+                <template x-for="review in reviews" :key="review.title">
+                  <div
+                    class="swiper-slide h-auto! bg-brand-gray-light-2 rounded-brand-base xs:rounded-3xl lg:rounded-brand-3xl p-4 sm:p-7 lg:p-10"
+                  >
+                    <div
+                      class="h-full flex flex-col justify-between space-y-3 lg:space-y-5"
+                    >
+                      <div class="space-y-3 xs:space-y-5">
+                        <div class="flex-base gap-2.5">
+                          <template x-for="i in 5" :key="i">
+                            <svg
+                              width="32"
+                              height="32"
+                              viewBox="0 0 32 32"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              aria-hidden="true"
+                              class="size-5 xs:size-6 lg:size-auto"
+                            >
+                              <path
+                                d="M15.999 2.6665L20.119 11.0132L29.3323 12.3598L22.6656 18.8532L24.239 28.0265L15.999 23.6932L7.75896 28.0265L9.33229 18.8532L2.66562 12.3598L11.879 11.0132L15.999 2.6665Z"
+                                fill="#1450A3"
+                                stroke="#1450A3"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </template>
+                        </div>
+                        <h4 x-text="review.title"></h4>
+                        <p
+                          class="xs:text-base lg:text-lg 3xl:text-2xl text_2 text-brand-gray-dark pt-2 sm:pt-0"
+                          x-text="review.text"
+                        ></p>
+                      </div>
+                      <div class="text_2 pt-2 sm:pt-0">
+                        <p x-text="review.author"></p>
+                        <p
+                          class="text-brand-gray-dark"
+                          x-text="review.authRole"
+                        ></p>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <div class="flex-between flex-col xs:flex-row gap-4 mt-5">
+              <button
+                type="button"
+                class="button_3 order-2 xs:order-1"
+                @click="$store.reviewModalOpen = true; $store.reviewModalOpenCount = $store.reviewModalOpenCount + 1"
+              >
+                Оставить отзыв
+              </button>
+              <div class="flex-end gap-3 lg:gap-6.5 order-1 xs:order-2">
+                <button
+                  type="button"
+                  class="reviews-swiper-prev hover:text-brand-blue disabled:text-brand-gray hover:bg-brand-gray-light-2 rounded smooth p-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  :disabled="!swiper || isBeginning"
+                  @click="swiper && swiper.slidePrev()"
+                  aria-label="Предыдущий отзыв"
+                >
+                  <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 48 48"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="size-10 lg:size-12"
+                  >
+                    <path
+                      d="M38 24H10"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M24 38L10 24L24 10"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  class="reviews-swiper-next hover:text-brand-blue disabled:text-brand-gray hover:bg-brand-gray-light-2 rounded smooth p-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  :disabled="!swiper || isEnd"
+                  @click="swiper && swiper.slideNext()"
+                  aria-label="Следующий отзыв"
+                >
+                  <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 48 48"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="size-10 lg:size-12 rotate-180"
+                  >
+                    <path
+                      d="M38 24H10"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M24 38L10 24L24 10"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leave a Review Modal -->
+        <div
+          x-show="$store.reviewModalOpen"
+          x-cloak
+          class="fixed inset-0 z-50 bg-black/50 flex-center px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="review-modal-title"
+          @keydown.escape.window="$store.reviewModalOpen = false"
+          @click="$store.reviewModalOpen = false"
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0"
+          x-transition:enter-end="opacity-100"
+          x-transition:leave="transition ease-in duration-150"
+          x-transition:leave-start="opacity-100"
+          x-transition:leave-end="opacity-0"
+        >
+          <div
+            x-data="reviewModalForm()"
+            :key="$store.reviewModalOpenCount"
+            class="relative w-full xs:w-auto"
+          >
+            <form
+              class="relative max-h-[90vh] overflow-y-auto max-w-150 w-full space-y-5 bg-white rounded-brand-base p-5 xs:p-6 md:p-10"
+              @click.stop
+              x-show="$store.reviewModalOpen"
+              x-transition:enter="transition ease-out duration-200"
+              x-transition:enter-start="opacity-0 scale-95"
+              x-transition:enter-end="opacity-100 scale-100"
+              x-transition:leave="transition ease-in duration-150"
+              x-transition:leave-start="opacity-100 scale-100"
+              x-transition:leave-end="opacity-0 scale-95"
+            >
+              <button
+                type="button"
+                class="absolute top-5 right-5 xs:right-6 xs:top-6 md:top-10 md:right-10 p-1 -mr-1 rounded-lg hover:bg-brand-gray-light smooth text-brand-dark"
+                aria-label="Закрыть"
+                @click="$store.reviewModalOpen = false"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4.99951 18.998L11.9995 11.998M11.9995 11.998L18.9995 4.99805M11.9995 11.998L4.99951 4.99805M11.9995 11.998L18.9995 18.998"
+                    stroke="#193760"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+
+              <!-- Modal Header -->
+              <div
+                class="flex-between flex-col items-start sm:flex-row sm:items-center gap-3 mt-5 2xs:mt-8 sm:mt-12"
+              >
+                <h4 id="review-modal-title">Оставьте отзыв</h4>
+                <!-- Star Rating -->
+                <div
+                  class="flex-base gap-1 2xs:gap-1.5 xs:gap-2.5"
+                  @mouseleave="hoverRating = 0"
+                >
+                  <template x-for="i in 5" :key="i">
+                    <button
+                      type="button"
+                      :aria-label="'Оценка ' + i + ' из 5'"
+                      class="p-0.5 rounded hover:opacity-80 smooth"
+                      @click="rating = i"
+                      @mouseenter="hoverRating = i"
+                    >
+                      <svg
+                        width="32"
+                        height="32"
+                        viewBox="0 0 32 32"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="size-5 xs:size-6 lg:size-auto"
+                      >
+                        <path
+                          d="M15.9989 2.66663L20.1189 11.0133L29.3322 12.36L22.6655 18.8533L24.2389 28.0266L15.9989 23.6933L7.75886 28.0266L9.33219 18.8533L2.66553 12.36L11.8789 11.0133L15.9989 2.66663Z"
+                          :fill="(hoverRating || rating) >= i ? '#1450A3' : 'none'"
+                          stroke="#1450A3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  </template>
+                </div>
+              </div>
+
+              <!-- Modal Content -->
+              <div class="space-y-3 xs:space-y-6 text-brand-gray-dark">
+                <div class="grid xs:grid-cols-2 gap-4">
+                  <label for="name">
+                    <input
+                      type="text"
+                      placeholder="Имя"
+                      class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+                    />
+                  </label>
+                  <label for="activity">
+                    <input
+                      type="text"
+                      placeholder="Род деятельности"
+                      class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+                    />
+                  </label>
+                  <label for="question" class="xs:col-span-2">
+                    <input
+                      type="text"
+                      placeholder="Обращение в компанию по вопросу"
+                      class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+                    />
+                  </label>
+                  <label for="question" class="xs:col-span-2">
+                    <textarea
+                      placeholder="Ваш комментарий"
+                      class="w-full min-h-45 text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+                    ></textarea>
+                  </label>
+                </div>
+                <label
+                  for="recomment"
+                  class="flex-base gap-2.5 cursor-pointer text_9 text-brand-gray-dark"
+                >
+                  <input type="checkbox" id="recomment" class="hidden peer" />
+
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="peer-checked:hidden size-4 xs:size-auto"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M12 24C13.5759 24 15.1363 23.6896 16.5922 23.0866C18.0481 22.4835 19.371 21.5996 20.4853 20.4853C21.5996 19.371 22.4835 18.0481 23.0866 16.5922C23.6896 15.1363 24 13.5759 24 12C24 10.4241 23.6896 8.86371 23.0866 7.4078C22.4835 5.95189 21.5996 4.62902 20.4853 3.51472C19.371 2.40042 18.0481 1.5165 16.5922 0.913445C15.1363 0.310389 13.5759 -2.34822e-08 12 0C8.8174 4.74244e-08 5.76516 1.26428 3.51472 3.51472C1.26428 5.76515 0 8.8174 0 12C0 15.1826 1.26428 18.2348 3.51472 20.4853C5.76516 22.7357 8.8174 24 12 24ZM11.6907 16.8533L18.3573 8.85333L16.3093 7.14667L10.576 14.0253L7.60933 11.0573L5.724 12.9427L9.724 16.9427L10.756 17.9747L11.6907 16.8533Z"
+                      fill="#8695AA"
+                    />
+                  </svg>
+
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="hidden peer-checked:block size-4 xs:size-auto"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M12 24C13.5759 24 15.1363 23.6896 16.5922 23.0866C18.0481 22.4835 19.371 21.5996 20.4853 20.4853C21.5996 19.371 22.4835 18.0481 23.0866 16.5922C23.6896 15.1363 24 13.5759 24 12C24 10.4241 23.6896 8.86371 23.0866 7.4078C22.4835 5.95189 21.5996 4.62902 20.4853 3.51472C19.371 2.40042 18.0481 1.5165 16.5922 0.913445C15.1363 0.310389 13.5759 -2.34822e-08 12 0C8.8174 4.74244e-08 5.76516 1.26428 3.51472 3.51472C1.26428 5.76515 0 8.8174 0 12C0 15.1826 1.26428 18.2348 3.51472 20.4853C5.76516 22.7357 8.8174 24 12 24ZM11.6907 16.8533L18.3573 8.85333L16.3093 7.14667L10.576 14.0253L7.60933 11.0573L5.724 12.9427L9.724 16.9427L10.756 17.9747L11.6907 16.8533Z"
+                      fill="#1450A3"
+                    />
+                  </svg>
+
+                  <span class="peer-checked:text-brand-blue"
+                    >Рекомендуете компанию?</span
+                  >
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                class="button_3 w-full mt-3 lg:mt-6"
+                @click.prevent="$store.reviewModalOpen = false"
+              >
+                Оставить отзыв
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Plans -->
+      <section id="prices" class="pb-10 sm:pb-16 md:pb-25 lg:pb-50">
+        <div class="container-base space-y-10 lg:space-y-15">
+          <div class="space-y-2">
+            <h2>Выберите подходящую услугу</h2>
+            <p class="text_2 max-w-5xl text-brand-gray-dark">
+              Подключайте услуги и сокращайте время на поиск организации или
+              эффективней привлекайте новых клиентов
+            </p>
+          </div>
+
+          <!-- Plans -->
+          <div
+            class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8 lg:gap-10"
+          >
+            <div
+              class="space-y-5 lg:space-y-6 3xl:space-y-10 bg-brand-gray-light-2 rounded-brand-base lg:rounded-brand-3xl py-6 px-5 lg:px-6 3xl:p-10"
+            >
+              <div class="space-y-2.5">
+                <h4>Подбор организации</h4>
+                <p class="text_2 text-brand-gray-dark">
+                  Устали искать? Довертье дело нам. Подберем для Вас нужную
+                  компанию
+                </p>
+                <p class="text-xl/6.25 lg:text-2xl/8 3xl:text-[32px]/9.75">
+                  <span class="font-semibold">от 1 500 ₽</span> / подбор
+                </p>
+              </div>
+
+              <button
+                type="button"
+                class="button_3"
+                @click="requestModalOpen = true"
+              >
+                Оставить заявку
+              </button>
+            </div>
+            <div
+              class="space-y-5 lg:space-y-6 3xl:space-y-10 bg-brand-gray-light-2 rounded-brand-base lg:rounded-brand-3xl py-6 px-5 lg:px-6 3xl:p-10"
+            >
+              <div class="space-y-2.5">
+                <h4>Подбор организации</h4>
+                <p class="text_2 text-brand-gray-dark">
+                  Устали искать? Довертье дело нам. Подберем для Вас нужную
+                  компанию
+                </p>
+                <p class="text-xl/6.25 lg:text-2xl/8 3xl:text-[32px]/9.75">
+                  <span class="font-semibold">от 1 500 ₽</span> / подбор
+                </p>
+              </div>
+
+              <button
+                type="button"
+                class="button_3"
+                @click="requestModalOpen = true"
+              >
+                Оставить заявку
+              </button>
+            </div>
+            <div
+              class="space-y-5 lg:space-y-6 3xl:space-y-10 bg-brand-gray-light-2 rounded-brand-base lg:rounded-brand-3xl py-6 px-5 lg:px-6 3xl:p-10"
+            >
+              <div class="space-y-2.5">
+                <h4>Подбор организации</h4>
+                <p class="text_2 text-brand-gray-dark">
+                  Устали искать? Довертье дело нам. Подберем для Вас нужную
+                  компанию
+                </p>
+                <p class="text-xl/6.25 lg:text-2xl/8 3xl:text-[32px]/9.75">
+                  <span class="font-semibold">от 1 500 ₽</span> / подбор
+                </p>
+              </div>
+
+              <button
+                type="button"
+                class="button_3"
+                @click="requestModalOpen = true"
+              >
+                Оставить заявку
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Need Help -->
+      <section id="need-help" class="pb-15 sm:pb-24 md:pb-37.5 lg:pb-75">
+        <div
+          class="container-base flex-base flex-col lg:flex-row gap-10 xl:gap-16 3xl:gap-26.25 2xl:px-30.5"
+        >
+          <div class="sm:max-w-1/2 2xl:max-w-150.75">
+            <img
+              src="./assets/images/phone.png"
+              alt="Phone"
+              class="size-full object-cover"
+            />
+          </div>
+          <div class="space-y-5 md:space-y-7.5 lg:space-y-10">
+            <div class="space-y-3 sm:space-y-5 text-center lg:text-left">
+              <h2>Нужна помощь в подборе подходящей компании?</h2>
+              <p class="text_2 text-brand-gray-dark">
+                Поручите задачу нам − наши специалисты подберут оптимальную
+                сетевую организацию
+              </p>
+            </div>
+
+            <div class="flex-center lg:justify-start">
+              <button
+                type="button"
+                class="button_2"
+                @click="requestModalOpen = true"
+              >
+                Оставить заявку
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-gray-light-2 py-10 sm:py-16 lg:py-20">
+      <div class="container-base space-y-10 lg:space-y-14">
+        <div
+          class="flex flex-col lg:flex-row justify-between gap-10 lg:gap-0 md:px-32 lg:px-0"
+        >
+          <h4 class="xs:text-center lg:text-left">МНОГОРЕСУРСОВ</h4>
+
+          <div class="flex-1 flex flex-col xs:flex-row justify-evenly gap-10">
+            <div class="space-y-5 lg:space-y-8">
+              <h5 class="text_5">Сотрудн ичество</h5>
+              <ul
+                class="text_6 space-y-2.5 lg:space-y-3.5 text-brand-gray-dark"
+              >
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >О платформе</a
+                  >
+                </li>
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Правовые вопросы</a
+                  >
+                </li>
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Присоединиться</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="space-y-5 lg:space-y-8">
+              <h5 class="text_5">Пользователям</h5>
+              <ul
+                class="text_6 space-y-2.5 lg:space-y-3.5 text-brand-gray-dark"
+              >
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Услуги</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="hover:underline underline-offset-1"
+                    @click.prevent="requestModalOpen = true"
+                    >Помощь в подборе</a
+                  >
+                </li>
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Блог</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="flex xs:items-center lg:items-end flex-col gap-10">
+            <div class="flex xs:items-center lg:items-end flex-col gap-2.25">
+              <a
+                href="mailto:muchresources@yandex.ru"
+                class="text_5 hover:underline underline-offset-1"
+                >muchresources@yandex.ru</a
+              >
+              <a
+                href="tel:+79219837215"
+                class="text_5 hover:underline underline-offset-1"
+                >+7 (921) 983-72-15</a
+              >
+            </div>
+
+            <!-- Socials -->
+            <div class="flex-base gap-6">
+              <a href="#" class="hover:scale-125 smooth">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9.41718 15.1814L9.02018 20.7654C9.58818 20.7654 9.83418 20.5214 10.1292 20.2284L12.7922 17.6834L18.3102 21.7244C19.3222 22.2884 20.0352 21.9914 20.3082 20.7934L23.9302 3.82141L23.9312 3.82041C24.2522 2.32441 23.3902 1.73941 22.4042 2.10641L1.11418 10.2574C-0.338822 10.8214 -0.316822 11.6314 0.867178 11.9984L6.31018 13.6914L18.9532 5.78041C19.5482 5.38641 20.0892 5.60441 19.6442 5.99841L9.41718 15.1814Z"
+                    fill="#193760"
+                  />
+                </svg>
+              </a>
+              <a href="#" class="hover:scale-125 smooth">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_83_375)">
+                    <path
+                      d="M1.68 1.68C3.17891e-07 3.376 0 6.088 0 11.52V12.48C0 17.904 3.17891e-07 20.616 1.68 22.32C3.376 24 6.088 24 11.52 24H12.48C17.904 24 20.616 24 22.32 22.32C24 20.624 24 17.912 24 12.48V11.52C24 6.096 24 3.384 22.32 1.68C20.624 3.17891e-07 17.912 0 12.48 0H11.52C6.096 0 3.384 3.17891e-07 1.68 1.68ZM4.048 7.304H6.8C6.888 11.88 8.904 13.816 10.504 14.216V7.304H13.088V11.248C14.664 11.08 16.328 9.28 16.888 7.296H19.464C19.2538 8.32296 18.8342 9.29556 18.2313 10.1531C17.6284 11.0106 16.8552 11.7347 15.96 12.28C16.9592 12.7772 17.8417 13.4806 18.5491 14.3438C19.2566 15.2071 19.7729 16.2105 20.064 17.288H17.224C16.616 15.392 15.096 13.92 13.088 13.72V17.288H12.768C7.296 17.288 4.176 13.544 4.048 7.304Z"
+                      fill="#193760"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_83_375">
+                      <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              </a>
+              <a href="#" class="hover:scale-125 smooth">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_83_378)">
+                    <path
+                      d="M23.4693 5.92901L23.4993 6.12501C23.2093 5.09601 22.4263 4.30201 21.4313 4.01301L21.4103 4.00801C19.5393 3.50001 12.0103 3.50001 12.0103 3.50001C12.0103 3.50001 4.50029 3.49001 2.61029 4.00801C1.59629 4.30201 0.812294 5.09601 0.527294 6.10401L0.522294 6.12501C-0.176706 9.77601 -0.181706 14.163 0.553294 18.072L0.522294 17.874C0.812294 18.903 1.59529 19.697 2.59029 19.986L2.61129 19.991C4.48029 20.5 12.0113 20.5 12.0113 20.5C12.0113 20.5 19.5203 20.5 21.4113 19.991C22.4263 19.697 23.2103 18.903 23.4953 17.895L23.5003 17.874C23.8183 16.176 24.0003 14.222 24.0003 12.226C24.0003 12.153 24.0003 12.079 23.9993 12.005C24.0003 11.937 24.0003 11.856 24.0003 11.775C24.0003 9.77801 23.8183 7.82401 23.4693 5.92901ZM9.60829 15.651V8.35801L15.8743 12.01L9.60829 15.651Z"
+                      fill="#193760"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_83_378">
+                      <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="text-sm 2xs:text_6 xs:text-center lg:text-left text-brand-gray"
+        >
+          © 2025 МногоРесурсов. Все права защищены <br />
+          Правообладатель ООО “МР”. Заявка № 2025756515
+        </div>
+      </div>
+    </footer>
+
+    <!-- Request modal (left): Оставить заявку — Имя+Телефон row, Комментарий -->
+    <div
+      x-show="requestModalOpen"
+      x-cloak
+      class="fixed inset-0 z-50 bg-black/50 flex-center px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="request-modal-title"
+      @keydown.escape.window="requestModalOpen = false"
+      @click="requestModalOpen = false"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      x-transition:leave="transition ease-in duration-150"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+    >
+      <div class="relative">
+        <form
+          class="relative max-h-[90vh] overflow-y-auto max-w-125 w-full space-y-4 bg-white rounded-brand-base pt-12 pb-5 xs:pb-6 md:pb-8 px-5 xs:px-6 md:px-8"
+          @click.stop
+          x-show="requestModalOpen"
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 scale-95"
+          x-transition:enter-end="opacity-100 scale-100"
+          x-transition:leave="transition ease-in duration-150"
+          x-transition:leave-start="opacity-100 scale-100"
+          x-transition:leave-end="opacity-0 scale-95"
+          @submit.prevent="requestModalOpen = false"
+        >
+          <button
+            type="button"
+            class="absolute top-5 right-5 xs:right-6 md:top-6 md:right-6 p-1 -mr-1 rounded-lg hover:bg-brand-gray-light smooth text-brand-dark"
+            aria-label="Закрыть"
+            @click="requestModalOpen = false"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4.99951 18.998L11.9995 11.998M11.9995 11.998L18.9995 4.99805M11.9995 11.998L4.99951 4.99805M11.9995 11.998L18.9995 18.998"
+                stroke="#193760"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <div class="flex-center">
+            <h4 id="request-modal-title text-center">Оставить заявку</h4>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <label class="sr-only" for="request-name-1">Имя</label>
+            <input
+              id="request-name-1"
+              type="text"
+              required
+              placeholder="Имя*"
+              class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+            />
+            <label class="sr-only" for="request-phone-1">Телефон</label>
+            <input
+              id="request-phone-1"
+              type="tel"
+              required
+              placeholder="Телефон*"
+              class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+            />
+          </div>
+          <label class="sr-only" for="request-comment-1">Комментарий</label>
+          <textarea
+            id="request-comment-1"
+            placeholder="Комментарий"
+            rows="4"
+            class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4 resize-none"
+          ></textarea>
+          <div
+            class="g-recaptcha"
+            data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+            data-theme="light"
+            data-size="normal"
+            aria-colspan="max-w-75"
+          ></div>
+          <button type="submit" class="button_3 w-full">Отправить</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Request modal (right): stacked layout + Почта — hidden -->
+    <div
+      class="hidden fixed inset-0 z-[100] bg-black/50 flex-center px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="request-modal-title-2"
+      aria-hidden="true"
+    >
+      <div class="relative">
+        <form
+          class="relative max-h-[90vh] overflow-y-auto max-w-125 w-full space-y-4 bg-white rounded-brand-base pt-12 pb-5 xs:pb-6 md:pb-8 px-5 xs:px-6 md:px-8"
+          @click.stop
+        >
+          <button
+            type="button"
+            class="absolute top-5 right-5 xs:right-6 md:top-6 md:right-6 p-1 -mr-1 rounded-lg hover:bg-brand-gray-light smooth text-brand-dark"
+            aria-label="Закрыть"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4.99951 18.998L11.9995 11.998M11.9995 11.998L18.9995 4.99805M11.9995 11.998L4.99951 4.99805M11.9995 11.998L18.9995 18.998"
+                stroke="#193760"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <div class="flex-center">
+            <h4 id="request-modal-title-2" class="text-center">
+              Оставить заявку
+            </h4>
+          </div>
+          <div class="space-y-4">
+            <label class="sr-only" for="request-name-2">Имя</label>
+            <input
+              id="request-name-2"
+              type="text"
+              required
+              placeholder="Имя*"
+              class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+            />
+            <label class="sr-only" for="request-phone-2">Телефон</label>
+            <input
+              id="request-phone-2"
+              type="tel"
+              required
+              placeholder="Телефон*"
+              class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+            />
+            <label class="sr-only" for="request-email-2">Почта</label>
+            <input
+              id="request-email-2"
+              type="email"
+              placeholder="Почта"
+              class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+            />
+            <label class="sr-only" for="request-comment-2">Комментарий</label>
+            <textarea
+              id="request-comment-2"
+              placeholder="Комментарий"
+              rows="4"
+              class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4 resize-none"
+            ></textarea>
+          </div>
+          <div
+            class="g-recaptcha"
+            data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+            data-theme="light"
+            data-size="normal"
+            aria-colspan="max-w-75"
+          ></div>
+          <button type="submit" class="button_3 w-full">Отправить</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

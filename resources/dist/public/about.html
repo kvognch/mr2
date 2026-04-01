@@ -1,0 +1,1301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <title>МНОГОРЕСУРСОВ</title>
+  </head>
+  <body
+    x-data="{ mobileMenuOpen: false }"
+    x-effect="document.body.style.overflow = mobileMenuOpen ? 'hidden' : ''"
+  >
+    <!-- HEADER -->
+    <header
+      class="sticky top-0 z-50 bg-white pt-1 sm:pt-3 lg:pt-6 xl:pt-10 2xl:pt-12 3xl:pt-20 transition-[transform,box-shadow] duration-300 ease-in-out"
+      :class="[
+        ($store.scroll.y > 64 || mobileMenuOpen) && 'shadow-lg',
+        $store.scroll.y > 64 && '-translate-y-1 sm:-translate-y-3 lg:-translate-y-6 xl:-translate-y-10 2xl:-translate-y-12 3xl:-translate-y-20'
+      ]"
+    >
+      <nav
+        class="container-base flex-between transition-[padding] duration-300 ease-in-out"
+        :class="$store.scroll.y > 64 ? 'py-3 xs:py-3.75 3xl:py-5' : 'py-3.75'"
+      >
+        <!-- Logo -->
+        <h4>
+          <a href="/"> МНОГОРЕСУРСОВ </a>
+        </h4>
+        <!-- Links & Login/Register Button -->
+        <div class="flex-base gap-11">
+          <!-- Links -->
+          <ul class="text_4 hidden lg:flex-base gap-6 3xl:gap-10">
+            <li>
+              <a href="/" class="hover:underline underline-offset-1">
+                О платформе
+              </a>
+            </li>
+            <li>
+              <a href="/" class="hover:underline underline-offset-1">
+                Присоединиться
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="hover:underline underline-offset-1"
+                @click.prevent="requestModalOpen = true"
+                >Помощь в подборе</a
+              >
+            </li>
+          </ul>
+
+          <!-- Login/Register Button -->
+          <button class="button_1 hidden lg:block">Вход / Регистрация</button>
+
+          <!-- Mobile menu: button + overlay & panel -->
+          <div class="relative lg:hidden">
+            <button
+              type="button"
+              class="p-1 -mr-1 rounded-2xl hover:bg-brand-gray-light smooth"
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              :aria-expanded="mobileMenuOpen"
+              aria-label="Меню"
+            >
+              <svg
+                x-show="!mobileMenuOpen"
+                x-cloak
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
+              <svg
+                x-show="mobileMenuOpen"
+                x-cloak
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 18.998L12 11.998M12 11.998L19 4.99805M12 11.998L5 4.99805M12 11.998L19 18.998"
+                  stroke="#193760"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Mobile menu overlay & panel (outside header so fixed works when header has transform) -->
+    <div
+      class="fixed inset-0 z-50 top-15.5 sm:top-18 lg:hidden"
+      :class="mobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'"
+    >
+      <div
+        x-show="mobileMenuOpen"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-x-0 bottom-0 top-15.5 sm:top-18 bg-black/50"
+        @click="mobileMenuOpen = false"
+        aria-hidden="true"
+      ></div>
+      <div
+        x-show="mobileMenuOpen"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-x-full"
+        x-transition:enter-end="opacity-100 translate-x-0"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-x-0"
+        x-transition:leave-end="opacity-0 translate-x-full"
+        class="fixed top-15.5 sm:top-18 right-0 h-screen w-full max-w-[min(20rem,85vw)] bg-white shadow-xl flex flex-col py-8 px-6"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Меню"
+      >
+        <ul class="text_4 flex flex-col gap-6">
+          <li>
+            <a
+              href="/"
+              class="hover:underline underline-offset-1 block py-1"
+              @click="mobileMenuOpen = false"
+              >О платформе</a
+            >
+          </li>
+          <li>
+            <a
+              href="/"
+              class="hover:underline underline-offset-1 block py-1"
+              @click="mobileMenuOpen = false"
+              >Присоединиться</a
+            >
+          </li>
+          <li>
+            <a
+              href="/"
+              class="hover:underline underline-offset-1 block py-1"
+              @click.prevent="mobileMenuOpen = false; requestModalOpen = true"
+              >Помощь в подборе</a
+            >
+          </li>
+        </ul>
+        <button class="button_1 mt-8 w-full" @click="mobileMenuOpen = false">
+          Вход / Регистрация
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <main class="bg-brand-gray-light-2 pb-20 lg:pb-30">
+      <!-- About Us -->
+      <section
+        id="about-us"
+        class="pt-8 lg:pt-10 pb-8 lg:pb-15"
+        x-data="{
+          cardTooltip: { show: false, text: '', x: 0, y: 0, above: true, wide: false },
+          showCardTooltip(ev, text, above, wide) {
+            const r = ev.currentTarget.getBoundingClientRect();
+            const gap = 6;
+            this.cardTooltip = { show: true, text, wide: !!wide, above: !!above, x: r.left + r.width / 2, y: above ? r.top - gap : r.bottom + gap };
+            this.$nextTick(() => {
+              requestAnimationFrame(() => {
+                const el = this.$refs.cardTooltipBox;
+                if (!el) return;
+                const box = el.getBoundingClientRect();
+                const pad = 16;
+                const W = window.innerWidth;
+                const H = window.innerHeight;
+                let x = this.cardTooltip.x;
+                let y = this.cardTooltip.y;
+                if (box.left < pad) x += pad - box.left;
+                if (box.right > W - pad) x -= box.right - (W - pad);
+                if (box.top < pad) y += pad - box.top;
+                if (box.bottom > H - pad) y -= box.bottom - (H - pad);
+                this.cardTooltip.x = x;
+                this.cardTooltip.y = y;
+              });
+            });
+          },
+          hideCardTooltip() { this.cardTooltip.show = false; }
+        }"
+      >
+        <div class="container-base">
+          <div class="space-y-8 lg:space-y-10">
+            <div
+              class="grid grid-cols-2 sm:flex-base gap-3 xs:gap-5 md:gap-7 lg:gap-10"
+            >
+              <button
+                class="text-xs 2xs:text-base lg:text-lg button_4 flex-center gap-2.5"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M19 12H5"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M12 19L5 12L12 5"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+                <span>К Поиску</span>
+              </button>
+              <button
+                type="button"
+                class="text-xs 2xs:text-base lg:text-lg button_4 flex-center gap-2.5"
+                @click="requestModalOpen = true"
+              >
+                Помощь в подборе
+              </button>
+            </div>
+            <div
+              class="flex-between flex-col sm:flex-row items-start sm:items-center gap-8"
+            >
+              <h2>ООО «МачЭнерджи»</h2>
+
+              <div class="flex-base gap-5 sm:gap-10">
+                <span
+                  class="cursor-default text_1 bg-white px-4.25 py-3.75 rounded-brand-base"
+                  @mouseenter="showCardTooltip($event, 'Бизнес для бизнеса', false, false)"
+                  @mouseleave="hideCardTooltip()"
+                >
+                  B2B
+                </span>
+                <span
+                  class="cursor-default text_1 bg-white px-4.25 py-3.75 rounded-brand-base"
+                  @mouseenter="showCardTooltip($event, 'Бизнес для потребителя', false, false)"
+                  @mouseleave="hideCardTooltip()"
+                >
+                  B2C
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="space-y-5 lg:space-y-10 mt-8 lg:mt-15">
+            <h4>Выполняемые работы по видам ресурсов</h4>
+
+            <div
+              class="bg-white rounded-brand-base xl:rounded-brand-3xl overflow-x-auto"
+            >
+              <table class="min-w-5xl table table-fixed w-full border-collapse">
+                <thead>
+                  <tr>
+                    <th
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    ></th>
+                    <th
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Газ', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/gas-pipe-sm.svg"
+                          alt="Газ"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </th>
+                    <th
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Вода', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/water-sm.svg"
+                          alt="Вода"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </th>
+                    <th
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Канализация', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/pipe-thin-sm.svg"
+                          alt="Канализация"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </th>
+                    <th
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Отопление', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/heating-square-sm.svg"
+                          alt="Отопление"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </th>
+                    <th
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Электричество', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/electricity-sm.svg"
+                          alt="Электричество"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </th>
+                    <th
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-block cursor-default xs:text-base xl:text-lg 3xl:text-2xl text_1 text-brand-gray-dark"
+                        @mouseenter="showCardTooltip($event, 'Наличие свидетельства о допуске к работам СРО', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        Наличие СРО
+                      </span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-block cursor-default xs:text-base xl:text-lg 3xl:text-2xl text_1 text-brand-gray-dark"
+                        @mouseenter="showCardTooltip($event, 'Строительно-монтажные работы', false, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        СМР
+                      </span>
+                    </th>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/tick.svg"
+                          alt="Выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Не выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/minus.svg"
+                          alt="Не выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/tick.svg"
+                          alt="Выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Не выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/minus.svg"
+                          alt="Не выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/tick.svg"
+                          alt="Выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Не выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/minus.svg"
+                          alt="Не выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-block cursor-default xs:text-base xl:text-lg 3xl:text-2xl text_1 text-brand-gray-dark"
+                        @mouseenter="showCardTooltip($event, 'Проектно-изыскательские работы', false, true)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        ПИР / ПСД
+                      </span>
+                    </th>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Не выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/minus.svg"
+                          alt="Не выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/tick.svg"
+                          alt="Выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Не выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/minus.svg"
+                          alt="Не выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/tick.svg"
+                          alt="Выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Не выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/minus.svg"
+                          alt="Не выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                    <td
+                      class="border border-brand-gray-light-2 py-1.5 xs:py-3 xl:py-5"
+                    >
+                      <span
+                        class="inline-flex justify-center cursor-default"
+                        @mouseenter="showCardTooltip($event, 'Выполняется', true, false)"
+                        @mouseleave="hideCardTooltip()"
+                      >
+                        <img
+                          src="./assets/svgs/tick.svg"
+                          alt="Выполняется"
+                          class="size-5 xs:size-7 xl:size-10 shrink-0 mx-auto"
+                        />
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fixed tooltip (no overflow/scroll issues) -->
+        <div
+          x-ref="cardTooltipBox"
+          x-show="cardTooltip.show"
+          x-cloak
+          x-transition:enter="transition ease-out duration-150"
+          x-transition:enter-start="opacity-0"
+          x-transition:enter-end="opacity-100"
+          x-transition:leave="transition ease-in duration-100"
+          class="fixed z-[100] pointer-events-none px-3 py-2 bg-white border border-brand-gray rounded-lg text_1 text-brand-gray-dark shadow-md"
+          :class="cardTooltip.wide ? 'min-w-48 max-w-80 whitespace-normal text-center' : 'whitespace-nowrap'"
+          :style="`left: ${cardTooltip.x}px; top: ${cardTooltip.y}px; transform: translate(-50%, ${cardTooltip.above ? '-100%' : '0'});`"
+        >
+          <span x-text="cardTooltip.text"></span>
+        </div>
+      </section>
+
+      <!-- About Info Grids -->
+      <section id="about-info-grids" class="pt-8 lg:pt-10 overflow-x-hidden">
+        <div
+          class="container-base grid lg:grid-cols-2 gap-10 lg:gap-15 2xl:gap-x-50 min-w-0"
+        >
+          <!-- About -->
+          <div class="space-y-3 xs:space-y-6 lg:space-y-10 min-w-0">
+            <h4>О компании</h4>
+            <div
+              class="space-y-5 bg-white rounded-2xl sm:rounded-brand-3xl p-4 xs:p-6 xl:p-10 min-w-0"
+            >
+              <h4>Общество с ограниченной ответственностью «МачЭнерджи»</h4>
+              <div class="space-y-4 lg:space-y-5">
+                <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-xs 2xs:text-sm sm:text_1 text-brand-gray-dark">
+                    Сайт
+                  </p>
+                  <a
+                    href="name.ru"
+                    class="text-xs 2xs:text-sm sm:text_2 text-brand-blue hover:underline underline-offset-1"
+                    >name.ru</a
+                  >
+                </div>
+                <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-xs 2xs:text-sm sm:text_1 text-brand-gray-dark">
+                    Социальные сети
+                  </p>
+                  <div class="flex-base gap-5 lg:*:gap-10">
+                    <a href="#" class="shrink-0 hover:scale-125 smooth">
+                      <img
+                        src="./assets/svgs/telegram.svg"
+                        alt="Telegram"
+                        class="size-5 lg:size-8"
+                      />
+                    </a>
+                    <a href="#" class="shrink-0 hover:scale-125 smooth">
+                      <img
+                        src="./assets/svgs/wk.svg"
+                        alt="WK"
+                        class="size-5 lg:size-8"
+                      />
+                    </a>
+                    <a href="#" class="shrink-0 hover:scale-125 smooth">
+                      <img
+                        src="./assets/svgs/whatsapp.svg"
+                        alt="Whatsapp"
+                        class="size-5 lg:size-8"
+                      />
+                    </a>
+                  </div>
+                </div>
+                <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">Телефон</p>
+                  <a
+                    href="tel:+79219837215"
+                    class="text-xs 2xs:text-sm sm:text_2 text-brand-dark hover:underline underline-offset-1"
+                    >+7 (921) 983-72-15</a
+                  >
+                </div>
+                <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">
+                    Электронная почта
+                  </p>
+                  <a
+                    href="mailto:mail@name.ru"
+                    class="text-xs 2xs:text-sm sm:text_2 text-brand-blue hover:underline underline-offset-1"
+                    >mail@name.ru
+                  </a>
+                </div>
+                <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">
+                    Категория
+                  </p>
+                  <p class="text-xs 2xs:text-sm sm:text_2 text-brand-gray-blue">
+                    Подрядчик
+                  </p>
+                </div>
+                <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">
+                    Рейтинг надежности
+                  </p>
+                  <p class="text-xs 2xs:text-sm sm:text_2 text-brand-blue">
+                    <span class="text-brand-dark">ААА</span> (подробнее)
+                  </p>
+                </div>
+                <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">
+                    Срок ответа
+                  </p>
+                  <p class="text-xs 2xs:text-sm sm:text_2 text-brand-dark">
+                    2 дня
+                  </p>
+                </div>
+                <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">
+                    Объем выполняемых работ, ₽
+                  </p>
+                  <p class="text-xs 2xs:text-sm sm:text_2 text-brand-dark">
+                    от 1 млн
+                  </p>
+                </div>
+                <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">
+                    Территория работы
+                    <button
+                      class="text-xs 2xs:text-sm sm:text_2 text-brand-blue font-normal text-left"
+                    >
+                      (показать на карте)
+                    </button>
+                  </p>
+                  <div class="space-y-1" x-data="{ expanded: false }">
+                    <p
+                      class="text-xs 2xs:text-sm sm:text_2 text-brand-dark transition-[line-clamp] duration-200"
+                      :class="expanded ? 'line-clamp-none' : 'line-clamp-2'"
+                    >
+                      Санкт-Петербург, Всеволожский, Ломоносовский sdfsdfssdf
+                    </p>
+                    <button
+                      type="button"
+                      class="flex-base gap-2.5 text_2 text-brand-blue group"
+                      @click="expanded = !expanded"
+                    >
+                      <span x-text="expanded ? 'свернуть' : 'подробнее'"></span>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="size-4 md:size-6 group-hover:translate-x-2 transition-all duration-150"
+                        :class="expanded && 'rotate-90'"
+                      >
+                        <path
+                          d="M5 12H19"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M12 5L19 12L12 19"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Details -->
+          <div class="space-y-3 xs:space-y-6 lg:space-y-10 min-w-0">
+            <h4>Реквизиты</h4>
+            <div
+              class="bg-white rounded-2xl sm:rounded-brand-3xl p-4 sm:p-6 xl:p-10 min-w-0"
+            >
+              <div class="space-y-4 lg:space-y-5">
+                <div class="grid xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">ОГРН</p>
+                  <p class="text-xs 2xs:text-sm sm:text_2 text-brand-gray-blue">
+                    1184704017222
+                  </p>
+                </div>
+                <div class="grid xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">ИНН</p>
+                  <p class="text-xs 2xs:text-sm sm:text_2 text-brand-gray-blue">
+                    4703159440
+                  </p>
+                </div>
+                <div class="grid xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">КПП</p>
+                  <p class="text-xs 2xs:text-sm sm:text_2 text-brand-gray-blue">
+                    470301001
+                  </p>
+                </div>
+                <div class="grid xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">
+                    Дата регистрации
+                  </p>
+                  <p class="text-xs 2xs:text-sm sm:text_2 text-brand-gray-blue">
+                    01.04.2025
+                  </p>
+                </div>
+                <div class="flex-center xs:pt-5 sm:pb-7.5">
+                  <button
+                    class="text-xs 2xs:text-sm sm:text_1 button_1 mx-auto"
+                  >
+                    Получить подробную выписку
+                  </button>
+                </div>
+                <div class="grid xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">
+                    Юридический адрес
+                  </p>
+                  <p class="text-xs 2xs:text-sm sm:text_2 text-brand-gray-blue">
+                    Санкт-Петербург, Дворцовая площадь д. 1
+                  </p>
+                </div>
+
+                <div class="grid xs:grid-cols-2 xs:gap-5 md:gap-10">
+                  <p class="text-sm xs:text_1 text-brand-gray-dark">
+                    Адреса и телефоны филиалов
+                  </p>
+                  <div class="space-y-1" x-data="{ expanded: false }">
+                    <p
+                      class="text-xs 2xs:text-sm sm:text_2 text-brand-dark transition-[line-clamp] duration-200"
+                      :class="expanded ? 'line-clamp-none' : 'line-clamp-6'"
+                    >
+                      Санкт-Петербург, Дворцовая площадь д. 1, тел.:
+                      <a href="tel:">+(999) 999-99-99</a> Санкт-Петербург,
+                      Дворцовая площадь д. 1, тел.:
+                      <a href="tel:">+(999) 999-99-99</a> Санкт-Петербург,
+                      Дворцовая площадь д. 1, тел.:
+                      <a href="tel:+(999) 999-99-99">+(999) 999-99-99</a>
+                    </p>
+                    <button
+                      type="button"
+                      class="flex-base gap-2.5 text-xs 2xs:text-sm sm:text_2 text-brand-blue group"
+                      @click="expanded = !expanded"
+                    >
+                      <span x-text="expanded ? 'свернуть' : 'подробнее'"></span>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="size-4 md:size-6 group-hover:translate-x-2 transition-all duration-150"
+                        :class="expanded && 'rotate-90'"
+                      >
+                        <path
+                          d="M5 12H19"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M12 5L19 12L12 19"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reviews-->
+          <div
+            class="space-y-3 xs:space-y-6 lg:space-y-10 min-w-0"
+            x-data="reviewsSwiper()"
+            x-init="$nextTick(() => initSwiper())"
+          >
+            <h4>Отзывы</h4>
+            <!-- Reviews Swiper -->
+            <div
+              class="swiper reviews-swiper overflow-hidden rounded-3xl sm:rounded-3xl lg:rounded-brand-3xl min-w-0"
+            >
+              <div class="swiper-wrapper">
+                <template x-for="review in reviews" :key="review.title">
+                  <div
+                    class="swiper-slide h-auto! bg-white rounded-lg sm:rounded-3xl lg:rounded-brand-3xl p-4 sm:p-7 lg:p-10"
+                  >
+                    <div
+                      class="h-full flex flex-col justify-between space-y-6 lg:space-y-10"
+                    >
+                      <div class="space-y-5">
+                        <div class="flex-between">
+                          <p
+                            class="text_1 text-brand-dark"
+                            x-text="review.title"
+                          ></p>
+                          <p
+                            class="text_6 text-brand-gray"
+                            x-text="review.date"
+                          ></p>
+                        </div>
+
+                        <p
+                          class="text_2 text-brand-gray-dark"
+                          x-text="review.desc"
+                        ></p>
+                      </div>
+                      <div class="flex-between items-end">
+                        <div class="text_2">
+                          <p class="text-brand-blue" x-text="review.author"></p>
+                          <p
+                            class="text-brand-gray"
+                            x-text="review.authRole"
+                          ></p>
+                        </div>
+                        <div class="sm:space-y-2">
+                          <div class="flex-base gap-1 sm:gap-2.5">
+                            <template x-for="i in 5" :key="i">
+                              <svg
+                                width="32"
+                                height="32"
+                                viewBox="0 0 32 32"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                                class="size-4 sm:size-6"
+                              >
+                                <path
+                                  d="M15.999 2.6665L20.119 11.0132L29.3323 12.3598L22.6656 18.8532L24.239 28.0265L15.999 23.6932L7.75896 28.0265L9.33229 18.8532L2.66562 12.3598L11.879 11.0132L15.999 2.6665Z"
+                                  :fill="i <= review.stars ? '#1450A3' : 'none'"
+                                  :stroke="i <= review.stars ? '#1450A3' : 'currentColor'"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </template>
+                          </div>
+                          <p
+                            class="text_2 text-brand-green shrink-0"
+                            x-show="review.stars > 3"
+                            x-cloak
+                          >
+                            Рекомендует
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <!-- Open Leave Review Modal & Swiper Navigation Buttons -->
+            <div class="flex-between">
+              <button class="text-xs 2xs:text-sm sm:text_7 button_5">
+                Оставить отзыв
+              </button>
+
+              <div class="flex-base gap-3 lg:gap-6.5">
+                <button
+                  type="button"
+                  class="reviews-swiper-prev hover:text-brand-blue disabled:text-brand-gray hover:bg-brand-blue/10 rounded smooth p-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  :disabled="!swiper || isBeginning"
+                  @click="swiper && swiper.slidePrev()"
+                  aria-label="Предыдущий отзыв"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M25.3327 16H6.66602"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M15.9993 25.3307L6.66602 15.9974L15.9993 6.66406"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                <button
+                  type="button"
+                  class="reviews-swiper-next hover:text-brand-blue disabled:text-brand-gray hover:bg-brand-blue/10 rounded smooth p-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  :disabled="!swiper || isEnd"
+                  @click="swiper && swiper.slideNext()"
+                  aria-label="Следующий отзыв"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="rotate-180"
+                  >
+                    <path
+                      d="M25.3327 16H6.66602"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M15.9993 25.3307L6.66602 15.9974L15.9993 6.66406"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="space-y-6 lg:space-y-10">
+            <h4>Примечания</h4>
+            <div
+              class="bg-white text-brand-dark rounded-2xl sm:rounded-brand-3xl p-4 sm:p-6 xl:p-10"
+              x-data="{ expanded: false }"
+            >
+              <p class="text_1 mb-5">Дополнительная информация о компании</p>
+
+              <p class="text_2" :class="{ 'line-clamp-5': !expanded }">
+                Дополнительная информация о компании, режимы работы, условия
+                оплаты, нюансы по территории работы компании, дублирующая
+                информация по компаниям, важные моменты по работе, специфика
+                работы, любая другая важная информация необходимая пользователю
+              </p>
+
+              <button
+                type="button"
+                class="flex-base gap-2.5 text_2 group text-brand-blue mt-1"
+                @click="expanded = !expanded"
+              >
+                <span x-text="expanded ? 'свернуть' : 'читать далее'"></span>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="group-hover:translate-x-2 transition-all duration-150"
+                  :class="{ 'rotate-180': expanded }"
+                >
+                  <path
+                    d="M5 12H19"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M12 5L19 12L12 19"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer
+      class="bg-brand-gray-light-2 border-t border-brand-gray py-10 sm:py-16 lg:py-20"
+    >
+      <div class="container-base space-y-10 lg:space-y-14">
+        <div
+          class="flex flex-col lg:flex-row justify-between gap-10 lg:gap-0 md:px-32 lg:px-0"
+        >
+          <h4 class="xs:text-center lg:text-left">МНОГОРЕСУРСОВ</h4>
+
+          <div class="flex-1 flex flex-col xs:flex-row justify-evenly gap-10">
+            <div class="space-y-5 lg:space-y-8">
+              <h5 class="text_5">Сотрудн ичество</h5>
+              <ul
+                class="text_6 space-y-2.5 lg:space-y-3.5 text-brand-gray-dark"
+              >
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >О платформе</a
+                  >
+                </li>
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Правовые вопросы</a
+                  >
+                </li>
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Присоединиться</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="space-y-5 lg:space-y-8">
+              <h5 class="text_5">Пользователям</h5>
+              <ul
+                class="text_6 space-y-2.5 lg:space-y-3.5 text-brand-gray-dark"
+              >
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Услуги</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="hover:underline underline-offset-1"
+                    @click.prevent="requestModalOpen = true"
+                    >Помощь в подборе</a
+                  >
+                </li>
+                <li>
+                  <a href="/" class="hover:underline underline-offset-1"
+                    >Блог</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="flex xs:items-center lg:items-end flex-col gap-10">
+            <div class="flex xs:items-center lg:items-end flex-col gap-2.25">
+              <a
+                href="mailto:muchresources@yandex.ru"
+                class="text_5 hover:underline underline-offset-1"
+                >muchresources@yandex.ru</a
+              >
+              <a
+                href="tel:+79219837215"
+                class="text_5 hover:underline underline-offset-1"
+                >+7 (921) 983-72-15</a
+              >
+            </div>
+
+            <!-- Socials -->
+            <div class="flex-base gap-6">
+              <a href="#" class="hover:scale-125 smooth">
+                <img
+                  src="./assets/svgs/telegram.svg"
+                  alt="Telegram"
+                  class="size-6 shrink-0"
+                />
+              </a>
+              <a href="#" class="hover:scale-125 smooth">
+                <img
+                  src="./assets/svgs/wk.svg"
+                  alt="WK"
+                  class="size-6 shrink-0"
+                />
+              </a>
+              <a href="#" class="hover:scale-125 smooth">
+                <img
+                  src="./assets/svgs/whatsapp.svg"
+                  alt="Whatsapp"
+                  class="size-6 shrink-0"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="text-sm 2xs:text_6 xs:text-center lg:text-left text-brand-gray"
+        >
+          © 2025 МногоРесурсов. Все права защищены <br />
+          Правообладатель ООО “МР”. Заявка № 2025756515
+        </div>
+      </div>
+    </footer>
+
+    <!-- Request modal: Оставить заявку -->
+    <div
+      x-show="requestModalOpen"
+      x-cloak
+      class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="request-modal-title"
+      @keydown.escape.window="requestModalOpen = false"
+    >
+      <div
+        class="absolute inset-0 bg-brand-gray-dark/40"
+        @click="requestModalOpen = false"
+      ></div>
+      <div
+        x-show="requestModalOpen"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
+        class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden"
+        @click.stop
+      >
+        <div class="p-6 xs:p-8">
+          <div class="flex justify-end mb-2">
+            <button
+              type="button"
+              class="p-1 -mr-1 rounded-lg hover:bg-brand-gray-light smooth text-brand-dark"
+              aria-label="Закрыть"
+              @click="requestModalOpen = false"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 18.998L12 11.998M12 11.998L19 4.99805M12 11.998L5 4.99805M12 11.998L19 18.998"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+          <h2
+            id="request-modal-title"
+            class="text-xl font-semibold text-brand-dark text-center mb-6"
+          >
+            Оставить заявку
+          </h2>
+          <form class="space-y-4" @submit.prevent="requestModalOpen = false">
+            <div>
+              <label for="request-name-about" class="sr-only">Имя</label>
+              <input
+                type="text"
+                id="request-name-about"
+                required
+                placeholder="Имя*"
+                class="w-full px-4 py-3 bg-brand-gray-light rounded-xl text-brand-dark placeholder:text-brand-gray-dark border-0 text_2"
+              />
+            </div>
+            <div>
+              <label for="request-phone-about" class="sr-only">Телефон</label>
+              <input
+                type="tel"
+                id="request-phone-about"
+                required
+                placeholder="Телефон*"
+                class="w-full px-4 py-3 bg-brand-gray-light rounded-xl text-brand-dark placeholder:text-brand-gray-dark border-0 text_2"
+              />
+            </div>
+            <div>
+              <label for="request-email-about" class="sr-only">Почта</label>
+              <input
+                type="email"
+                id="request-email-about"
+                placeholder="Почта"
+                class="w-full px-4 py-3 bg-brand-gray-light rounded-xl text-brand-dark placeholder:text-brand-gray-dark border-0 text_2"
+              />
+            </div>
+            <div>
+              <label for="request-comment-about" class="sr-only"
+                >Комментарий</label
+              >
+              <textarea
+                id="request-comment-about"
+                rows="4"
+                placeholder="Комментарий"
+                class="w-full px-4 py-3 bg-brand-gray-light rounded-xl text-brand-dark placeholder:text-brand-gray-dark border-0 text_2 resize-none"
+              ></textarea>
+            </div>
+            <div class="flex justify-center py-2">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-2 bg-brand-gray-light rounded-lg text_2 text-brand-gray-dark"
+                role="presentation"
+              >
+                <span
+                  class="size-5 border-2 border-brand-gray-dark rounded-sm flex-shrink-0"
+                  aria-hidden="true"
+                ></span>
+                <span>I'm not a robot</span>
+              </div>
+            </div>
+            <button type="submit" class="button_3 w-full justify-center py-3.5">
+              Отправить
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="js/script.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,205 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+@import "tailwindcss";
+@source "../views/**/*.blade.php";
+@source "../js/**/*.js";
+
+@theme {
+  --breakpoint-3xs: 375px;
+  --breakpoint-2xs: 425px;
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
+  --breakpoint-3xl: 1680px;
+
+  --max-width-base: 1720px;
+
+  --font-inter: "Inter", sans-serif;
+
+  --color-brand-dark: #193760;
+  --color-brand-blue: #1450a3;
+  --color-brand-green: #399c41;
+  --color-brand-gray: #c7ced7;
+  --color-brand-gray-dark: #8695aa;
+  --color-brand-gray-light: #f0f5fb;
+  --color-brand-gray-light-2: #f9f9f9;
+
+  --radius-brand-base: 18px;
+  --radius-brand-3xl: 30px;
+
+  --background-image-hero: url("../images/hero.png");
+}
+
+@layer base {
+  [x-cloak] {
+    display: none !important;
+  }
+
+  body {
+    @apply font-inter text-brand-dark overflow-x-hidden;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold;
+  }
+
+  h1 {
+    @apply text-2xl/8 2xs:text-4xl/11.25 md:text-4xl/11.25 xl:text-[40px]/12.5 3xl:text-[54px]/16.25;
+  }
+
+  h2 {
+    @apply text-2xl/8 2xs:text-4xl/11.25 md:text-4xl/11.25 xl:text-[40px]/12.5 3xl:text-[56px]/16.25;
+  }
+
+  h3 {
+    @apply text-xl/6.25 md:text-2xl/8.75 xl:text-[32px]/9 3xl:text-[50px]/15;
+  }
+
+  h4 {
+    @apply text-lg/6.5 md:text-xl/6.25 xl:text-2xl/7.5 3xl:text-3xl/10;
+  }
+}
+
+/* Typography utilities – shared base for text-2 … text-8 */
+.text-2,
+.text-3,
+.text-4,
+.text-5,
+.text-6,
+.text-7,
+.text-8 {
+  @apply text-sm/4.75 md:text-base/6;
+}
+
+@utility text_1 {
+  @apply font-medium leading-5.5 md:text-lg/6.5 xl:text-xl/7 3xl:text-[24px]/8.5;
+}
+
+@utility text_2 {
+  @apply text-sm/4.75 2xs:text-base/6 xl:text-xl/8 3xl:text-[26px]/10;
+}
+
+@utility text_3 {
+  @apply font-semibold xl:text-lg/6 3xl:text-2xl/7.5;
+}
+
+@utility text_4 {
+  @apply font-medium xl:text-lg/6.5 3xl:text-2xl/7;
+}
+
+@utility text_5 {
+  @apply font-semibold xl:text-lg/6 3xl:text-[22px]/7.5;
+}
+
+@utility text_6 {
+  @apply xl:text-lg/6 3xl:text-[20px]/7;
+}
+
+@utility text_7 {
+  @apply font-semibold xl:text-lg/6 3xl:text-xl/6;
+}
+
+@utility text_8 {
+  @apply xl:text-lg/6 3xl:text-xl/7;
+}
+
+@utility text_9 {
+  @apply text-xs/4 md:text-sm/5.5 xl:text-base/6 3xl:text-lg/7.5;
+}
+
+/* Layout utilities */
+@utility container-base {
+  @apply max-w-base mx-auto px-4;
+}
+
+/* Flex utilities */
+@utility flex-base {
+  @apply flex items-center;
+}
+
+@utility flex-center {
+  @apply flex items-center justify-center;
+}
+
+@utility flex-between {
+  @apply flex items-center justify-between;
+}
+
+@utility flex-end {
+  @apply flex items-center justify-end;
+}
+
+/* Button utilities – shared base */
+.button_1,
+.button_2,
+.button_3,
+.button_4,
+.button_5,
+.button_6,
+.button_poppup_filter {
+  @apply font-semibold border border-brand-blue bg-brand-blue text-white hover:bg-white hover:text-brand-gray hover:border-brand-gray smooth;
+}
+
+@utility button_1 {
+  @apply text_3 rounded-xl py-2.5 px-4;
+}
+
+@utility button_2 {
+  @apply text_1 rounded-brand-base py-3.25 px-10 xl:px-15;
+}
+
+@utility button_3 {
+  @apply text_1 rounded-brand-base py-3.25 px-14 xl:px-20;
+}
+
+@utility button_4 {
+  @apply text_7 rounded-xl py-2 px-4;
+}
+
+@utility button_5 {
+  @apply text_7 rounded-xl py-2 px-4;
+}
+
+@utility button_6 {
+  @apply text_3 rounded-xl py-2.5 px-20 xl:px-30;
+}
+
+@utility button_poppup_filter {
+  @apply button_3 w-full 3xl:text-xl/7.5 px-4 py-2.5 sm:py-3 3xl:py-3.75  3xl:px-10;
+}
+
+/* Tooltip – white box, rounded, border; show on group-hover; fixed so no scroll and always on top */
+@utility tooltip-popup {
+  @apply absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 px-3 py-2 bg-white border border-brand-gray rounded-lg text_1 text-brand-gray-dark whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[100] pointer-events-none shadow-md;
+}
+
+@utility tooltip-popup-below {
+  @apply absolute left-1/2 -translate-x-1/2 top-full mt-1.5 px-3 py-2 bg-white border border-brand-gray rounded-lg text_1 text-brand-gray-dark whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[100] pointer-events-none shadow-md;
+}
+
+@utility tooltip-popup-below-wide {
+  @apply absolute left-1/2 -translate-x-1/2 top-full mt-1.5 px-3 py-2 bg-white border border-brand-gray rounded-lg text_1 text-brand-gray-dark max-w-64 text-center opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[100] pointer-events-none shadow-md;
+}
+
+/* Other utilities */
+@utility smooth {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.info-page-content p {
+  @apply mb-4 xl:mb-5;
+}
+
+.info-page-content p:last-child {
+  @apply mb-0;
+}

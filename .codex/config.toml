@@ -1,0 +1,12 @@
+model = "gpt-5.4"
+
+[mcp_servers.serena]
+command = "uvx"
+args = ["--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server", "--context", "codex"]
+
+[mcp_servers.context7]
+args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-16d9649d-422c-42ae-b0d9-0248f79a92b6"]
+command = "npx"
+
+[projects."/home/donnie/projects/mr2"]
+trust_level = "trusted"

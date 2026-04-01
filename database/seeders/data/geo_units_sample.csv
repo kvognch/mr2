@@ -1,0 +1,5 @@
+external_id,parent_external_id,level,name,short_name,full_name,fias_guid,oktmo,okato,kladr,status,is_active
+ru,,country,Россия,,Российская Федерация,,,,,disabled,1
+moscow_region,ru,region,Москва,г,Город Москва,123e4567-e89b-12d3-a456-426614174001,45000000,45000000000,,disabled,1
+cao,moscow_region,district,Центральный административный округ,,Центральный административный округ,123e4567-e89b-12d3-a456-426614174002,45382000,45286555000,,disabled,1
+tverskoy,cao,locality,Тверской район,,Тверской район,123e4567-e89b-12d3-a456-426614174003,45382000,45286585000,,disabled,1
