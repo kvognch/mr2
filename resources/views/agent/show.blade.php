@@ -8,7 +8,7 @@
 @section('title', $contractorMetaTitle)
 @section('meta-description', $contractorMetaDescription)
 @section('body-attrs')
-x-data="{ mobileMenuOpen: false, requestModalOpen: false, ratingInfoModalOpen: false, contractorTerritoryMapModalOpen: false, contractorReviewModalOpen: false, authModalOpen: false, authModalMode: 'login' }" x-effect="document.body.style.overflow = (mobileMenuOpen || requestModalOpen || ratingInfoModalOpen || contractorTerritoryMapModalOpen || contractorReviewModalOpen || authModalOpen || $store.reviewModalOpen) ? 'hidden' : ''"
+x-data="{ mobileMenuOpen: false, requestModalOpen: false, ratingInfoModalOpen: false, contractorTerritoryMapModalOpen: false, contractorReviewModalOpen: false, authModalOpen: false, authModalMode: 'login' }" x-effect="window.setBodyScrollLock(mobileMenuOpen || requestModalOpen || ratingInfoModalOpen || contractorTerritoryMapModalOpen || contractorReviewModalOpen || authModalOpen || $store.reviewModalOpen)"
 @endsection
 
 @push('styles')

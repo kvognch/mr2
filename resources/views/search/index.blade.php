@@ -3,7 +3,7 @@
 @section('title', $settings['meta']['search']['title'] ?? 'Поиск организаций')
 @section('meta-description', $settings['meta']['search']['description'] ?? 'Поиск подрядчиков и ресурсоснабжающих организаций')
 @section('body-attrs')
-x-data="searchPage()" x-effect="document.body.style.overflow = (mobileMenuOpen || requestModalOpen || authModalOpen || territorySchemesModalOpen) ? 'hidden' : ''"
+x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || requestModalOpen || authModalOpen || territorySchemesModalOpen)"
 @endsection
 
 @section('content')

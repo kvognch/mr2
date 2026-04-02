@@ -1,2 +1,6 @@
 *
 !.gitignore
+!homepage-icons/
+!homepage-icons/**
+!homepage-images/
+!homepage-images/**

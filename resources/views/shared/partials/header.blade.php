@@ -1,12 +1,12 @@
 <header
-    class="sticky top-0 z-50 bg-white pt-1 sm:pt-3 lg:pt-6 xl:pt-10 2xl:pt-12 3xl:pt-20 transition-[padding,transform,box-shadow] duration-300 ease-in-out"
+    class="sticky top-0 z-50 bg-white pt-1 pb-1 sm:pt-3 sm:pb-3 lg:pt-6 lg:pb-8 xl:pt-10 2xl:pt-12 3xl:pt-20 transition-[padding,transform,box-shadow] duration-300 ease-in-out"
     :class="[
-        $store.scroll.collapsed ? 'pb-0' : 'pb-1 sm:pb-3 lg:pb-8',
+        $store.scroll.collapsed ? '!pb-0' : '',
         ($store.scroll.y > 64 || mobileMenuOpen) && 'shadow-lg',
         $store.scroll.y > 64 && '-translate-y-1 sm:-translate-y-3 lg:-translate-y-6 xl:-translate-y-10 2xl:-translate-y-12 3xl:-translate-y-20'
     ]"
 >
-    <nav class="container-base flex-between transition-[padding] duration-300 ease-in-out" :class="$store.scroll.y > 64 ? 'py-3 xs:py-3.75 3xl:py-5' : 'py-3.75'">
+    <nav class="container-base flex-between py-3.75 transition-[padding] duration-300 ease-in-out" :class="$store.scroll.y > 64 ? '!py-3 xs:!py-3.75 3xl:!py-5' : ''">
         <h4>
             <a href="/">{{ $settings['header']['brand'] }}</a>
         </h4>

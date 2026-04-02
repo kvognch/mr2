@@ -3,7 +3,7 @@
 @section('title', $settings['meta']['home']['title'] ?? 'МНОГОРЕСУРСОВ')
 @section('meta-description', $settings['meta']['home']['description'] ?? '')
 @section('body-attrs')
-x-data="{ mobileMenuOpen: false, requestModalOpen: false, videoModalOpen: false, authModalOpen: false, authModalMode: 'login' }" x-effect="document.body.style.overflow = (mobileMenuOpen || $store.reviewModalOpen || requestModalOpen || videoModalOpen || authModalOpen) ? 'hidden' : ''"
+x-data="{ mobileMenuOpen: false, requestModalOpen: false, videoModalOpen: false, authModalOpen: false, authModalMode: 'login' }" x-effect="window.setBodyScrollLock(mobileMenuOpen || $store.reviewModalOpen || requestModalOpen || videoModalOpen || authModalOpen)"
 @endsection
 
 @push('styles')

@@ -1,5 +1,20 @@
 import './bootstrap';
 
+window.setBodyScrollLock = (locked) => {
+  const body = document.body;
+  if (!body) return;
+
+  if (locked) {
+    const scrollbarWidth = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+    body.style.overflow = "hidden";
+    body.style.paddingRight = scrollbarWidth > 0 ? `${scrollbarWidth}px` : "";
+    return;
+  }
+
+  body.style.overflow = "";
+  body.style.paddingRight = "";
+};
+
 document.addEventListener("alpine:init", () => {
   // Scroll store for header shadow and bottom padding collapse.
   Alpine.store("scroll", { y: 0, collapsed: false });

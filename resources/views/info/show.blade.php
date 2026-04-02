@@ -3,7 +3,7 @@
 @section('title', $page->meta_title ?: $page->title)
 @section('meta-description', $page->meta_description ?: '')
 @section('body-attrs')
-x-data="{ mobileMenuOpen: false, requestModalOpen: false, ratingInfoModalOpen: false, contractorReviewModalOpen: false, authModalOpen: false, authModalMode: 'login' }" x-effect="document.body.style.overflow = (mobileMenuOpen || requestModalOpen || ratingInfoModalOpen || contractorReviewModalOpen || authModalOpen || $store.reviewModalOpen) ? 'hidden' : ''"
+x-data="{ mobileMenuOpen: false, requestModalOpen: false, ratingInfoModalOpen: false, contractorReviewModalOpen: false, authModalOpen: false, authModalMode: 'login' }" x-effect="window.setBodyScrollLock(mobileMenuOpen || requestModalOpen || ratingInfoModalOpen || contractorReviewModalOpen || authModalOpen || $store.reviewModalOpen)"
 @endsection
 
 @section('content')
