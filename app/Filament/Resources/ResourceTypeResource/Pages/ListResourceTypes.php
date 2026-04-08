@@ -4,7 +4,6 @@ namespace App\Filament\Resources\ResourceTypeResource\Pages;
 
 use Filament\Actions\CreateAction;
 use App\Filament\Resources\ResourceTypeResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListResourceTypes extends ListRecords
@@ -16,7 +15,7 @@ class ListResourceTypes extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label('Добавить'),
         ];
     }
 }

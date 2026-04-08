@@ -2,14 +2,14 @@
 
 namespace App\Filament\Resources\InformationPageResource\Pages;
 
+use App\Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\InformationPageResource;
-use Filament\Resources\Pages\CreateRecord;
 
 class CreateInformationPage extends CreateRecord
 {
     protected static string $resource = InformationPageResource::class;
 
-    protected static ?string $title = 'Создать страницу';
+    protected static ?string $title = 'Добавить информационную страницу';
 
     protected function mutateFormDataBeforeFill(array $data): array
     {

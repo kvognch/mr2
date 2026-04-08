@@ -4,7 +4,6 @@ namespace App\Filament\Resources\ContractorCategoryResource\Pages;
 
 use Filament\Actions\CreateAction;
 use App\Filament\Resources\ContractorCategoryResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListContractorCategories extends ListRecords
@@ -16,7 +15,7 @@ class ListContractorCategories extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label('Добавить'),
         ];
     }
 }

@@ -3,12 +3,14 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Enums\UserRole;
+use App\Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\UserResource;
-use Filament\Resources\Pages\CreateRecord;
 
 class CreateUser extends CreateRecord
 {
     protected static string $resource = UserResource::class;
+
+    protected static ?string $title = 'Добавить пользователя';
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

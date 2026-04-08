@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\ContractorResource\Pages;
 
+use App\Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\ContractorResource;
-use Filament\Resources\Pages\CreateRecord;
 
 class CreateContractor extends CreateRecord
 {
     protected static string $resource = ContractorResource::class;
+
+    protected static ?string $title = 'Добавить подрядчика';
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

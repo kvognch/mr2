@@ -79,7 +79,7 @@ class ListContractors extends ListRecords
                         ->send();
                 })
                 ->visible(fn (): bool => auth()->user()?->isSuperadmin() || auth()->user()?->isManager()),
-            CreateAction::make(),
+            CreateAction::make()->label('Добавить'),
         ];
     }
 }

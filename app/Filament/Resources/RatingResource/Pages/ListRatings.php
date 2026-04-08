@@ -4,7 +4,6 @@ namespace App\Filament\Resources\RatingResource\Pages;
 
 use Filament\Actions\CreateAction;
 use App\Filament\Resources\RatingResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListRatings extends ListRecords
@@ -16,7 +15,7 @@ class ListRatings extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label('Добавить'),
         ];
     }
 }
