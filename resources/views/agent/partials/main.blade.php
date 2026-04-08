@@ -537,167 +537,177 @@
             </div>
           </div>
 
-          @if (! empty($contractorReviews))
-            <!-- Reviews-->
+          <!-- Reviews-->
+          <div
+            class="space-y-3 xs:space-y-6 lg:space-y-10 min-w-0"
+            x-data="reviewsSwiper(@js($contractorReviews ?? []))"
+            x-init="$nextTick(() => { if (reviews.length) initSwiper() })"
+          >
+            <h4>Отзывы</h4>
+            <!-- Reviews Swiper -->
             <div
-              class="space-y-3 xs:space-y-6 lg:space-y-10 min-w-0"
-              x-data="reviewsSwiper(@js($contractorReviews ?? []))"
-              x-init="$nextTick(() => initSwiper())"
+              x-show="reviews.length"
+              x-cloak
+              class="swiper reviews-swiper overflow-hidden rounded-3xl sm:rounded-3xl lg:rounded-brand-3xl min-w-0"
             >
-              <h4>Отзывы</h4>
-              <!-- Reviews Swiper -->
-              <div
-                class="swiper reviews-swiper overflow-hidden rounded-3xl sm:rounded-3xl lg:rounded-brand-3xl min-w-0"
-              >
-                <div class="swiper-wrapper">
-                  <template x-for="review in reviews" :key="review.title">
+              <div class="swiper-wrapper">
+                <template x-for="review in reviews" :key="review.title">
+                  <div
+                    class="swiper-slide h-auto! bg-white rounded-lg sm:rounded-3xl lg:rounded-brand-3xl p-4 sm:p-7 lg:p-10"
+                  >
                     <div
-                      class="swiper-slide h-auto! bg-white rounded-lg sm:rounded-3xl lg:rounded-brand-3xl p-4 sm:p-7 lg:p-10"
+                      class="h-full flex flex-col justify-between space-y-6 lg:space-y-10"
                     >
-                      <div
-                        class="h-full flex flex-col justify-between space-y-6 lg:space-y-10"
-                      >
-                        <div class="space-y-5">
-                          <div class="flex-between">
-                            <p
-                              class="text_1 text-brand-dark"
-                              x-text="review.title"
-                            ></p>
-                            <p
-                              class="text_6 text-brand-gray"
-                              x-text="review.date"
-                            ></p>
-                          </div>
-
+                      <div class="space-y-5">
+                        <div class="flex-between">
                           <p
-                            class="text_2 text-brand-gray-dark"
-                            x-text="review.desc"
+                            class="text_1 text-brand-dark"
+                            x-text="review.title"
+                          ></p>
+                          <p
+                            class="text_6 text-brand-gray"
+                            x-text="review.date"
                           ></p>
                         </div>
-                        <div class="flex-between items-end">
-                          <div class="text_2">
-                            <p class="text-brand-blue" x-text="review.author"></p>
-                            <p
-                              class="text-brand-gray"
-                              x-text="review.authRole"
-                            ></p>
+
+                        <p
+                          class="text_2 text-brand-gray-dark"
+                          x-text="review.desc"
+                        ></p>
+                      </div>
+                      <div class="flex-between items-end">
+                        <div class="text_2">
+                          <p class="text-brand-blue" x-text="review.author"></p>
+                          <p
+                            class="text-brand-gray"
+                            x-text="review.authRole"
+                          ></p>
+                        </div>
+                        <div class="sm:space-y-2">
+                          <div class="flex-base gap-1 sm:gap-2.5">
+                            <template x-for="i in 5" :key="i">
+                              <svg
+                                width="32"
+                                height="32"
+                                viewBox="0 0 32 32"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                                class="size-4 sm:size-6"
+                              >
+                                <path
+                                  d="M15.999 2.6665L20.119 11.0132L29.3323 12.3598L22.6656 18.8532L24.239 28.0265L15.999 23.6932L7.75896 28.0265L9.33229 18.8532L2.66562 12.3598L11.879 11.0132L15.999 2.6665Z"
+                                  :fill="i <= review.stars ? '#1450A3' : 'none'"
+                                  :stroke="i <= review.stars ? '#1450A3' : 'currentColor'"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </template>
                           </div>
-                          <div class="sm:space-y-2">
-                            <div class="flex-base gap-1 sm:gap-2.5">
-                              <template x-for="i in 5" :key="i">
-                                <svg
-                                  width="32"
-                                  height="32"
-                                  viewBox="0 0 32 32"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  aria-hidden="true"
-                                  class="size-4 sm:size-6"
-                                >
-                                  <path
-                                    d="M15.999 2.6665L20.119 11.0132L29.3323 12.3598L22.6656 18.8532L24.239 28.0265L15.999 23.6932L7.75896 28.0265L9.33229 18.8532L2.66562 12.3598L11.879 11.0132L15.999 2.6665Z"
-                                    :fill="i <= review.stars ? '#1450A3' : 'none'"
-                                    :stroke="i <= review.stars ? '#1450A3' : 'currentColor'"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                  />
-                                </svg>
-                              </template>
-                            </div>
-                            <p
-                              class="text_2 text-brand-green shrink-0"
-                              x-show="review.isRecommended"
-                              x-cloak
-                            >
-                              Рекомендует
-                            </p>
-                          </div>
+                          <p
+                            class="text_2 text-brand-green shrink-0"
+                            x-show="review.isRecommended"
+                            x-cloak
+                          >
+                            Рекомендует
+                          </p>
                         </div>
                       </div>
                     </div>
-                  </template>
-                </div>
-              </div>
-
-              <!-- Open Leave Review Modal & Swiper Navigation Buttons -->
-              <div class="flex-between">
-                @auth
-                  <button type="button" class="text-xs 2xs:text-sm sm:text_7 button_5" @click="contractorReviewModalOpen = true">
-                    Оставить отзыв
-                  </button>
-                @else
-                  <button type="button" class="text-xs 2xs:text-sm sm:text_7 button_5" @click="authModalOpen = true; authModalMode = 'login'">
-                    Оставить отзыв
-                  </button>
-                @endauth
-
-                <div class="flex-base gap-3 lg:gap-6.5">
-                  <button
-                    type="button"
-                    class="reviews-swiper-prev hover:text-brand-blue disabled:text-brand-gray hover:bg-brand-blue/10 rounded smooth p-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                    :disabled="!swiper || isBeginning"
-                    @click="swiper && swiper.slideTo(Math.max(swiper.activeIndex - 1, 0))"
-                    aria-label="Предыдущий отзыв"
-                  >
-                    <svg
-                      width="32"
-                      height="32"
-                      viewBox="0 0 32 32"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M25.3327 16H6.66602"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M15.9993 25.3307L6.66602 15.9974L15.9993 6.66406"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </button>
-
-                  <button
-                    type="button"
-                    class="reviews-swiper-next hover:text-brand-blue disabled:text-brand-gray hover:bg-brand-blue/10 rounded smooth p-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                    :disabled="!swiper || isEnd"
-                    @click="swiper && swiper.slideTo(swiper.activeIndex + 1)"
-                    aria-label="Следующий отзыв"
-                  >
-                    <svg
-                      width="32"
-                      height="32"
-                      viewBox="0 0 32 32"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="rotate-180"
-                    >
-                      <path
-                        d="M25.3327 16H6.66602"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M15.9993 25.3307L6.66602 15.9974L15.9993 6.66406"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                  </div>
+                </template>
               </div>
             </div>
-          @endif
+
+            <div
+              x-show="!reviews.length"
+              x-cloak
+              class="bg-white rounded-lg sm:rounded-3xl lg:rounded-brand-3xl p-4 sm:p-7 lg:p-10"
+            >
+              <p class="text_2 text-brand-gray-dark">
+                Пока нет отзывов о данной организации
+              </p>
+            </div>
+
+            <!-- Open Leave Review Modal & Swiper Navigation Buttons -->
+            <div class="flex-between">
+              @auth
+                <button type="button" class="text-xs 2xs:text-sm sm:text_7 button_5" @click="contractorReviewModalOpen = true">
+                  Оставить отзыв
+                </button>
+              @else
+                <button type="button" class="text-xs 2xs:text-sm sm:text_7 button_5" @click="authModalOpen = true; authModalMode = 'login'">
+                  Оставить отзыв
+                </button>
+              @endauth
+
+              <div class="flex-base gap-3 lg:gap-6.5" x-show="reviews.length" x-cloak>
+                <button
+                  type="button"
+                  class="reviews-swiper-prev hover:text-brand-blue disabled:text-brand-gray hover:bg-brand-blue/10 rounded smooth p-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  :disabled="!swiper || isBeginning"
+                  @click="swiper && swiper.slideTo(Math.max(swiper.activeIndex - 1, 0))"
+                  aria-label="Предыдущий отзыв"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M25.3327 16H6.66602"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M15.9993 25.3307L6.66602 15.9974L15.9993 6.66406"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                <button
+                  type="button"
+                  class="reviews-swiper-next hover:text-brand-blue disabled:text-brand-gray hover:bg-brand-blue/10 rounded smooth p-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  :disabled="!swiper || isEnd"
+                  @click="swiper && swiper.slideTo(swiper.activeIndex + 1)"
+                  aria-label="Следующий отзыв"
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="rotate-180"
+                  >
+                    <path
+                      d="M25.3327 16H6.66602"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M15.9993 25.3307L6.66602 15.9974L15.9993 6.66406"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
 
           <!-- Notes -->
           <div class="space-y-6 lg:space-y-10">
