@@ -518,19 +518,19 @@ class ContractorResource extends Resource
     public static function getNavigationItems(): array
     {
         return [
-            NavigationItem::make('Гарантирующий поставщик')
+            NavigationItem::make('Гарантирующие поставщики')
                 ->group(static::getNavigationGroup())
                 ->icon(static::getNavigationIcon())
                 ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.guaranteeing-suppliers'))
                 ->sort(10)
                 ->url(static::getUrl('guaranteeing-suppliers')),
-            NavigationItem::make('Подрядчик')
+            NavigationItem::make('Подрядчики')
                 ->group(static::getNavigationGroup())
                 ->icon(static::getNavigationIcon())
                 ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.category-contractors'))
                 ->sort(11)
                 ->url(static::getUrl('category-contractors')),
-            NavigationItem::make('Ресурсо-снабжающая организация')
+            NavigationItem::make('РСО')
                 ->group(static::getNavigationGroup())
                 ->icon(static::getNavigationIcon())
                 ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.resource-supplying-organizations'))
