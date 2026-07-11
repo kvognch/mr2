@@ -10,6 +10,7 @@
 </head>
 <body @yield('body-attrs')>
 @yield('content')
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @stack('scripts')
 </body>
 </html>
