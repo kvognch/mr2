@@ -6,13 +6,14 @@ use App\Enums\ServiceRequestStatus;
 use App\Models\ServiceRequest;
 use App\Models\User;
 use App\Support\GoogleRecaptcha;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class PublicFormController extends Controller
 {
-    public function storeRequest(Request $request): RedirectResponse
+    public function storeRequest(Request $request): RedirectResponse|JsonResponse
     {
         $data = $request->validateWithBag('requestModal', [
             'name' => ['required', 'string', 'max:255'],
@@ -40,9 +41,17 @@ class PublicFormController extends Controller
             'source_url' => $data['source_url'] ?: $request->headers->get('referer'),
         ]);
 
+        $successMessage = 'Заявка отправлена. Специалисты МНОГОРЕСУРСОВ свяжутся с Вами в ближайшее время';
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => $successMessage,
+            ]);
+        }
+
         return back()
             ->with('open_request_modal', true)
-            ->with('request_modal_success', 'Заявка отправлена.');
+            ->with('request_modal_success', $successMessage);
     }
 
     private function throwBaggedValidationException(string $bag, array $messages): never

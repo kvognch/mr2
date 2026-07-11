@@ -27,7 +27,7 @@ class EditContractor extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        unset($data['territory_ids']);
+        unset($data['territory_ids'], $data['tariff_upload']);
 
         return $data;
     }
@@ -42,5 +42,19 @@ class EditContractor extends EditRecord
             ->all();
 
         $this->record->territories()->sync($territoryIds);
+        $this->saveUploadedTariff();
+    }
+
+    protected function saveUploadedTariff(): void
+    {
+        $path = $this->data['tariff_upload'] ?? null;
+
+        if (is_array($path)) {
+            $path = reset($path) ?: null;
+        }
+
+        if (is_string($path) && $path !== '') {
+            $this->record->addCurrentTariff($path);
+        }
     }
 }

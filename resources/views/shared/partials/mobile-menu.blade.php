@@ -26,11 +26,14 @@
     >
         <ul class="text_4 flex flex-col gap-6">
             @foreach ($settings['header']['menu'] as $item)
+                @php($itemUrl = $item['url'] ?? '#')
                 <li>
-                    @if (($item['url'] ?? '#') === '#')
+                    @if ($itemUrl === 'modal:request')
+                        <button type="button" class="hover:underline underline-offset-1 block py-1 text-left" @click="mobileMenuOpen = false; requestModalOpen = true">{{ $item['label'] }}</button>
+                    @elseif ($itemUrl === '#')
                         <a href="#" class="hover:underline underline-offset-1 block py-1" @click="mobileMenuOpen = false">{{ $item['label'] }}</a>
                     @else
-                        <a href="{{ $item['url'] }}" class="hover:underline underline-offset-1 block py-1" @click="mobileMenuOpen = false">{{ $item['label'] }}</a>
+                        <a href="{{ $itemUrl }}" class="hover:underline underline-offset-1 block py-1" @click="mobileMenuOpen = false">{{ $item['label'] }}</a>
                     @endif
                 </li>
             @endforeach

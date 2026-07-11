@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Contractor extends Model
@@ -20,9 +21,11 @@ class Contractor extends Model
         'full_name',
         'business_segments',
         'website',
+        'application_url',
         'social_telegram',
         'social_vk',
         'social_whatsapp',
+        'social_max',
         'phone',
         'email',
         'response_time',
@@ -86,6 +89,38 @@ class Contractor extends Model
         return $this->belongsToMany(ContractorCategory::class, 'contractor_contractor_category')->withTimestamps();
     }
 
+    public function hasTariffCategory(): bool
+    {
+        $tariffCategories = [
+            'Гарантирующий поставщик',
+            'Ресурсо-снабжающая организация',
+        ];
+
+        if ($this->relationLoaded('categories')) {
+            return $this->categories
+                ->pluck('name')
+                ->intersect($tariffCategories)
+                ->isNotEmpty();
+        }
+
+        return $this->categories()
+            ->whereIn('name', $tariffCategories)
+            ->exists();
+    }
+
+    public function hasContractorCategory(): bool
+    {
+        if ($this->relationLoaded('categories')) {
+            return $this->categories
+                ->pluck('name')
+                ->contains('Подрядчик');
+        }
+
+        return $this->categories()
+            ->where('name', 'Подрядчик')
+            ->exists();
+    }
+
     public function smrResourceTypes(): BelongsToMany
     {
         return $this->belongsToMany(ResourceType::class, 'contractor_smr_resource_type')->withTimestamps();
@@ -114,6 +149,40 @@ class Contractor extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(ContractorReview::class);
+    }
+
+    public function tariffs(): HasMany
+    {
+        return $this->hasMany(ContractorTariff::class)->latest();
+    }
+
+    public function currentTariff(): HasMany
+    {
+        return $this->hasMany(ContractorTariff::class)
+            ->where('is_current', true)
+            ->latest();
+    }
+
+    public function tariffHistory(): HasMany
+    {
+        return $this->hasMany(ContractorTariff::class)
+            ->where('is_current', false)
+            ->latest();
+    }
+
+    public function addCurrentTariff(string $path): ContractorTariff
+    {
+        $this->tariffs()->where('is_current', true)->update(['is_current' => false]);
+
+        $disk = Storage::disk('public');
+
+        return $this->tariffs()->create([
+            'path' => $path,
+            'original_name' => basename($path),
+            'mime_type' => $disk->exists($path) ? $disk->mimeType($path) : null,
+            'size' => $disk->exists($path) ? $disk->size($path) : null,
+            'is_current' => true,
+        ]);
     }
 
     public function scopeOrderedForModeration(Builder $query): Builder

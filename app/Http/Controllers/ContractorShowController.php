@@ -13,7 +13,7 @@ class ContractorShowController extends Controller
     public function __invoke(string $slug): View
     {
         $contractor = Contractor::query()
-            ->with(['categories', 'rating', 'territories', 'smrResourceTypes', 'pirResourceTypes'])
+            ->with(['categories', 'rating', 'territories', 'smrResourceTypes', 'pirResourceTypes', 'currentTariff', 'tariffHistory'])
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -24,6 +24,8 @@ class ContractorShowController extends Controller
         $email = (string) ($contractor->email ?: 'mail@name.ru');
 
         $categoriesText = $contractor->categories->pluck('name')->implode(', ');
+        $hasTariffCategory = $contractor->hasTariffCategory();
+        $hasContractorCategory = $contractor->hasContractorCategory();
         $territoriesText = $contractor->territories->pluck('name')->implode(', ');
         $ratingText = (string) ($contractor->rating?->name ?? 'ААА');
         $registrationDate = (string) ($contractor->registration_date?->format('d.m.Y') ?? '01.04.2025');
@@ -31,7 +33,10 @@ class ContractorShowController extends Controller
         $branchContacts = collect($contractor->branch_contacts ?? [])
             ->map(fn ($item) => is_array($item) ? ($item['value'] ?? null) : null)
             ->filter()
-            ->implode(' ');
+            ->values();
+
+        $branchContactsLines = $branchContacts->all();
+        $branchContactsText = $branchContacts->implode(' ');
 
         $segmentBadges = collect($contractor->business_segments ?? [])
             ->map(function (string $segment): ?array {
@@ -52,14 +57,6 @@ class ContractorShowController extends Controller
         }
 
         $settings = HomepageSettings::all();
-        $settings['footer']['email'] = $email;
-        $settings['footer']['phone'] = $phoneHref !== '' ? $phoneHref : '79999999999';
-        $settings['footer']['phone_display'] = $phone;
-        $settings['footer']['socials'] = [
-            ['key' => 'telegram', 'url' => (string) ($contractor->social_telegram ?: '#'), 'icon' => 'assets/svgs/telegram.svg'],
-            ['key' => 'vk', 'url' => (string) ($contractor->social_vk ?: '#'), 'icon' => 'assets/svgs/wk.svg'],
-            ['key' => 'whatsapp', 'url' => (string) ($contractor->social_whatsapp ?: '#'), 'icon' => 'assets/svgs/whatsapp.svg'],
-        ];
 
         $resourceOrder = ['ГС' => 1, 'НВ' => 2, 'НК' => 3, 'ТС' => 4, 'ЭС' => 5];
 
@@ -108,6 +105,11 @@ class ContractorShowController extends Controller
             'phoneHref' => $phoneHref !== '' ? $phoneHref : '79999999999',
             'email' => $email,
             'categoriesText' => $categoriesText !== '' ? $categoriesText : 'Подрядчик',
+            'hasTariffCategory' => $hasTariffCategory,
+            'hasContractorCategory' => $hasContractorCategory,
+            'applicationUrl' => $this->normalizeExternalUrl((string) ($contractor->application_url ?: $contractor->website ?: '')),
+            'currentTariff' => $contractor->currentTariff->first(),
+            'tariffHistory' => $contractor->tariffHistory,
             'ratingText' => $ratingText,
             'territoriesText' => $territoriesText !== '' ? $territoriesText : 'Санкт-Петербург',
             'contractorTerritoryIds' => $contractor->territories->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
@@ -118,11 +120,13 @@ class ContractorShowController extends Controller
             'kppText' => (string) ($contractor->kpp ?: '470301001'),
             'registrationDateText' => $registrationDate,
             'legalAddressText' => (string) ($contractor->legal_address ?: 'Санкт-Петербург, Дворцовая площадь д. 1'),
-            'branchContactsText' => (string) $branchContacts,
+            'branchContactsLines' => $branchContactsLines,
+            'branchContactsText' => (string) $branchContactsText,
             'additionalInfoText' => (string) ($contractor->additional_info ?: 'Дополнительная информация о компании, режимы работы, условия оплаты, нюансы по территории работы компании, дублирующая информация по компаниям, важные моменты по работе, специфика работы, любая другая важная информация необходимая пользователю'),
             'socialTelegram' => (string) ($contractor->social_telegram ?: '#'),
             'socialVk' => (string) ($contractor->social_vk ?: '#'),
             'socialWhatsapp' => (string) ($contractor->social_whatsapp ?: '#'),
+            'socialMax' => (string) ($contractor->social_max ?: '#'),
             'resourceColumns' => $resourceColumns,
             'smrResourceAbbreviations' => $smrResourceAbbreviations,
             'pirResourceAbbreviations' => $pirResourceAbbreviations,
@@ -145,5 +149,16 @@ class ContractorShowController extends Controller
                 ->all(),
             'yandexMapsApiKey' => (string) env('YANDEX_MAPS_API_KEY', ''),
         ]);
+    }
+
+    private function normalizeExternalUrl(string $url): string
+    {
+        $url = trim($url);
+
+        if ($url === '') {
+            return '#';
+        }
+
+        return preg_match('#^https?://#i', $url) ? $url : "https://{$url}";
     }
 }

@@ -14,12 +14,14 @@ class InformationPage extends Model
         'title',
         'slug',
         'body',
+        'use_rich_editor',
         'is_active',
         'meta_title',
         'meta_description',
     ];
 
     protected $casts = [
+        'use_rich_editor' => 'boolean',
         'is_active' => 'boolean',
     ];
 

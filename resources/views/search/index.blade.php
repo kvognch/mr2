@@ -17,17 +17,17 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
 
     @include('shared.partials.header', ['settings' => $settings])
 
-    <main class="bg-brand-gray-light-2 pb-20 lg:pb-30">
-        <section id="search" class="pt-15 pb-30">
+    <main class="bg-brand-gray-light-2 pt-15 pb-20 lg:pb-30">
+        <section id="search">
             <div class="container-base space-y-10">
-                <div class="space-y-6 sm:space-y-8 lg:space-y-10">
+                <div class="space-y-6 sm:space-y-8 lg:space-y-7">
                     <h1 class="text-lg/6.5 md:text-xl/6.25 xl:text-2xl/7.5 3xl:text-3xl/10">Поиск организации</h1>
 
-                    <div class="grid lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5" @keydown.enter.window.prevent="applySearch()">
+                    <div class="grid lg:grid-cols-4 gap-3 sm:gap-5" @keydown.enter.window.prevent="applySearch()">
                         <label class="sm:col-span-2">
                             <input
                                 type="text"
-                                class="h-12.5 w-full text_6 placeholder:text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                                class="h-10 xl:h-12.5 w-full text-sm/5.5 xl:text_6 placeholder:text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
                                 placeholder="Название организации"
                                 x-model.debounce.250ms="searchQuery"
                             />
@@ -36,11 +36,11 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                         <div class="relative" @click.outside="territoryOpen = false">
                             <button
                                 type="button"
-                                class="h-12.5 w-full text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                                class="h-10 xl:h-12.5 w-full text-sm/5.5 xl:text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
                                 @click="territoryOpen = !territoryOpen"
                                 :aria-expanded="territoryOpen"
                             >
-                                <span class="line-clamp-1" :class="selectedTerritoryName ? 'text-brand-dark' : ''" x-text="selectedTerritoryName || 'Выберите территорию'"></span>
+                                <span class="min-w-0 flex-1 text-left line-clamp-1" :class="selectedTerritoryName ? 'text-brand-dark' : ''" x-text="selectedTerritoryName || 'Выберите территорию'"></span>
                                 <svg width="17" height="10" class="shrink-0 transition-transform duration-200" :class="territoryOpen && 'rotate-180'" aria-hidden="true">
                                     <use href="#icon-select-chevron" />
                                 </svg>
@@ -55,7 +55,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                 x-transition:leave="transition ease-in duration-150"
                                 x-transition:leave-start="opacity-100 translate-y-0"
                                 x-transition:leave-end="opacity-0 -translate-y-1"
-                                class="w-full max-h-96 2xl:max-h-120 absolute top-full left-0 space-y-0.75 text_8 bg-white rounded-xl overflow-y-auto mt-4 z-20 shadow-lg"
+                                class="w-full max-h-96 2xl:max-h-120 absolute top-full left-0 space-y-0.75 text-sm/5.5 xl:text_8 bg-white rounded-xl overflow-y-auto mt-4 z-20 shadow-lg"
                             >
                                 <li>
                                     <button
@@ -125,15 +125,15 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                         <div class="relative" @click.outside="resourceOpen = false">
                             <button
                                 type="button"
-                                class="h-12.5 w-full text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                                class="h-10 xl:h-12.5 w-full text-sm/5.5 xl:text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
                                 @click="resourceOpen = !resourceOpen"
                             >
-                                <span class="line-clamp-1" :class="selectedResourceIds.length ? 'text-brand-dark' : ''" x-text="selectedResourceTitle || 'Выберите ресурс'"></span>
+                                <span class="min-w-0 flex-1 text-left line-clamp-1" :class="selectedResourceIds.length ? 'text-brand-dark' : ''" x-text="selectedResourceTitle || 'Выберите ресурс'"></span>
                                 <svg width="17" height="10" class="shrink-0 transition-transform duration-200" :class="resourceOpen && 'rotate-180'" aria-hidden="true">
                                     <use href="#icon-select-chevron" />
                                 </svg>
                             </button>
-                            <ul x-show="resourceOpen" x-cloak class="w-full max-h-60 absolute top-full left-0 text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2">
+                            <ul x-show="resourceOpen" x-cloak class="w-full max-h-60 absolute top-full left-0 text-sm/5.5 xl:text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2">
                                 <li>
                                     <button type="button" class="w-full text-left px-5 py-2.5 smooth hover:bg-brand-blue hover:text-white text-brand-dark" @click="selectedResourceIds = []; resourceOpen = false">Любые ресурсы</button>
                                 </li>
@@ -156,15 +156,15 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                         <div class="relative" @click.outside="categoryOpen = false">
                             <button
                                 type="button"
-                                class="h-12.5 w-full text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                                class="h-10 xl:h-12.5 w-full text-sm/5.5 xl:text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
                                 @click="categoryOpen = !categoryOpen"
                             >
-                                <span class="line-clamp-1" :class="selectedCategoryIds.length ? 'text-brand-dark' : ''" x-text="selectedCategoryTitle || 'Выберите категорию'"></span>
+                                <span class="min-w-0 flex-1 text-left line-clamp-1" :class="selectedCategoryIds.length ? 'text-brand-dark' : ''" x-text="selectedCategoryTitle || 'Выберите категорию'"></span>
                                 <svg width="17" height="10" class="shrink-0 transition-transform duration-200" :class="categoryOpen && 'rotate-180'" aria-hidden="true">
                                     <use href="#icon-select-chevron" />
                                 </svg>
                             </button>
-                            <ul x-show="categoryOpen" x-cloak class="w-full max-h-60 absolute top-full left-0 text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2">
+                            <ul x-show="categoryOpen" x-cloak class="w-full max-h-60 absolute top-full left-0 text-sm/5.5 xl:text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2">
                                 <li>
                                     <button type="button" class="w-full text-left px-5 py-2.5 smooth hover:bg-brand-blue hover:text-white text-brand-dark" @click="selectedCategoryIds = []; categoryOpen = false">Любые категории</button>
                                 </li>
@@ -187,15 +187,15 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                         <div class="relative" @click.outside="workOpen = false">
                             <button
                                 type="button"
-                                class="h-12.5 w-full text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                                class="h-10 xl:h-12.5 w-full text-sm/5.5 xl:text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
                                 @click="workOpen = !workOpen"
                             >
-                                <span class="line-clamp-1" :class="workType !== 'all' ? 'text-brand-dark' : ''" x-text="workType === 'all' ? 'Выберите работы' : workTypeLabel"></span>
+                                <span class="min-w-0 flex-1 text-left line-clamp-1" :class="workType !== 'all' ? 'text-brand-dark' : ''" x-text="workType === 'all' ? 'Выберите работы' : workTypeLabel"></span>
                                 <svg width="17" height="10" class="shrink-0 transition-transform duration-200" :class="workOpen && 'rotate-180'" aria-hidden="true">
                                     <use href="#icon-select-chevron" />
                                 </svg>
                             </button>
-                            <ul x-show="workOpen" x-cloak class="w-full max-h-60 absolute top-full left-0 text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2">
+                            <ul x-show="workOpen" x-cloak class="w-full max-h-60 absolute top-full left-0 text-sm/5.5 xl:text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2">
                                 <li><button type="button" class="w-full text-left px-5 py-2.5 smooth hover:bg-brand-blue hover:text-white text-brand-dark" @click="setWorkType('all')">Любые работы</button></li>
                                 <li><button type="button" class="w-full text-left px-5 py-2.5 smooth" :class="isWorkTypeDisabled('smr') ? 'text-brand-gray cursor-not-allowed' : 'hover:bg-brand-blue hover:text-white text-brand-dark'" :disabled="isWorkTypeDisabled('smr')" @click="setWorkType('smr')">СМР</button></li>
                                 <li><button type="button" class="w-full text-left px-5 py-2.5 smooth" :class="isWorkTypeDisabled('pir') ? 'text-brand-gray cursor-not-allowed' : 'hover:bg-brand-blue hover:text-white text-brand-dark'" :disabled="isWorkTypeDisabled('pir')" @click="setWorkType('pir')">ПИР / ПСД</button></li>
@@ -206,15 +206,15 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                         <div class="relative" @click.outside="segmentOpen = false">
                             <button
                                 type="button"
-                                class="h-12.5 w-full text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
+                                class="h-10 xl:h-12.5 w-full text-sm/5.5 xl:text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
                                 @click="segmentOpen = !segmentOpen"
                             >
-                                <span class="line-clamp-1" :class="businessSegment !== '' ? 'text-brand-dark' : ''" x-text="businessSegment === '' ? 'Выберите сегмент' : segmentLabel"></span>
+                                <span class="min-w-0 flex-1 text-left line-clamp-1" :class="businessSegment !== '' ? 'text-brand-dark' : ''" x-text="businessSegment === '' ? 'Выберите сегмент' : segmentLabel"></span>
                                 <svg width="17" height="10" class="shrink-0 transition-transform duration-200" :class="segmentOpen && 'rotate-180'" aria-hidden="true">
                                     <use href="#icon-select-chevron" />
                                 </svg>
                             </button>
-                            <ul x-show="segmentOpen" x-cloak class="w-full max-h-60 absolute top-full left-0 text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2">
+                            <ul x-show="segmentOpen" x-cloak class="w-full max-h-60 absolute top-full left-0 text-sm/5.5 xl:text_8 bg-white rounded-xl overflow-y-auto mt-2 z-20 shadow-lg border border-brand-gray-light-2">
                                 <li><button type="button" class="w-full text-left px-5 py-2.5 smooth hover:bg-brand-blue hover:text-white text-brand-dark" @click="setBusinessSegment('')">Любые сегменты</button></li>
                                 <li><button type="button" class="w-full text-left px-5 py-2.5 smooth" :class="isSegmentDisabled('b2b') ? 'text-brand-gray cursor-not-allowed' : 'hover:bg-brand-blue hover:text-white text-brand-dark'" :disabled="isSegmentDisabled('b2b')" @click="setBusinessSegment('b2b')">В2В - для бизнеса</button></li>
                                 <li><button type="button" class="w-full text-left px-5 py-2.5 smooth" :class="isSegmentDisabled('b2c') ? 'text-brand-gray cursor-not-allowed' : 'hover:bg-brand-blue hover:text-white text-brand-dark'" :disabled="isSegmentDisabled('b2c')" @click="setBusinessSegment('b2c')">В2С - для клиента</button></li>
@@ -222,7 +222,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                             </ul>
                         </div>
 
-                        <button class="h-12.5 button_6" @click="applySearch()">Начать поиск</button>
+                        <button class="h-10 xl:h-12.5 button_6" @click="applySearch()">Начать поиск</button>
                     </div>
 
                     <div class="grid lg:grid-cols-2 gap-5">
@@ -230,7 +230,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                             <div id="geo-map" class="size-full object-cover" style="min-height: 720px;"></div>
                         </div>
 
-                        <div class="bg-white p-5 lg:p-6 3xl:p-10 min-h-96 lg:min-h-150 3xl:min-h-250 flex">
+                        <div class="search-results-panel bg-white p-5 lg:p-6 3xl:p-10 min-h-96 lg:min-h-150 3xl:min-h-250 flex">
                             <div class="w-full flex flex-col">
                                 <div class="flex-1 flex flex-col gap-5">
                                     <template x-if="hasAppliedSearch">
@@ -244,7 +244,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                                 <div class="relative" @click.outside="filtersOpen = false">
                                                     <button
                                                         type="button"
-                                                        class="flex-base gap-2.5 hover:text-brand-gray-dark smooth"
+                                                        class="flex-base gap-2 hover:text-brand-gray-dark smooth"
                                                         @click="filtersOpen = !filtersOpen"
                                                         :aria-expanded="filtersOpen"
                                                     >
@@ -341,7 +341,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                                 <div class="relative" @click.outside="sortOpen = false">
                                                     <button
                                                         type="button"
-                                                        class="flex-base gap-2.5 hover:text-brand-gray-dark smooth xs:px-5"
+                                                        class="flex-base gap-2 hover:text-brand-gray-dark smooth xs:px-5"
                                                         @click="sortOpen = !sortOpen"
                                                         :aria-expanded="sortOpen"
                                                     >
@@ -368,7 +368,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                             <div class="shrink-0" aria-hidden="true">
                                                 {!! $searchPlaceholderIcon !!}
                                             </div>
-                                            <p style="color: #C7CED7; font-size: 22px; line-height: 30px;">
+                                            <p class="text-sm/5.5 xl:text-[22px]/7.5" style="color: #C7CED7;">
                                                 Наведите на карту<br>или начните поиск,<br>информация<br>появится
                                             </p>
                                         </div>

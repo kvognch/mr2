@@ -207,8 +207,10 @@
               <button class="button_2">Начать поиск</button>
               <button class="button_2">Присоединиться</button>
             </div>
-            <button
-              class="flex-center sm:flex-base gap-4 group text-brand-gray-dark hover:text-brand-blue smooth"
+            <a
+              href="#"
+              class="flex-center sm:flex-base gap-3 xl:gap-4 group text-brand-gray-dark hover:text-brand-blue smooth"
+              @click.prevent="videoModalOpen = true"
             >
               <svg
                 width="60"
@@ -216,6 +218,7 @@
                 viewBox="0 0 60 60"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                class="size-12.5 xl:size-15"
               >
                 <path
                   d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
@@ -236,7 +239,7 @@
                 >Как пользоваться <br />
                 платформой</span
               >
-            </button>
+            </a>
           </div>
 
           <div
@@ -521,7 +524,7 @@
             </div>
 
             <div class="flex-center">
-              <button class="button_3 max-w-125 w-full">Присоединиться</button>
+              <button class="button_3 max-w-100 xl:max-w-125 w-full">Присоединиться</button>
             </div>
           </div>
         </div>
@@ -935,11 +938,11 @@
         <div
           class="container-base flex-base flex-col lg:flex-row gap-10 xl:gap-16 3xl:gap-26.25 2xl:px-30.5"
         >
-          <div class="sm:max-w-1/2 2xl:max-w-150.75">
+          <div class="sm:max-w-1/2 2xl:max-w-150.75 flex justify-center xl:block">
             <img
               src="./assets/images/phone.png"
               alt="Phone"
-              class="size-full object-cover"
+              class="size-full object-cover max-w-[80%] xl:max-w-none"
             />
           </div>
           <div class="space-y-5 md:space-y-7.5 lg:space-y-10">
@@ -952,13 +955,13 @@
             </div>
 
             <div class="flex-center lg:justify-start">
-              <button
-                type="button"
+              <a
+                href="#"
                 class="button_2"
-                @click="requestModalOpen = true"
+                @click.prevent="requestModalOpen = true"
               >
                 Оставить заявку
-              </button>
+              </a>
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Forms\Components\Toggle;
@@ -14,22 +15,29 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Actions\EditAction;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Schemas\Components\Html;
 use App\Filament\Resources\ContractorResource\Pages\ListContractors;
+use App\Filament\Resources\ContractorResource\Pages\ListContractorCategoryContractors;
 use App\Filament\Resources\ContractorResource\Pages\CreateContractor;
 use App\Filament\Resources\ContractorResource\Pages\EditContractor;
+use App\Filament\Resources\ContractorResource\Pages\ListGuaranteeingSuppliers;
+use App\Filament\Resources\ContractorResource\Pages\ListResourceSupplyingOrganizations;
 use App\Filament\Forms\Components\TerritoryTreeSelect;
 use App\Filament\Resources\ContractorResource\Pages;
 use App\Models\Contractor;
+use App\Models\ContractorCategory;
 use App\Models\GeoUnit;
 use App\Models\User;
+use Filament\Navigation\NavigationItem;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 use BackedEnum;
 use UnitEnum;
 
@@ -95,6 +103,9 @@ class ContractorResource extends Resource
                             TextInput::make('social_whatsapp')
                                 ->label('WhatsApp')
                                 ->maxLength(255),
+                            TextInput::make('social_max')
+                                ->label('Max')
+                                ->maxLength(255),
                         ])
                         ->columns(1)
                         ->columnSpanFull(),
@@ -111,14 +122,36 @@ class ContractorResource extends Resource
                         ->relationship('categories', 'name')
                         ->multiple()
                         ->required()
+                        ->live()
                         ->preload()
                         ->searchable(),
                     TextInput::make('response_time')
                         ->label('Сроки ответа')
+                        ->visible(fn (Get $get): bool => static::shouldShowContractorWorkFields($get('categories')))
                         ->maxLength(255),
                     TextInput::make('work_volume')
                         ->label('Объем выполняемых работ, ₽')
+                        ->visible(fn (Get $get): bool => static::shouldShowContractorWorkFields($get('categories')))
                         ->maxLength(255),
+                    TextInput::make('application_url')
+                        ->label('Ссылка на форму заявки')
+                        ->url()
+                        ->visible(fn (Get $get): bool => static::hasTariffCategorySelected($get('categories')))
+                        ->maxLength(255),
+                    FileUpload::make('tariff_upload')
+                        ->label('Действующий тариф')
+                        ->disk('public')
+                        ->directory('contractor-tariffs')
+                        ->downloadable()
+                        ->openable()
+                        ->preserveFilenames()
+                        ->rules(['mimes:pdf,doc,docx,xls,xlsx,csv,txt,rtf,odt,ods,ppt,pptx'])
+                        ->helperText('При загрузке нового файла предыдущий действующий тариф попадёт в историю тарифов.')
+                        ->visible(fn (Get $get): bool => static::hasTariffCategorySelected($get('categories')))
+                        ->columnSpanFull(),
+                    Html::make(fn (?Contractor $record): HtmlString => new HtmlString(static::renderTariffsAdminHtml($record)))
+                        ->visible(fn (Get $get): bool => static::hasTariffCategorySelected($get('categories')))
+                        ->columnSpanFull(),
                     TerritoryTreeSelect::make('territory_ids')
                         ->label('Территория работы')
                         ->tree(fn (): array => static::getTerritoryTree())
@@ -234,11 +267,6 @@ class ContractorResource extends Resource
                     ->label('Краткое название')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('categories.name')
-                    ->label('Категории')
-                    ->badge()
-                    ->separator(', ')
-                    ->toggleable(),
                 TextColumn::make('status')
                     ->label('Статус')
                     ->formatStateUsing(fn (string $state): string => match ($state) {
@@ -257,6 +285,49 @@ class ContractorResource extends Resource
                     ->label('Создано')
                     ->dateTime('d.m.Y H:i')
                     ->sortable(),
+                TextColumn::make('edit')
+                    ->label('Изменить')
+                    ->state('Изменить')
+                    ->url(fn (Contractor $record): string => static::getUrl('edit', ['record' => $record]))
+                    ->color('primary'),
+                TextColumn::make('categories.name')
+                    ->label('Категории')
+                    ->width('240px')
+                    ->wrap()
+                    ->extraCellAttributes(['style' => 'max-width: 240px; white-space: normal;'])
+                    ->badge()
+                    ->separator(', '),
+                TextColumn::make('territories.name')
+                    ->label('Территория работы')
+                    ->width('240px')
+                    ->wrap()
+                    ->extraCellAttributes(['style' => 'max-width: 240px; white-space: normal;'])
+                    ->badge()
+                    ->separator(', '),
+                TextColumn::make('smrResourceTypes.name')
+                    ->label('СМР')
+                    ->width('240px')
+                    ->wrap()
+                    ->extraCellAttributes(['style' => 'max-width: 240px; white-space: normal;'])
+                    ->badge()
+                    ->separator(', '),
+                TextColumn::make('pirResourceTypes.name')
+                    ->label('ПИР/ПСД')
+                    ->width('240px')
+                    ->wrap()
+                    ->extraCellAttributes(['style' => 'max-width: 240px; white-space: normal;'])
+                    ->badge()
+                    ->separator(', '),
+                TextColumn::make('business_segments')
+                    ->label('Сегмент бизнеса')
+                    ->badge()
+                    ->state(fn (Contractor $record): string => collect($record->business_segments ?? [])
+                        ->map(fn (string $segment): string => match ($segment) {
+                            'b2b' => 'B2B',
+                            'b2c' => 'B2C',
+                            default => mb_strtoupper($segment),
+                        })
+                        ->join(', ')),
                 TextColumn::make('updated_at')
                     ->label('Обновлено')
                     ->dateTime('d.m.Y H:i')
@@ -271,18 +342,57 @@ class ContractorResource extends Resource
                         'approved' => 'Одобрен',
                         'rejected' => 'Отклонён',
                     ]),
-                SelectFilter::make('owner_id')
-                    ->label('Владелец')
-                    ->relationship('owner', 'name')
-                    ->visible(fn () => ! auth()->user()?->isClient()),
                 SelectFilter::make('categories')
                     ->label('Категория')
                     ->relationship('categories', 'name')
                     ->multiple()
                     ->preload(),
-            ])
-            ->recordActions([
-                EditAction::make(),
+                SelectFilter::make('territories')
+                    ->label('Территория работы')
+                    ->relationship(
+                        'territories',
+                        'name',
+                        fn (Builder $query) => $query
+                            ->select(['geo_units.id', 'geo_units.name'])
+                            ->orderBy('geo_units.name')
+                    )
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('smrResourceTypes')
+                    ->label('СМР')
+                    ->relationship('smrResourceTypes', 'name', fn (Builder $query) => $query->orderBy('name'))
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('pirResourceTypes')
+                    ->label('ПИР/ПСД')
+                    ->relationship('pirResourceTypes', 'name', fn (Builder $query) => $query->orderBy('name'))
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('business_segments')
+                    ->label('Сегмент бизнеса')
+                    ->options([
+                        'b2b' => 'B2B - для бизнеса',
+                        'b2c' => 'B2C - для клиента',
+                    ])
+                    ->multiple()
+                    ->query(function (Builder $query, array $data): Builder {
+                        $segments = collect($data['values'] ?? [])
+                            ->filter()
+                            ->values();
+
+                        if ($segments->isEmpty()) {
+                            return $query;
+                        }
+
+                        return $query->where(function (Builder $query) use ($segments): void {
+                            foreach ($segments as $segment) {
+                                $query->orWhereJsonContains('business_segments', $segment);
+                            }
+                        });
+                    }),
             ])
             ->toolbarActions([
                 DeleteBulkAction::make(),
@@ -307,6 +417,90 @@ class ContractorResource extends Resource
         return auth()->check();
     }
 
+    protected static function hasTariffCategorySelected(mixed $categoryIds): bool
+    {
+        $categoryIds = collect($categoryIds)
+            ->map(fn ($id) => (int) $id)
+            ->filter()
+            ->values();
+
+        if ($categoryIds->isEmpty()) {
+            return false;
+        }
+
+        return ContractorCategory::query()
+            ->whereIn('id', $categoryIds)
+            ->whereIn('name', [
+                'Гарантирующий поставщик',
+                'Ресурсо-снабжающая организация',
+            ])
+            ->exists();
+    }
+
+    protected static function shouldShowContractorWorkFields(mixed $categoryIds): bool
+    {
+        $categoryIds = collect($categoryIds)
+            ->map(fn ($id) => (int) $id)
+            ->filter()
+            ->values();
+
+        if ($categoryIds->isEmpty()) {
+            return true;
+        }
+
+        return ContractorCategory::query()
+            ->whereIn('id', $categoryIds)
+            ->where('name', 'Подрядчик')
+            ->exists()
+            || ! static::hasTariffCategorySelected($categoryIds);
+    }
+
+    protected static function renderTariffsAdminHtml(?Contractor $contractor): string
+    {
+        if (! $contractor?->exists) {
+            return '<div class="text-sm text-gray-500">Тарифы появятся после сохранения подрядчика.</div>';
+        }
+
+        $contractor->loadMissing(['currentTariff', 'tariffHistory']);
+
+        $currentTariff = $contractor->currentTariff->first();
+        $history = $contractor->tariffHistory;
+
+        $html = '<div class="space-y-3 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm">';
+        $html .= '<div class="font-medium text-gray-950">Загруженные тарифы</div>';
+        $html .= '<div><div class="mb-1 text-gray-600">Действующий тариф</div>';
+
+        if ($currentTariff) {
+            $html .= sprintf(
+                '<a class="text-primary-600 underline underline-offset-2" href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+                e($currentTariff->url),
+                e($currentTariff->original_name)
+            );
+        } else {
+            $html .= '<div class="text-gray-500">Не загружен</div>';
+        }
+
+        $html .= '</div>';
+
+        if ($history->isNotEmpty()) {
+            $html .= '<div><div class="mb-1 text-gray-600">История тарифов</div><div class="space-y-1">';
+
+            foreach ($history as $tariff) {
+                $html .= sprintf(
+                    '<div><a class="text-primary-600 underline underline-offset-2" href="%s" target="_blank" rel="noopener noreferrer">%s</a></div>',
+                    e($tariff->url),
+                    e($tariff->original_name)
+                );
+            }
+
+            $html .= '</div></div>';
+        }
+
+        $html .= '</div>';
+
+        return $html;
+    }
+
     public static function getNavigationBadge(): ?string
     {
         $count = static::getEloquentQuery()
@@ -321,10 +515,37 @@ class ContractorResource extends Resource
         return 'warning';
     }
 
+    public static function getNavigationItems(): array
+    {
+        return [
+            NavigationItem::make('Гарантирующий поставщик')
+                ->group(static::getNavigationGroup())
+                ->icon(static::getNavigationIcon())
+                ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.guaranteeing-suppliers'))
+                ->sort(10)
+                ->url(static::getUrl('guaranteeing-suppliers')),
+            NavigationItem::make('Подрядчик')
+                ->group(static::getNavigationGroup())
+                ->icon(static::getNavigationIcon())
+                ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.category-contractors'))
+                ->sort(11)
+                ->url(static::getUrl('category-contractors')),
+            NavigationItem::make('Ресурсо-снабжающая организация')
+                ->group(static::getNavigationGroup())
+                ->icon(static::getNavigationIcon())
+                ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.resource-supplying-organizations'))
+                ->sort(12)
+                ->url(static::getUrl('resource-supplying-organizations')),
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => ListContractors::route('/'),
+            'guaranteeing-suppliers' => ListGuaranteeingSuppliers::route('/guaranteeing-suppliers'),
+            'category-contractors' => ListContractorCategoryContractors::route('/contractors'),
+            'resource-supplying-organizations' => ListResourceSupplyingOrganizations::route('/resource-supplying-organizations'),
             'create' => CreateContractor::route('/create'),
             'edit' => EditContractor::route('/{record}/edit'),
         ];

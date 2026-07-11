@@ -9,6 +9,8 @@ use Filament\Actions\CreateAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,6 +19,22 @@ class ListContractors extends ListRecords
     protected static string $resource = ContractorResource::class;
 
     protected static ?string $title = 'Подрядчики';
+
+    protected const ?string CATEGORY_NAME = null;
+
+    protected function getTableQuery(): Builder | Relation | null
+    {
+        $query = parent::getTableQuery();
+
+        if (static::CATEGORY_NAME === null) {
+            return $query;
+        }
+
+        return $query?->whereHas(
+            'categories',
+            fn (Builder $query) => $query->where('name', static::CATEGORY_NAME)
+        );
+    }
 
     protected function getHeaderActions(): array
     {

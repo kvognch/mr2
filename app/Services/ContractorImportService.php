@@ -76,6 +76,7 @@ class ContractorImportService
                         ContractorSpreadsheet::COLUMN_SOCIAL_TELEGRAM => 'social_telegram',
                         ContractorSpreadsheet::COLUMN_SOCIAL_VK => 'social_vk',
                         ContractorSpreadsheet::COLUMN_SOCIAL_WHATSAPP => 'social_whatsapp',
+                        ContractorSpreadsheet::COLUMN_SOCIAL_MAX => 'social_max',
                         ContractorSpreadsheet::COLUMN_PHONE => 'phone',
                         ContractorSpreadsheet::COLUMN_EMAIL => 'email',
                         ContractorSpreadsheet::COLUMN_RESPONSE_TIME => 'response_time',

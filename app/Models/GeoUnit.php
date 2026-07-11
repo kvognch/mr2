@@ -45,6 +45,20 @@ class GeoUnit extends Model
         'meta' => 'array',
     ];
 
+    protected static function booted(): void
+    {
+        static::saving(function (self $geoUnit): void {
+            if ($geoUnit->isForcedInactiveByAdminLevel()) {
+                $geoUnit->is_active = false;
+            }
+        });
+    }
+
+    public function isForcedInactiveByAdminLevel(): bool
+    {
+        return $this->admin_level !== null && $this->admin_level <= 4;
+    }
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');

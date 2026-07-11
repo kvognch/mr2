@@ -17,6 +17,7 @@ class ContractorSpreadsheet
     public const COLUMN_SOCIAL_TELEGRAM = 'Telegram';
     public const COLUMN_SOCIAL_VK = 'ВКонтакте';
     public const COLUMN_SOCIAL_WHATSAPP = 'WhatsApp';
+    public const COLUMN_SOCIAL_MAX = 'Max';
     public const COLUMN_PHONE = 'Телефон';
     public const COLUMN_EMAIL = 'Электронная почта';
     public const COLUMN_CATEGORIES = 'Категория';
@@ -49,6 +50,7 @@ class ContractorSpreadsheet
             self::COLUMN_SOCIAL_TELEGRAM,
             self::COLUMN_SOCIAL_VK,
             self::COLUMN_SOCIAL_WHATSAPP,
+            self::COLUMN_SOCIAL_MAX,
             self::COLUMN_PHONE,
             self::COLUMN_EMAIL,
             self::COLUMN_CATEGORIES,
@@ -104,6 +106,7 @@ class ContractorSpreadsheet
             self::COLUMN_SOCIAL_TELEGRAM => $contractor->social_telegram,
             self::COLUMN_SOCIAL_VK => $contractor->social_vk,
             self::COLUMN_SOCIAL_WHATSAPP => $contractor->social_whatsapp,
+            self::COLUMN_SOCIAL_MAX => $contractor->social_max,
             self::COLUMN_PHONE => $contractor->phone,
             self::COLUMN_EMAIL => $contractor->email,
             self::COLUMN_CATEGORIES => static::implodeValues($contractor->categories->pluck('name')->sort()->values()->all()),

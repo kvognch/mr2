@@ -9,10 +9,10 @@ x-data="{ mobileMenuOpen: false, requestModalOpen: false, ratingInfoModalOpen: f
 @section('content')
     @include('shared.partials.header', ['settings' => $settings])
 
-    <main class="bg-brand-gray-light-2 pb-20 lg:pb-30">
-        <section class="pt-15 pb-30">
+    <main class="bg-brand-gray-light-2 pt-15 pb-20 lg:pb-30">
+        <section>
             <div class="container-base space-y-10">
-                <div class="space-y-6 sm:space-y-8 lg:space-y-10">
+                <div class="space-y-6 sm:space-y-8 lg:space-y-7">
                     <h1>{{ $page->title }}</h1>
 
                     <div class="space-y-5 bg-white text-brand-dark rounded-2xl sm:rounded-brand-3xl p-4 sm:p-6 xl:p-10 min-w-0">

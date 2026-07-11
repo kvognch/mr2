@@ -51,7 +51,10 @@ class GeoUnitResource extends Resource
                 ->relationship('parent', 'name')
                 ->searchable()
                 ->nullable(),
-            Toggle::make('is_active')->label('Активен на карте'),
+            Toggle::make('is_active')
+                ->label('Активен на карте')
+                ->disabled(fn (?GeoUnit $record): bool => $record?->isForcedInactiveByAdminLevel() ?? false)
+                ->helperText('Геообъекты с уровнем OSM 4 или менее всегда отключены.'),
 
             Section::make('Схемы по видам ресурсов')
                 ->collapsed()
@@ -164,6 +167,7 @@ class GeoUnitResource extends Resource
                     ->sortable(),
                 ToggleColumn::make('is_active')
                     ->label('Статус')
+                    ->disabled(fn (GeoUnit $record): bool => $record->isForcedInactiveByAdminLevel())
                     ->sortable(),
             ])
             ->recordActions([
@@ -173,7 +177,11 @@ class GeoUnitResource extends Resource
                 BulkAction::make('activateSelected')
                     ->label('Активировать')
                     ->requiresConfirmation()
-                    ->action(fn ($records) => $records->each(fn (GeoUnit $item) => $item->update(['is_active' => true]))),
+                    ->action(fn ($records) => $records->each(function (GeoUnit $item): void {
+                        if (! $item->isForcedInactiveByAdminLevel()) {
+                            $item->update(['is_active' => true]);
+                        }
+                    })),
                 BulkAction::make('deactivateSelected')
                     ->label('Деактивировать')
                     ->requiresConfirmation()

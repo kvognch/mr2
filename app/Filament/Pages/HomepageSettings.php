@@ -65,7 +65,10 @@ class HomepageSettings extends Page implements HasForms
                             ->addActionLabel('Добавить')
                             ->schema([
                                 TextInput::make('label')->label('Название')->required(),
-                                TextInput::make('url')->label('Ссылка')->required(),
+                                TextInput::make('url')
+                                    ->label('Ссылка')
+                                    ->helperText('Для открытия попапа заявки укажите modal:request')
+                                    ->required(),
                             ])
                             ->columns(2)
                             ->defaultItems(3)

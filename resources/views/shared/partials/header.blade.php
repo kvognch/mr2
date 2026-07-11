@@ -1,9 +1,9 @@
 <header
-    class="sticky top-0 z-50 bg-white pt-1 pb-1 sm:pt-3 sm:pb-3 lg:pt-6 lg:pb-8 xl:pt-10 2xl:pt-12 3xl:pt-20 transition-[padding,transform,box-shadow] duration-300 ease-in-out"
+    class="sticky top-0 z-50 bg-white pt-1 pb-1 sm:pt-3 sm:pb-3 lg:pt-6 lg:pb-8 xl:pt-8 2xl:pt-10 3xl:pt-20 transition-[padding,transform,box-shadow] duration-300 ease-in-out"
     :class="[
         $store.scroll.collapsed ? '!pb-0' : '',
         ($store.scroll.y > 64 || mobileMenuOpen) && 'shadow-lg',
-        $store.scroll.y > 64 && '-translate-y-1 sm:-translate-y-3 lg:-translate-y-6 xl:-translate-y-10 2xl:-translate-y-12 3xl:-translate-y-20'
+        $store.scroll.y > 64 && '-translate-y-1 sm:-translate-y-3 lg:-translate-y-6 xl:-translate-y-8 2xl:-translate-y-10 3xl:-translate-y-20'
     ]"
 >
     <nav class="container-base flex-between py-3.75 transition-[padding] duration-300 ease-in-out" :class="$store.scroll.y > 64 ? '!py-3 xs:!py-3.75 3xl:!py-5' : ''">
@@ -14,11 +14,14 @@
         <div class="flex-base gap-11">
             <ul class="text_4 hidden lg:flex-base gap-6 3xl:gap-10">
                 @foreach ($settings['header']['menu'] as $item)
+                    @php($itemUrl = $item['url'] ?? '#')
                     <li>
-                        @if (($item['url'] ?? '#') === '#')
+                        @if ($itemUrl === 'modal:request')
+                            <button type="button" class="hover:underline underline-offset-1" @click="requestModalOpen = true">{{ $item['label'] }}</button>
+                        @elseif ($itemUrl === '#')
                             <a href="#" class="hover:underline underline-offset-1">{{ $item['label'] }}</a>
                         @else
-                            <a href="{{ $item['url'] }}" class="hover:underline underline-offset-1">{{ $item['label'] }}</a>
+                            <a href="{{ $itemUrl }}" class="hover:underline underline-offset-1">{{ $item['label'] }}</a>
                         @endif
                     </li>
                 @endforeach

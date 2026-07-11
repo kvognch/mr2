@@ -14,7 +14,6 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -70,24 +69,6 @@ class InformationPageResource extends Resource
                     ->label('Визуальный редактор')
                     ->helperText('Выключите, чтобы править HTML-код вручную.')
                     ->live()
-                    ->afterStateUpdated(function (Get $get, Set $set, bool $state): void {
-                        if ($state) {
-                            $bodyHtml = $get('body_html');
-
-                            if (is_string($bodyHtml)) {
-                                $set('body', $bodyHtml);
-                            }
-
-                            return;
-                        }
-
-                        $body = $get('body');
-
-                        if (is_string($body)) {
-                            $set('body_html', $body);
-                        }
-                    })
-                    ->dehydrated(false)
                     ->default(true),
                 RichEditor::make('body')
                     ->label('Текст')

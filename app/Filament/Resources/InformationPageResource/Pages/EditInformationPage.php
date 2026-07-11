@@ -14,8 +14,8 @@ class EditInformationPage extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $data['use_rich_editor'] = true;
-        $data['body_html'] = $data['body'] ?? '';
+        $data['use_rich_editor'] = (bool) ($data['use_rich_editor'] ?? true);
+        $data['body_html'] = is_string($data['body'] ?? null) ? $data['body'] : '';
 
         return $data;
     }
@@ -27,7 +27,6 @@ class EditInformationPage extends EditRecord
         }
 
         unset($data['body_html']);
-        unset($data['use_rich_editor']);
 
         return $data;
     }

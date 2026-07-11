@@ -6,12 +6,13 @@ use App\Enums\ReviewStatus;
 use App\Models\Contractor;
 use App\Models\ContractorReview;
 use App\Models\ServiceReview;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class PublicReviewController extends Controller
 {
-    public function storeService(Request $request): RedirectResponse
+    public function storeService(Request $request): RedirectResponse|JsonResponse
     {
         $data = $request->validateWithBag('serviceReview', [
             'author_name' => ['required', 'string', 'max:255'],
@@ -33,12 +34,20 @@ class PublicReviewController extends Controller
             'status' => ReviewStatus::Pending->value,
         ]);
 
+        $successMessage = 'Отзыв направлен на модерацию. Спасибо!';
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => $successMessage,
+            ]);
+        }
+
         return back()
             ->with('open_service_review_modal', true)
-            ->with('service_review_success', 'Отзыв отправлен на модерацию.');
+            ->with('service_review_success', $successMessage);
     }
 
-    public function storeContractor(Request $request, string $contractor): RedirectResponse
+    public function storeContractor(Request $request, string $contractor): RedirectResponse|JsonResponse
     {
         $contractorModel = Contractor::query()
             ->where('slug', $contractor)
@@ -65,8 +74,16 @@ class PublicReviewController extends Controller
             'status' => ReviewStatus::Pending->value,
         ]);
 
+        $successMessage = 'Отзыв направлен на модерацию. Спасибо!';
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => $successMessage,
+            ]);
+        }
+
         return back()
             ->with('open_contractor_review_modal', true)
-            ->with('contractor_review_success', 'Отзыв отправлен на модерацию.');
+            ->with('contractor_review_success', $successMessage);
     }
 }

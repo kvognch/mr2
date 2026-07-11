@@ -8,7 +8,7 @@
 <footer class="bg-brand-gray-light-2 py-10 sm:py-16 lg:py-20 {{ $footerBorder ? 'border-t border-brand-gray' : '' }}">
     <div class="container-base space-y-10 lg:space-y-14">
         <div class="flex flex-col lg:flex-row justify-between gap-10 lg:gap-0 md:px-32 lg:px-0">
-            <h4 class="xs:text-center lg:text-left">{{ $settings['footer']['brand'] }}</h4>
+            <h4 class="xs:text-center lg:text-left"><a href="/">{{ $settings['footer']['brand'] }}</a></h4>
 
             <div class="flex-1 flex flex-col xs:flex-row justify-evenly gap-10">
                 <div class="space-y-5 lg:space-y-8">

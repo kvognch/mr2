@@ -35,7 +35,7 @@ class HomepageSettings
                 'menu' => [
                     ['label' => 'О платформе', 'url' => '/'],
                     ['label' => 'Присоединиться', 'url' => '/'],
-                    ['label' => 'Помощь в подборе', 'url' => '#'],
+                    ['label' => 'Помощь в подборе', 'url' => 'modal:request'],
                 ],
             ],
             'hero' => [

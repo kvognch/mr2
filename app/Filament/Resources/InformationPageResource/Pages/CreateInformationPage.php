@@ -14,7 +14,7 @@ class CreateInformationPage extends CreateRecord
     protected function mutateFormDataBeforeFill(array $data): array
     {
         $data['use_rich_editor'] = true;
-        $data['body_html'] = $data['body'] ?? '';
+        $data['body_html'] = is_string($data['body'] ?? null) ? $data['body'] : '';
 
         return $data;
     }
@@ -26,7 +26,6 @@ class CreateInformationPage extends CreateRecord
         }
 
         unset($data['body_html']);
-        unset($data['use_rich_editor']);
 
         return $data;
     }

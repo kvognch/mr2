@@ -11,8 +11,8 @@
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
-  --breakpoint-2xl: 1440px;
+  --breakpoint-xl: 1440px;
+  --breakpoint-2xl: 1536px;
   --breakpoint-3xl: 1680px;
 
   --max-width-base: 1720px;
@@ -54,19 +54,33 @@
   }
 
   h1 {
-    @apply text-2xl/8 2xs:text-4xl/11.25 md:text-4xl/11.25 xl:text-[40px]/12.5 3xl:text-[54px]/16.25;
+    @apply text-4xl/11 xl:text-[38px]/11.5 3xl:text-[54px]/16.25;
   }
 
   h2 {
-    @apply text-2xl/8 2xs:text-4xl/11.25 md:text-4xl/11.25 xl:text-[40px]/12.5 3xl:text-[56px]/16.25;
+    @apply text-4xl/11;
+  }
+
+  @media (width >= 1280px) {
+    h2 {
+      font-size: 36px;
+      line-height: calc(var(--spacing) * 11);
+    }
+  }
+
+  @media (width >= 1440px) {
+    h2 {
+      font-size: 44px;
+      line-height: calc(var(--spacing) * 13);
+    }
   }
 
   h3 {
-    @apply text-xl/6.25 md:text-2xl/8.75 xl:text-[32px]/9 3xl:text-[50px]/15;
+    @apply text-xl/6.25 md:text-2xl/8.75 xl:text-[28px]/8 3xl:text-[50px]/15;
   }
 
   h4 {
-    @apply text-lg/6.5 md:text-xl/6.25 xl:text-2xl/7.5 3xl:text-3xl/10;
+    @apply text-lg/6.5 md:text-xl/6.25 xl:text-[20px]/7 3xl:text-3xl/10;
   }
 }
 
@@ -78,39 +92,54 @@
 .text-6,
 .text-7,
 .text-8 {
-  @apply text-sm/4.75 md:text-base/6;
+  @apply text-sm/4.75 md:text-base/6 lg:text-lg/7;
 }
 
 @utility text_1 {
-  @apply font-medium leading-5.5 md:text-lg/6.5 xl:text-xl/7 3xl:text-[24px]/8.5;
+  @apply font-medium leading-5.5 md:text-base/6 lg:text-lg/7 3xl:text-[24px]/8.5;
 }
 
 @utility text_2 {
-  @apply text-sm/4.75 2xs:text-base/6 xl:text-xl/8 3xl:text-[26px]/10;
+  @apply text-sm/4.75 2xs:text-base/6 lg:text-lg/7 3xl:text-[26px]/10;
+}
+
+@media (width >= 1680px) {
+  .text_2,
+  .sm\:text_2 {
+    font-size: 24px;
+    line-height: calc(var(--spacing) * 8.5);
+  }
 }
 
 @utility text_3 {
-  @apply font-semibold xl:text-lg/6 3xl:text-2xl/7.5;
+  @apply font-semibold lg:text-lg/6 3xl:text-2xl/7.5;
 }
 
 @utility text_4 {
-  @apply font-medium xl:text-lg/6.5 3xl:text-2xl/7;
+  @apply font-medium lg:text-lg/7 3xl:text-2xl/7;
 }
 
 @utility text_5 {
-  @apply font-semibold xl:text-lg/6 3xl:text-[22px]/7.5;
+  @apply font-semibold lg:text-lg/6 3xl:text-[22px]/7.5;
 }
 
 @utility text_6 {
-  @apply xl:text-lg/6 3xl:text-[20px]/7;
+  @apply lg:text-lg/7 3xl:text-[20px]/7;
 }
 
 @utility text_7 {
-  @apply font-semibold xl:text-lg/6 3xl:text-xl/6;
+  @apply font-semibold lg:text-lg/6 3xl:text-xl/6;
 }
 
 @utility text_8 {
-  @apply xl:text-lg/6 3xl:text-xl/7;
+  @apply lg:text-lg/7 3xl:text-xl/7;
+}
+
+@media (width >= 1024px) {
+  .text_8 {
+    font-size: var(--text-lg);
+    line-height: calc(var(--spacing) * 6);
+  }
 }
 
 @utility text_9 {
@@ -119,7 +148,8 @@
 
 /* Layout utilities */
 @utility container-base {
-  @apply max-w-base mx-auto px-4;
+  @apply max-w-base mx-auto;
+  padding-inline: clamp(calc(var(--spacing) * 4), 6.25vw, calc(var(--spacing) * 20));
 }
 
 /* Flex utilities */
@@ -147,35 +177,35 @@
 .button_5,
 .button_6,
 .button_poppup_filter {
-  @apply font-semibold border border-brand-blue bg-brand-blue text-white hover:bg-white hover:text-brand-gray hover:border-brand-gray smooth;
+  @apply inline-flex items-center justify-center text-center whitespace-nowrap font-semibold border border-brand-blue bg-brand-blue text-white hover:bg-white hover:text-brand-gray hover:border-brand-gray smooth;
 }
 
 @utility button_1 {
-  @apply text_3 rounded-xl py-2.5 px-4;
+  @apply text-sm/5 rounded-lg py-2 px-3.5 xl:text_3 xl:rounded-xl xl:py-2.5 xl:px-4;
 }
 
 @utility button_2 {
-  @apply text_1 rounded-brand-base py-3.25 px-10 xl:px-15;
+  @apply text-base/6 rounded-[15px] py-2.5 px-6.5 xl:text_1 xl:rounded-brand-base xl:py-3 xl:px-10 3xl:py-3.25 3xl:px-15;
 }
 
 @utility button_3 {
-  @apply text_1 rounded-brand-base py-3.25 px-14 xl:px-20;
+  @apply text-base/6 rounded-[15px] py-2.5 px-8.5 xl:text_1 xl:rounded-brand-base xl:py-3 xl:px-12 3xl:py-3.25 3xl:px-20;
 }
 
 @utility button_4 {
-  @apply text_7 rounded-xl py-2 px-4;
+  @apply text-sm/5 rounded-lg py-1.5 px-3.5 xl:text_7 xl:rounded-xl xl:py-2 xl:px-4;
 }
 
 @utility button_5 {
-  @apply text_7 rounded-xl py-2 px-4;
+  @apply text-sm/5 rounded-lg py-1.5 px-3.5 xl:text_7 xl:rounded-xl xl:py-2 xl:px-4;
 }
 
 @utility button_6 {
-  @apply text_3 rounded-xl py-2.5 px-20 xl:px-30;
+  @apply text-sm/5 rounded-lg py-2 px-16.5 xl:text_3 xl:rounded-xl xl:py-2.5 xl:px-20 3xl:px-30;
 }
 
 @utility button_poppup_filter {
-  @apply button_3 w-full 3xl:text-xl/7.5 px-4 py-2.5 sm:py-3 3xl:py-3.75  3xl:px-10;
+  @apply button_3 w-full px-3.5 py-2 sm:py-2.5 xl:px-4 xl:py-3 3xl:text-xl/7.5 3xl:py-3.75 3xl:px-10;
 }
 
 /* Tooltip – white box, rounded, border; show on group-hover; fixed so no scroll and always on top */
@@ -202,4 +232,53 @@
 
 .info-page-content p:last-child {
   @apply mb-0;
+}
+
+@media (width < 1440px) {
+  .search-results-panel :is(.text_1, .text_8, .text_9, h4) {
+    font-size: var(--text-sm);
+    line-height: calc(var(--spacing) * 5.5);
+  }
+
+  .search-results-panel .text-lg\/4\.5 {
+    font-size: var(--text-sm);
+    line-height: calc(var(--spacing) * 4);
+  }
+
+  .agent-card-content :is(.text_1, .text_2, .text_6, .text_7, .text_8):not(p) {
+    font-size: var(--text-sm);
+    line-height: calc(var(--spacing) * 5.5);
+  }
+
+  .agent-card-content p {
+    font-size: var(--text-base);
+    line-height: calc(var(--spacing) * 5.5);
+  }
+
+  .agent-card-content .agent-social-icon {
+    width: calc(var(--spacing) * 5);
+    height: calc(var(--spacing) * 5);
+  }
+
+  .agent-card-content :is(.button_1, .button_4, .button_5) {
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    line-height: calc(var(--spacing) * 5);
+    padding-block: calc(var(--spacing) * 1.5);
+    padding-inline: calc(var(--spacing) * 3.5);
+  }
+
+  .agent-card-content .agent-card-action-button {
+    min-height: calc(var(--spacing) * 9.5);
+  }
+
+  .agent-card-content .button_1 {
+    padding-block: calc(var(--spacing) * 2);
+  }
+
+  .agent-card-content .agent-segment-badge {
+    border-radius: var(--radius-xl);
+    padding-block: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3.5);
+  }
 }
