@@ -474,30 +474,32 @@ class ContractorResource extends Resource
         $currentTariff = $contractor->currentTariff->first();
         $history = $contractor->tariffHistory;
 
-        $html = '<div class="space-y-3 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm">';
+        $html = '<div class="space-y-3 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm" data-tariffs-admin>';
         $html .= '<div class="font-medium text-gray-950">Загруженные тарифы</div>';
-        $html .= '<div><div class="mb-1 text-gray-600">Действующий тариф</div>';
+        $html .= '<div><div class="mb-1 text-gray-600">Действующий тариф</div><div data-current-tariff>';
 
         if ($currentTariff) {
             $html .= sprintf(
-                '<a class="text-primary-600 underline underline-offset-2" href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+                '<div class="flex flex-wrap items-center gap-2" data-tariff-row><a class="text-primary-600 underline underline-offset-2" href="%s" target="_blank" rel="noopener noreferrer">%s</a>%s</div>',
                 e($currentTariff->url),
-                e($currentTariff->original_name)
+                e($currentTariff->original_name),
+                static::renderTariffDeleteButton($currentTariff->id, true)
             );
         } else {
             $html .= '<div class="text-gray-500">Не загружен</div>';
         }
 
-        $html .= '</div>';
+        $html .= '</div></div>';
 
         if ($history->isNotEmpty()) {
-            $html .= '<div><div class="mb-1 text-gray-600">История тарифов</div><div class="space-y-1">';
+            $html .= '<div data-tariff-history><div class="mb-1 text-gray-600">История тарифов</div><div class="space-y-1" data-tariff-history-list>';
 
             foreach ($history as $tariff) {
                 $html .= sprintf(
-                    '<div><a class="text-primary-600 underline underline-offset-2" href="%s" target="_blank" rel="noopener noreferrer">%s</a></div>',
+                    '<div class="flex flex-wrap items-center gap-2" data-tariff-row><a class="text-primary-600 underline underline-offset-2" href="%s" target="_blank" rel="noopener noreferrer">%s</a>%s</div>',
                     e($tariff->url),
-                    e($tariff->original_name)
+                    e($tariff->original_name),
+                    static::renderTariffDeleteButton($tariff->id)
                 );
             }
 
@@ -507,6 +509,16 @@ class ContractorResource extends Resource
         $html .= '</div>';
 
         return $html;
+    }
+
+    protected static function renderTariffDeleteButton(int $tariffId, bool $isCurrent = false): string
+    {
+        return sprintf(
+            '<button type="button" class="text-xs font-medium text-danger-600 hover:underline underline-offset-2" onclick="event.preventDefault(); event.stopPropagation(); var button = this; if (button.dataset.deleting === \'1\') return false; button.dataset.deleting = \'1\'; if (! confirm(\'Удалить этот тариф?\')) { button.dataset.deleting = \'\'; return false; } fetch(\'%s\', { method: \'DELETE\', headers: { \'X-CSRF-TOKEN\': \'%s\', \'Accept\': \'application/json\' }, credentials: \'same-origin\' }).then(function (response) { if (! response.ok) throw new Error(); var root = button.closest(\'[data-tariffs-admin]\'); var row = button.closest(\'[data-tariff-row]\'); if (%s) { var current = root && root.querySelector(\'[data-current-tariff]\'); if (current) { current.replaceChildren(); var empty = document.createElement(\'div\'); empty.className = \'text-gray-500\'; empty.textContent = \'Не загружен\'; current.appendChild(empty); } } else { if (row) row.remove(); var history = root && root.querySelector(\'[data-tariff-history]\'); var historyList = root && root.querySelector(\'[data-tariff-history-list]\'); if (history && historyList && ! historyList.querySelector(\'[data-tariff-row]\')) history.remove(); } }).catch(function () { button.dataset.deleting = \'\'; alert(\'Не удалось удалить тариф.\'); }); return false;">Удалить</button>',
+            e(route('contractor-tariffs.destroy', ['contractorTariff' => $tariffId])),
+            e(csrf_token()),
+            $isCurrent ? 'true' : 'false'
+        );
     }
 
     public static function getNavigationBadge(): ?string

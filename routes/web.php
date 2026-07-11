@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContractorExportController;
 use App\Http\Controllers\ContractorShowController;
+use App\Http\Controllers\ContractorTariffController;
 use App\Http\Controllers\InfoPageController;
 use App\Http\Controllers\PublicFormController;
 use App\Http\Controllers\PublicReviewController;
@@ -18,6 +19,8 @@ Route::post('/register', [AuthModalController::class, 'register'])->name('regist
 Route::post('/request', [PublicFormController::class, 'storeRequest'])->name('request.store');
 Route::middleware('auth')->group(function (): void {
     Route::get('/dashboard/contractors/export', ContractorExportController::class)->name('contractors.export');
+    Route::delete('/dashboard/contractor-tariffs/{contractorTariff}', [ContractorTariffController::class, 'destroy'])
+        ->name('contractor-tariffs.destroy');
     Route::post('/reviews/service', [PublicReviewController::class, 'storeService'])->name('reviews.service.store');
     Route::post('/reviews/contractor/{contractor}', [PublicReviewController::class, 'storeContractor'])->name('reviews.contractor.store');
 });

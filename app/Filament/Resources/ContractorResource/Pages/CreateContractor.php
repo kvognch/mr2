@@ -42,6 +42,7 @@ class CreateContractor extends CreateRecord
 
         if (is_string($path) && $path !== '') {
             $this->record->addCurrentTariff($path);
+            $this->data['tariff_upload'] = null;
         }
     }
 }
