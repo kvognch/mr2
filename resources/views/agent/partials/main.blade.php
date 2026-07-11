@@ -364,11 +364,11 @@
                   </p>
                 </div>
                 @if ($hasTariffCategory)
-                  <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
-                    <p class="text-sm xs:text_1 text-brand-gray-dark">
-                      Подать заявку
-                    </p>
-                    @if ($applicationUrl !== '#')
+                  @if ($applicationUrl !== '')
+                    <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
+                      <p class="text-sm xs:text_1 text-brand-gray-dark">
+                        Подать заявку
+                      </p>
                       <a
                         href="{{ $applicationUrl }}"
                         target="_blank"
@@ -377,12 +377,8 @@
                       >
                         Перейти на сайт
                       </a>
-                    @else
-                      <p class="text-xs 2xs:text-sm sm:text_2 text-brand-dark">
-                        Не указано
-                      </p>
-                    @endif
-                  </div>
+                    </div>
+                  @endif
                   <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
                     <p class="text-sm xs:text_1 text-brand-gray-dark">
                       Действующий тариф

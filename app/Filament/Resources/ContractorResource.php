@@ -296,28 +296,36 @@ class ContractorResource extends Resource
                     ->wrap()
                     ->extraCellAttributes(['style' => 'max-width: 240px; white-space: normal;'])
                     ->badge()
-                    ->separator(', '),
+                    ->listWithLineBreaks()
+                    ->limitList(5)
+                    ->expandableLimitedList(),
                 TextColumn::make('territories.name')
                     ->label('Территория работы')
                     ->width('240px')
                     ->wrap()
                     ->extraCellAttributes(['style' => 'max-width: 240px; white-space: normal;'])
                     ->badge()
-                    ->separator(', '),
+                    ->listWithLineBreaks()
+                    ->limitList(5)
+                    ->expandableLimitedList(),
                 TextColumn::make('smrResourceTypes.name')
                     ->label('СМР')
                     ->width('240px')
                     ->wrap()
                     ->extraCellAttributes(['style' => 'max-width: 240px; white-space: normal;'])
                     ->badge()
-                    ->separator(', '),
+                    ->listWithLineBreaks()
+                    ->limitList(5)
+                    ->expandableLimitedList(),
                 TextColumn::make('pirResourceTypes.name')
                     ->label('ПИР/ПСД')
                     ->width('240px')
                     ->wrap()
                     ->extraCellAttributes(['style' => 'max-width: 240px; white-space: normal;'])
                     ->badge()
-                    ->separator(', '),
+                    ->listWithLineBreaks()
+                    ->limitList(5)
+                    ->expandableLimitedList(),
                 TextColumn::make('business_segments')
                     ->label('Сегмент бизнеса')
                     ->badge()

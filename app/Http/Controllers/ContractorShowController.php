@@ -57,6 +57,7 @@ class ContractorShowController extends Controller
         }
 
         $settings = HomepageSettings::all();
+        $applicationUrl = trim((string) ($contractor->application_url ?? ''));
 
         $resourceOrder = ['ГС' => 1, 'НВ' => 2, 'НК' => 3, 'ТС' => 4, 'ЭС' => 5];
 
@@ -107,7 +108,7 @@ class ContractorShowController extends Controller
             'categoriesText' => $categoriesText !== '' ? $categoriesText : 'Подрядчик',
             'hasTariffCategory' => $hasTariffCategory,
             'hasContractorCategory' => $hasContractorCategory,
-            'applicationUrl' => $this->normalizeExternalUrl((string) ($contractor->application_url ?: $contractor->website ?: '')),
+            'applicationUrl' => $applicationUrl !== '' ? $this->normalizeExternalUrl($applicationUrl) : '',
             'currentTariff' => $contractor->currentTariff->first(),
             'tariffHistory' => $contractor->tariffHistory,
             'ratingText' => $ratingText,
