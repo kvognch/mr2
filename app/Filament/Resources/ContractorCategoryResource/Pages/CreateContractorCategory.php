@@ -9,5 +9,5 @@ class CreateContractorCategory extends CreateRecord
 {
     protected static string $resource = ContractorCategoryResource::class;
 
-    protected static ?string $title = 'Добавить категорию подрядчика';
+    protected static ?string $title = 'Добавить категорию организации';
 }

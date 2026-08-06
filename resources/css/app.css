@@ -234,6 +234,10 @@
   @apply mb-0;
 }
 
+.info-page-content :is(.button_1, .button_2, .button_3, .button_4, .button_5, .button_6) {
+  @apply flex w-fit mx-auto;
+}
+
 @media (width < 1440px) {
   .search-results-panel :is(.text_1, .text_8, .text_9, h4) {
     font-size: var(--text-sm);

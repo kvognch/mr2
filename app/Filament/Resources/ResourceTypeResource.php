@@ -26,7 +26,7 @@ class ResourceTypeResource extends Resource
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wrench-screwdriver';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Подрядчики';
+    protected static string | \UnitEnum | null $navigationGroup = 'Организации';
 
     protected static ?string $navigationLabel = 'Виды ресурсов';
 

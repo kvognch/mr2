@@ -10,7 +10,7 @@ class ListContractorCategories extends ListRecords
 {
     protected static string $resource = ContractorCategoryResource::class;
 
-    protected static ?string $title = 'Категории подрядчиков';
+    protected static ?string $title = 'Категории организаций';
 
     protected function getHeaderActions(): array
     {

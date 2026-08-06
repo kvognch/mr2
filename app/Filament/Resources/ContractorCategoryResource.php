@@ -25,15 +25,15 @@ class ContractorCategoryResource extends Resource
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-tag';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Подрядчики';
+    protected static string | \UnitEnum | null $navigationGroup = 'Организации';
 
-    protected static ?string $navigationLabel = 'Категории подрядчиков';
+    protected static ?string $navigationLabel = 'Категории организаций';
 
-    protected static ?string $modelLabel = 'категория подрядчика';
+    protected static ?string $modelLabel = 'категория организации';
 
-    protected static ?string $pluralModelLabel = 'категории подрядчиков';
+    protected static ?string $pluralModelLabel = 'категории организаций';
 
-    protected static ?string $breadcrumb = 'Категории подрядчиков';
+    protected static ?string $breadcrumb = 'Категории организаций';
 
     protected static bool $hasTitleCaseModelLabel = false;
 

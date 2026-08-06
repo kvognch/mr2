@@ -47,7 +47,7 @@ class ContractorResource extends Resource
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Подрядчики';
+    protected static string | \UnitEnum | null $navigationGroup = 'Организации';
 
     protected static ?string $navigationLabel = 'Подрядчики';
 
@@ -55,7 +55,7 @@ class ContractorResource extends Resource
 
     protected static ?string $pluralModelLabel = 'подрядчики';
 
-    protected static ?string $breadcrumb = 'Подрядчики';
+    protected static ?string $breadcrumb = 'Организации';
 
     protected static bool $hasTitleCaseModelLabel = false;
 
@@ -548,13 +548,13 @@ class ContractorResource extends Resource
                 ->group(static::getNavigationGroup())
                 ->icon(static::getNavigationIcon())
                 ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.category-contractors'))
-                ->sort(11)
+                ->sort(12)
                 ->url(static::getUrl('category-contractors')),
             NavigationItem::make('РСО')
                 ->group(static::getNavigationGroup())
                 ->icon(static::getNavigationIcon())
                 ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.resource-supplying-organizations'))
-                ->sort(12)
+                ->sort(11)
                 ->url(static::getUrl('resource-supplying-organizations')),
         ];
     }

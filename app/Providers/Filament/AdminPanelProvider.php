@@ -64,12 +64,16 @@ class AdminPanelProvider extends PanelProvider
             )
             ->renderHook(
                 PanelsRenderHook::BODY_END,
+                fn (): string => view('filament.partials.admin-table-scrollbars')->render(),
+            )
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
                 fn (): string => view('filament.partials.admin-footer', [
                     'settings' => HomepageSettings::all(),
                 ])->render(),
             )
             ->navigationGroups([
-                NavigationGroup::make()->label('Подрядчики'),
+                NavigationGroup::make()->label('Организации'),
                 NavigationGroup::make()->label('Отзывы'),
                 NavigationGroup::make()->label('Заявки'),
                 NavigationGroup::make()->label('Пользователи'),

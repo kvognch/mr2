@@ -25,13 +25,13 @@ class ContractorReviewResource extends Resource
 
     protected static string | \UnitEnum | null $navigationGroup = 'Отзывы';
 
-    protected static ?string $navigationLabel = 'Отзывы о подрядчиках';
+    protected static ?string $navigationLabel = 'Отзывы об организациях';
 
-    protected static ?string $modelLabel = 'отзыв о подрядчике';
+    protected static ?string $modelLabel = 'отзыв об организации';
 
-    protected static ?string $pluralModelLabel = 'отзывы о подрядчиках';
+    protected static ?string $pluralModelLabel = 'отзывы об организациях';
 
-    protected static ?string $breadcrumb = 'Отзывы о подрядчиках';
+    protected static ?string $breadcrumb = 'Отзывы об организациях';
 
     protected static bool $hasTitleCaseModelLabel = false;
 
@@ -42,7 +42,7 @@ class ContractorReviewResource extends Resource
         return $schema
             ->components([
                 TextInput::make('contractor_display')
-                    ->label('Подрядчик')
+                    ->label('Организация')
                     ->formatStateUsing(fn (?ContractorReview $record): string => $record?->contractor?->short_name ?: '—')
                     ->disabled()
                     ->dehydrated(false),
@@ -103,7 +103,7 @@ class ContractorReviewResource extends Resource
             ->columnManager(false)
             ->columns([
                 TextColumn::make('contractor.short_name')
-                    ->label('Подрядчик')
+                    ->label('Организация')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('title')
@@ -132,7 +132,7 @@ class ContractorReviewResource extends Resource
                     ->label('Статус')
                     ->options(ReviewStatus::options()),
                 SelectFilter::make('contractor_id')
-                    ->label('Подрядчик')
+                    ->label('Организация')
                     ->relationship('contractor', 'short_name'),
             ])
             ->recordActions([

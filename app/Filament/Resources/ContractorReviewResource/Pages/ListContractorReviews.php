@@ -9,5 +9,5 @@ class ListContractorReviews extends ListRecords
 {
     protected static string $resource = ContractorReviewResource::class;
 
-    protected static ?string $title = 'Отзывы о подрядчиках';
+    protected static ?string $title = 'Отзывы об организациях';
 }

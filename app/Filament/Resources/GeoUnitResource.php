@@ -24,6 +24,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use BackedEnum;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class GeoUnitResource extends Resource
@@ -177,15 +178,23 @@ class GeoUnitResource extends Resource
                 BulkAction::make('activateSelected')
                     ->label('Активировать')
                     ->requiresConfirmation()
-                    ->action(fn ($records) => $records->each(function (GeoUnit $item): void {
-                        if (! $item->isForcedInactiveByAdminLevel()) {
-                            $item->update(['is_active' => true]);
-                        }
-                    })),
+                    ->fetchSelectedRecords(false)
+                    ->action(function (BulkAction $action): void {
+                        $action->getSelectedRecordsQuery()
+                            ->where(function (Builder $query): void {
+                                $query
+                                    ->whereNull('admin_level')
+                                    ->orWhere('admin_level', '>', 4);
+                            })
+                            ->update(['is_active' => true]);
+                    }),
                 BulkAction::make('deactivateSelected')
                     ->label('Деактивировать')
                     ->requiresConfirmation()
-                    ->action(fn ($records) => $records->each(fn (GeoUnit $item) => $item->update(['is_active' => false]))),
+                    ->fetchSelectedRecords(false)
+                    ->action(function (BulkAction $action): void {
+                        $action->getSelectedRecordsQuery()->update(['is_active' => false]);
+                    }),
             ])
             ->paginationPageOptions([50, 100, 200])
             ->defaultSort('name');
