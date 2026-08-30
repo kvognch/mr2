@@ -300,7 +300,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                 class="size-full min-h-96 lg:min-h-150 3xl:min-h-250 flex-center bg-white px-5 text-center"
                                 style="min-height: 720px;"
                             >
-                                <p class="text_6 text-brand-gray-dark">Для просмотра карты выберите регион</p>
+                                <p class="text-sm/5.5 xl:text-[22px]/7.5" style="color: #C7CED7;">Для просмотра карты<br>выберите регион</p>
                             </div>
                             <div
                                 id="geo-map"
@@ -450,7 +450,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                                 {!! $searchPlaceholderIcon !!}
                                             </div>
                                             <p class="text-sm/5.5 xl:text-[22px]/7.5" style="color: #C7CED7;">
-                                                Наведите на карту<br>или начните поиск,<br>информация<br>появится
+                                                Начните поиск,<br>информация появится
                                             </p>
                                         </div>
                                     </template>
