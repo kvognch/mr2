@@ -107,7 +107,7 @@ class HomepageSettings extends Page implements HasForms
                             ->label('Соцсети')
                             ->addActionLabel('Добавить')
                             ->schema([
-                                TextInput::make('key')->label('Ключ (telegram/vk/youtube)')->required(),
+                                TextInput::make('key')->label('Ключ (telegram/vk/youtube/max)')->required(),
                                 TextInput::make('url')->label('Ссылка')->required(),
                             ])
                             ->columns(2)

@@ -27,6 +27,7 @@ use App\Filament\Forms\Components\TerritoryTreeSelect;
 use App\Filament\Resources\ContractorResource\Pages;
 use App\Models\Contractor;
 use App\Models\ContractorCategory;
+use App\Models\ContractorTariff;
 use App\Models\GeoUnit;
 use App\Models\User;
 use Filament\Navigation\NavigationItem;
@@ -138,8 +139,8 @@ class ContractorResource extends Resource
                         ->url()
                         ->visible(fn (Get $get): bool => static::hasTariffCategorySelected($get('categories')))
                         ->maxLength(255),
-                    FileUpload::make('tariff_upload')
-                        ->label('Действующий тариф')
+                    FileUpload::make('connection_tariff_upload')
+                        ->label('Действующий тариф (подключение)')
                         ->disk('public')
                         ->directory('contractor-tariffs')
                         ->downloadable()
@@ -147,15 +148,38 @@ class ContractorResource extends Resource
                         ->preserveFilenames()
                         ->rules(['mimes:pdf,doc,docx,xls,xlsx,csv,txt,rtf,odt,ods,ppt,pptx'])
                         ->helperText('При загрузке нового файла предыдущий действующий тариф попадёт в историю тарифов.')
-                        ->visible(fn (Get $get): bool => static::hasTariffCategorySelected($get('categories')))
+                        ->visible(fn (Get $get): bool => static::hasResourceSupplyingCategorySelected($get('categories')))
                         ->columnSpanFull(),
-                    Html::make(fn (?Contractor $record): HtmlString => new HtmlString(static::renderTariffsAdminHtml($record)))
-                        ->visible(fn (Get $get): bool => static::hasTariffCategorySelected($get('categories')))
+                    Html::make(fn (?Contractor $record): HtmlString => new HtmlString(static::renderTariffsAdminHtml(
+                        $record,
+                        ContractorTariff::TYPE_CONNECTION,
+                        'Действующий тариф (подключение)',
+                    )))
+                        ->visible(fn (Get $get): bool => static::hasResourceSupplyingCategorySelected($get('categories')))
+                        ->columnSpanFull(),
+                    FileUpload::make('sales_tariff_upload')
+                        ->label('Действующий тариф (сбыт)')
+                        ->disk('public')
+                        ->directory('contractor-tariffs')
+                        ->downloadable()
+                        ->openable()
+                        ->preserveFilenames()
+                        ->rules(['mimes:pdf,doc,docx,xls,xlsx,csv,txt,rtf,odt,ods,ppt,pptx'])
+                        ->helperText('При загрузке нового файла предыдущий действующий тариф попадёт в историю тарифов.')
+                        ->visible(fn (Get $get): bool => static::hasGuaranteeingSupplierCategorySelected($get('categories')))
+                        ->columnSpanFull(),
+                    Html::make(fn (?Contractor $record): HtmlString => new HtmlString(static::renderTariffsAdminHtml(
+                        $record,
+                        ContractorTariff::TYPE_SALES,
+                        'Действующий тариф (сбыт)',
+                    )))
+                        ->visible(fn (Get $get): bool => static::hasGuaranteeingSupplierCategorySelected($get('categories')))
                         ->columnSpanFull(),
                     TerritoryTreeSelect::make('territory_ids')
                         ->label('Территория работы')
                         ->tree(fn (): array => static::getTerritoryTree())
                         ->descendants(fn (): array => static::getTerritoryDescendants())
+                        ->manageSchemes(fn (): bool => (bool) (auth()->user()?->isSuperadmin() || auth()->user()?->isManager()))
                         ->columnSpanFull(),
                 ])
                 ->columns(1),
@@ -427,6 +451,22 @@ class ContractorResource extends Resource
 
     protected static function hasTariffCategorySelected(mixed $categoryIds): bool
     {
+        return static::hasCategorySelected($categoryIds, 'Гарантирующий поставщик')
+            || static::hasCategorySelected($categoryIds, 'Ресурсо-снабжающая организация');
+    }
+
+    protected static function hasGuaranteeingSupplierCategorySelected(mixed $categoryIds): bool
+    {
+        return static::hasCategorySelected($categoryIds, 'Гарантирующий поставщик');
+    }
+
+    protected static function hasResourceSupplyingCategorySelected(mixed $categoryIds): bool
+    {
+        return static::hasCategorySelected($categoryIds, 'Ресурсо-снабжающая организация');
+    }
+
+    protected static function hasCategorySelected(mixed $categoryIds, string $categoryName): bool
+    {
         $categoryIds = collect($categoryIds)
             ->map(fn ($id) => (int) $id)
             ->filter()
@@ -438,10 +478,7 @@ class ContractorResource extends Resource
 
         return ContractorCategory::query()
             ->whereIn('id', $categoryIds)
-            ->whereIn('name', [
-                'Гарантирующий поставщик',
-                'Ресурсо-снабжающая организация',
-            ])
+            ->where('name', $categoryName)
             ->exists();
     }
 
@@ -463,24 +500,34 @@ class ContractorResource extends Resource
             || ! static::hasTariffCategorySelected($categoryIds);
     }
 
-    protected static function renderTariffsAdminHtml(?Contractor $contractor): string
+    protected static function renderTariffsAdminHtml(?Contractor $contractor, string $tariffType, string $tariffLabel): string
     {
         if (! $contractor?->exists) {
             return '<div class="text-sm text-gray-500">Тарифы появятся после сохранения подрядчика.</div>';
         }
 
-        $contractor->loadMissing(['currentTariff', 'tariffHistory']);
+        $currentRelation = $tariffType === ContractorTariff::TYPE_SALES
+            ? 'currentSalesTariff'
+            : 'currentConnectionTariff';
+        $historyRelation = $tariffType === ContractorTariff::TYPE_SALES
+            ? 'salesTariffHistory'
+            : 'connectionTariffHistory';
+        $historyLabel = $tariffType === ContractorTariff::TYPE_SALES
+            ? 'История тарифов (сбыт)'
+            : 'История тарифов (подключение)';
 
-        $currentTariff = $contractor->currentTariff->first();
-        $history = $contractor->tariffHistory;
+        $contractor->loadMissing([$currentRelation, $historyRelation]);
+
+        $currentTariff = $contractor->{$currentRelation}->first();
+        $history = $contractor->{$historyRelation};
 
         $html = '<div class="space-y-3 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm" data-tariffs-admin>';
         $html .= '<div class="font-medium text-gray-950">Загруженные тарифы</div>';
-        $html .= '<div><div class="mb-1 text-gray-600">Действующий тариф</div><div data-current-tariff>';
+        $html .= sprintf('<div><div class="mb-1 text-gray-600">%s</div><div data-current-tariff>', e($tariffLabel));
 
         if ($currentTariff) {
             $html .= sprintf(
-                '<div class="flex flex-wrap items-center gap-2" data-tariff-row><a class="text-primary-600 underline underline-offset-2" href="%s" target="_blank" rel="noopener noreferrer">%s</a>%s</div>',
+                '<div class="flex flex-wrap items-center gap-2" data-tariff-row><a class="min-w-0 break-all text-primary-600 underline underline-offset-2" href="%s" target="_blank" rel="noopener noreferrer">%s</a>%s</div>',
                 e($currentTariff->url),
                 e($currentTariff->original_name),
                 static::renderTariffDeleteButton($currentTariff->id, true)
@@ -492,11 +539,11 @@ class ContractorResource extends Resource
         $html .= '</div></div>';
 
         if ($history->isNotEmpty()) {
-            $html .= '<div data-tariff-history><div class="mb-1 text-gray-600">История тарифов</div><div class="space-y-1" data-tariff-history-list>';
+            $html .= sprintf('<div data-tariff-history><div class="mb-1 text-gray-600">%s</div><div class="space-y-1" data-tariff-history-list>', e($historyLabel));
 
             foreach ($history as $tariff) {
                 $html .= sprintf(
-                    '<div class="flex flex-wrap items-center gap-2" data-tariff-row><a class="text-primary-600 underline underline-offset-2" href="%s" target="_blank" rel="noopener noreferrer">%s</a>%s</div>',
+                    '<div class="flex flex-wrap items-center gap-2" data-tariff-row><a class="min-w-0 break-all text-primary-600 underline underline-offset-2" href="%s" target="_blank" rel="noopener noreferrer">%s</a>%s</div>',
                     e($tariff->url),
                     e($tariff->original_name),
                     static::renderTariffDeleteButton($tariff->id)
@@ -535,6 +582,16 @@ class ContractorResource extends Resource
         return 'warning';
     }
 
+    protected static function getPendingCountForCategory(string $categoryName): ?string
+    {
+        $count = static::getEloquentQuery()
+            ->where('status', 'pending')
+            ->whereHas('categories', fn (Builder $query) => $query->where('name', $categoryName))
+            ->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
     public static function getNavigationItems(): array
     {
         return [
@@ -543,18 +600,21 @@ class ContractorResource extends Resource
                 ->icon(static::getNavigationIcon())
                 ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.guaranteeing-suppliers'))
                 ->sort(10)
+                ->badge(fn (): ?string => static::getPendingCountForCategory('Гарантирующий поставщик'), color: 'warning')
                 ->url(static::getUrl('guaranteeing-suppliers')),
             NavigationItem::make('Подрядчики')
                 ->group(static::getNavigationGroup())
                 ->icon(static::getNavigationIcon())
                 ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.category-contractors'))
                 ->sort(12)
+                ->badge(fn (): ?string => static::getPendingCountForCategory('Подрядчик'), color: 'warning')
                 ->url(static::getUrl('category-contractors')),
             NavigationItem::make('РСО')
                 ->group(static::getNavigationGroup())
                 ->icon(static::getNavigationIcon())
                 ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.resource-supplying-organizations'))
                 ->sort(11)
+                ->badge(fn (): ?string => static::getPendingCountForCategory('Ресурсо-снабжающая организация'), color: 'warning')
                 ->url(static::getUrl('resource-supplying-organizations')),
         ];
     }

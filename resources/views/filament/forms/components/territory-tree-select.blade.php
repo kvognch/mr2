@@ -3,6 +3,7 @@
         $statePath = $getStatePath();
         $tree = $getTree();
         $descendants = $getDescendants();
+        $canManageSchemes = $field->canManageSchemes();
     @endphp
 
     <div
@@ -42,6 +43,6 @@
         }"
         class="space-y-2"
     >
-        @include('filament.forms.components.partials.territory-tree-nodes', ['nodes' => $tree, 'level' => 0])
+        @include('filament.forms.components.partials.territory-tree-nodes', ['nodes' => $tree, 'level' => 0, 'canManageSchemes' => $canManageSchemes])
     </div>
 </x-dynamic-component>

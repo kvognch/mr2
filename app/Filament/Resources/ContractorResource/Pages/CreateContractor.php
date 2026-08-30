@@ -4,6 +4,7 @@ namespace App\Filament\Resources\ContractorResource\Pages;
 
 use App\Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\ContractorResource;
+use App\Models\ContractorTariff;
 
 class CreateContractor extends CreateRecord
 {
@@ -14,7 +15,7 @@ class CreateContractor extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['owner_id'] ??= auth()->id();
-        unset($data['territory_ids'], $data['tariff_upload']);
+        unset($data['territory_ids'], $data['connection_tariff_upload'], $data['sales_tariff_upload']);
 
         return $data;
     }
@@ -29,20 +30,26 @@ class CreateContractor extends CreateRecord
             ->all();
 
         $this->record->territories()->sync($territoryIds);
-        $this->saveUploadedTariff();
+        $this->saveUploadedTariff('connection_tariff_upload', ContractorTariff::TYPE_CONNECTION);
+        $this->saveUploadedTariff('sales_tariff_upload', ContractorTariff::TYPE_SALES);
     }
 
-    protected function saveUploadedTariff(): void
+    protected function saveUploadedTariff(string $field, string $tariffType): void
     {
-        $path = $this->data['tariff_upload'] ?? null;
+        $path = $this->data[$field] ?? null;
 
         if (is_array($path)) {
             $path = reset($path) ?: null;
         }
 
         if (is_string($path) && $path !== '') {
-            $this->record->addCurrentTariff($path);
-            $this->data['tariff_upload'] = null;
+            if ($tariffType === ContractorTariff::TYPE_SALES) {
+                $this->record->addSalesTariff($path);
+            } else {
+                $this->record->addConnectionTariff($path);
+            }
+
+            $this->data[$field] = null;
         }
     }
 }

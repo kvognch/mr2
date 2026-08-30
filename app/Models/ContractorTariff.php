@@ -11,8 +11,13 @@ class ContractorTariff extends Model
 {
     use HasFactory;
 
+    public const TYPE_CONNECTION = 'connection';
+
+    public const TYPE_SALES = 'sales';
+
     protected $fillable = [
         'contractor_id',
+        'tariff_type',
         'path',
         'original_name',
         'mime_type',

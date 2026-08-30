@@ -2,40 +2,38 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\GeoUnitResource\Pages\CreateGeoUnit;
+use App\Filament\Resources\GeoUnitResource\Pages\EditGeoUnit;
+use App\Filament\Resources\GeoUnitResource\Pages\ListGeoUnits;
+use App\Models\GeoUnit;
+use Filament\Actions\BulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\Textarea;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkAction;
-use App\Filament\Resources\GeoUnitResource\Pages\ListGeoUnits;
-use App\Filament\Resources\GeoUnitResource\Pages\CreateGeoUnit;
-use App\Filament\Resources\GeoUnitResource\Pages\EditGeoUnit;
-use App\Filament\Resources\GeoUnitResource\Pages;
-use App\Models\GeoUnit;
-use Filament\Forms;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Tables;
 use Filament\Tables\Table;
-use BackedEnum;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
 class GeoUnitResource extends Resource
 {
     protected static ?string $model = GeoUnit::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-map';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Геоданные';
+    protected static string|\UnitEnum|null $navigationGroup = 'Геоданные';
 
     protected static ?string $navigationLabel = 'Геообъекты';
+
+    protected static ?string $modelLabel = 'геообъект';
+
+    protected static ?string $pluralModelLabel = 'геообъекты';
 
     protected static ?string $breadcrumb = 'Геообъекты';
 
@@ -43,22 +41,28 @@ class GeoUnitResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
-    public static function form(Schema $schema): Schema
+    public static function getEloquentQuery(): Builder
     {
-        return $schema->components([
-            TextInput::make('name')->label('Название')->required()->maxLength(255),
-            Select::make('parent_id')
-                ->label('Родитель')
-                ->relationship('parent', 'name')
-                ->searchable()
-                ->nullable(),
-            Toggle::make('is_active')
-                ->label('Активен на карте')
-                ->disabled(fn (?GeoUnit $record): bool => $record?->isForcedInactiveByAdminLevel() ?? false)
-                ->helperText('Геообъекты с уровнем OSM 4 или менее всегда отключены.'),
+        return parent::getEloquentQuery()->select([
+            'geo_units.id',
+            'geo_units.parent_id',
+            'geo_units.name',
+            'geo_units.is_active',
+            'geo_units.resource_schemes',
+            'geo_units.source',
+            'geo_units.source_id',
+            'geo_units.parent_source_id',
+            'geo_units.normalized_name',
+            'geo_units.admin_level',
+            'geo_units.level',
+            'geo_units.boundary',
+        ])->withCount('children');
+    }
 
+    public static function resourceSchemesFormComponents(): array
+    {
+        return [
             Section::make('Схемы по видам ресурсов')
-                ->collapsed()
                 ->schema([
                     Repeater::make('resource_schemes')
                         ->label('Файлы')
@@ -85,69 +89,65 @@ class GeoUnitResource extends Resource
                         ->columnSpanFull(),
                 ])
                 ->columns(1),
+        ];
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema->components([
+            TextInput::make('name')
+                ->label('Название')
+                ->required()
+                ->maxLength(255)
+                ->visibleOn('create'),
+            Select::make('parent_id')
+                ->label('Родитель')
+                ->relationship('parent', 'name')
+                ->searchable()
+                ->nullable()
+                ->visibleOn('create'),
+            Toggle::make('is_active')
+                ->label('Активен на карте'),
+
+            ...static::resourceSchemesFormComponents(),
 
             Section::make('Служебные поля')
                 ->collapsed()
                 ->schema([
-                    TextInput::make('source')->label('Источник')->required()->maxLength(32),
-                    TextInput::make('source_id')->label('ID источника')->required()->maxLength(255),
-                    TextInput::make('parent_source_id')->label('ID родителя в источнике')->maxLength(255),
-                    TextInput::make('normalized_name')->label('Нормализованное название')->required()->maxLength(255),
-                    TextInput::make('admin_level')->label('Уровень OSM')->numeric(),
-                    TextInput::make('level')->label('Тип уровня')->maxLength(32),
-                    TextInput::make('boundary')->label('Тип границы')->maxLength(64),
+                    TextInput::make('source')
+                        ->label('Источник')
+                        ->required()
+                        ->maxLength(32)
+                        ->disabled(fn (?GeoUnit $record): bool => $record !== null),
+                    TextInput::make('source_id')
+                        ->label('ID источника')
+                        ->required()
+                        ->maxLength(255)
+                        ->disabled(fn (?GeoUnit $record): bool => $record !== null),
+                    TextInput::make('parent_source_id')
+                        ->label('ID родителя в источнике')
+                        ->maxLength(255)
+                        ->disabled(fn (?GeoUnit $record): bool => $record !== null),
+                    TextInput::make('normalized_name')
+                        ->label('Нормализованное название')
+                        ->required()
+                        ->maxLength(255)
+                        ->disabled(fn (?GeoUnit $record): bool => $record !== null),
+                    TextInput::make('admin_level')
+                        ->label('Уровень OSM')
+                        ->numeric()
+                        ->disabled(fn (?GeoUnit $record): bool => $record !== null),
+                    TextInput::make('level')
+                        ->label('Тип уровня')
+                        ->maxLength(32)
+                        ->disabled(fn (?GeoUnit $record): bool => $record !== null),
+                    TextInput::make('boundary')
+                        ->label('Тип границы')
+                        ->maxLength(64)
+                        ->disabled(fn (?GeoUnit $record): bool => $record !== null),
                 ])
                 ->columns(1),
 
-            Section::make('Геометрия OSM (JSON)')
-                ->collapsed()
-                ->schema([
-                    Textarea::make('geometry_osm')
-                        ->label('OSM геометрия')
-                        ->rows(8)
-                        ->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : (string) ($state ?? ''))
-                        ->dehydrateStateUsing(function ($state) {
-                            $decoded = json_decode((string) $state, true);
-                            return is_array($decoded) ? $decoded : null;
-                        }),
-                ])
-                ->columns(1),
-
-            Section::make('Геометрия Яндекс (JSON)')
-                ->collapsed()
-                ->schema([
-                    Textarea::make('geometry_yandex')
-                        ->label('Яндекс геометрия')
-                        ->rows(8)
-                        ->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : (string) ($state ?? ''))
-                        ->dehydrateStateUsing(function ($state) {
-                            $decoded = json_decode((string) $state, true);
-                            return is_array($decoded) ? $decoded : null;
-                        }),
-                ])
-                ->columns(1),
-
-            Section::make('Дополнительно')
-                ->collapsed()
-                ->schema([
-                    Textarea::make('properties')
-                        ->label('Свойства (JSON)')
-                        ->rows(6)
-                        ->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) : (string) ($state ?? ''))
-                        ->dehydrateStateUsing(function ($state) {
-                            $decoded = json_decode((string) $state, true);
-                            return is_array($decoded) ? $decoded : null;
-                        }),
-                    Textarea::make('meta')
-                        ->label('Метаданные (JSON)')
-                        ->rows(4)
-                        ->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) : (string) ($state ?? ''))
-                        ->dehydrateStateUsing(function ($state) {
-                            $decoded = json_decode((string) $state, true);
-                            return is_array($decoded) ? $decoded : null;
-                        }),
-                ])
-                ->columns(1),
         ])->columns(1);
     }
 
@@ -156,6 +156,8 @@ class GeoUnitResource extends Resource
         return $table
             ->recordUrl(null)
             ->columnManager(false)
+            ->emptyStateHeading('Не найдено геообъектов')
+            ->emptyStateDescription('Добавьте геообъект, чтобы начать.')
             ->columns([
                 TextColumn::make('name')
                     ->label('Название')
@@ -168,8 +170,29 @@ class GeoUnitResource extends Resource
                     ->sortable(),
                 ToggleColumn::make('is_active')
                     ->label('Статус')
-                    ->disabled(fn (GeoUnit $record): bool => $record->isForcedInactiveByAdminLevel())
+                    ->updateStateUsing(function (GeoUnit $record, ?bool $state): bool {
+                        $isActive = (bool) $state;
+
+                        if ($record->admin_level !== null && $record->admin_level >= 5) {
+                            $record->is_active = $isActive;
+                            $record->save();
+                        } else {
+                            $record->setActiveWithDescendants($isActive);
+                        }
+
+                        return (bool) $record->is_active;
+                    })
                     ->sortable(),
+                ToggleColumn::make('descendants_active')
+                    ->label('Наследники')
+                    ->getStateUsing(fn (GeoUnit $record): bool => $record->hasActiveDescendants())
+                    ->updateStateUsing(function (GeoUnit $record, ?bool $state): bool {
+                        $record->setDescendantsActive((bool) $state);
+
+                        return (bool) $state;
+                    })
+                    ->visible(fn ($livewire): bool => $livewire instanceof ListGeoUnits && $livewire->shouldShowDescendantStatusColumn())
+                    ->disabled(fn (GeoUnit $record): bool => (int) ($record->children_count ?? 0) === 0),
             ])
             ->recordActions([
                 EditAction::make(),
@@ -180,20 +203,40 @@ class GeoUnitResource extends Resource
                     ->requiresConfirmation()
                     ->fetchSelectedRecords(false)
                     ->action(function (BulkAction $action): void {
-                        $action->getSelectedRecordsQuery()
-                            ->where(function (Builder $query): void {
-                                $query
-                                    ->whereNull('admin_level')
-                                    ->orWhere('admin_level', '>', 4);
-                            })
-                            ->update(['is_active' => true]);
+                        GeoUnit::setActiveForIdsWithDescendants(
+                            $action->getSelectedRecordsQuery()->pluck('id'),
+                            true,
+                        );
                     }),
                 BulkAction::make('deactivateSelected')
                     ->label('Деактивировать')
                     ->requiresConfirmation()
                     ->fetchSelectedRecords(false)
                     ->action(function (BulkAction $action): void {
-                        $action->getSelectedRecordsQuery()->update(['is_active' => false]);
+                        GeoUnit::setActiveForIdsWithDescendants(
+                            $action->getSelectedRecordsQuery()->pluck('id'),
+                            false,
+                        );
+                    }),
+                BulkAction::make('activateSelectedDescendants')
+                    ->label('Активировать наследников')
+                    ->requiresConfirmation()
+                    ->fetchSelectedRecords(false)
+                    ->action(function (BulkAction $action): void {
+                        GeoUnit::setActiveForDescendants(
+                            $action->getSelectedRecordsQuery()->pluck('id'),
+                            true,
+                        );
+                    }),
+                BulkAction::make('deactivateSelectedDescendants')
+                    ->label('Деактивировать наследников')
+                    ->requiresConfirmation()
+                    ->fetchSelectedRecords(false)
+                    ->action(function (BulkAction $action): void {
+                        GeoUnit::setActiveForDescendants(
+                            $action->getSelectedRecordsQuery()->pluck('id'),
+                            false,
+                        );
                     }),
             ])
             ->paginationPageOptions([50, 100, 200])

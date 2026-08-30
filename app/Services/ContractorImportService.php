@@ -8,6 +8,7 @@ use App\Models\ContractorCategory;
 use App\Models\GeoUnit;
 use App\Models\Rating;
 use App\Models\ResourceType;
+use App\Models\User;
 use App\Support\ContractorSpreadsheet;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +47,7 @@ class ContractorImportService
         $territoryMap = $this->buildLookupMap(GeoUnit::query()->pluck('id', 'name')->all());
         $resourceTypeMap = $this->buildLookupMap(ResourceType::query()->pluck('id', 'name')->all());
         $ratingMap = $this->buildLookupMap(Rating::query()->pluck('id', 'name')->all());
+        $ownerMap = $this->buildLookupMap(User::query()->pluck('id', 'email')->all());
 
         foreach ($rows as $row) {
             $row = collect($row)->values()->all();
@@ -58,7 +60,7 @@ class ContractorImportService
             }
 
             try {
-                DB::transaction(function () use ($mappedRow, $headerIndexes, $categoryMap, $territoryMap, $resourceTypeMap, $ratingMap, &$stats): void {
+                DB::transaction(function () use ($mappedRow, $headerIndexes, $categoryMap, $territoryMap, $resourceTypeMap, $ratingMap, $ownerMap, &$stats): void {
                     $id = $this->parseInteger($mappedRow[ContractorSpreadsheet::COLUMN_ID] ?? null);
                     $contractor = $id ? Contractor::query()->find($id) : null;
                     $isExisting = $contractor !== null;
@@ -73,6 +75,7 @@ class ContractorImportService
                         ContractorSpreadsheet::COLUMN_SHORT_NAME => 'short_name',
                         ContractorSpreadsheet::COLUMN_FULL_NAME => 'full_name',
                         ContractorSpreadsheet::COLUMN_WEBSITE => 'website',
+                        ContractorSpreadsheet::COLUMN_APPLICATION_URL => 'application_url',
                         ContractorSpreadsheet::COLUMN_SOCIAL_TELEGRAM => 'social_telegram',
                         ContractorSpreadsheet::COLUMN_SOCIAL_VK => 'social_vk',
                         ContractorSpreadsheet::COLUMN_SOCIAL_WHATSAPP => 'social_whatsapp',
@@ -125,6 +128,10 @@ class ContractorImportService
 
                     if ($this->hasHeading($headerIndexes, ContractorSpreadsheet::COLUMN_STATUS)) {
                         $attributes['status'] = $this->parseContractorStatus($mappedRow[ContractorSpreadsheet::COLUMN_STATUS] ?? null);
+                    }
+
+                    if ($this->hasHeading($headerIndexes, ContractorSpreadsheet::COLUMN_OWNER)) {
+                        $attributes['owner_id'] = $this->resolveSingleRelationId($mappedRow[ContractorSpreadsheet::COLUMN_OWNER] ?? null, $ownerMap);
                     }
 
                     $contractor->fill($attributes);

@@ -13,7 +13,17 @@ class ContractorShowController extends Controller
     public function __invoke(string $slug): View
     {
         $contractor = Contractor::query()
-            ->with(['categories', 'rating', 'territories', 'smrResourceTypes', 'pirResourceTypes', 'currentTariff', 'tariffHistory'])
+            ->with([
+                'categories',
+                'rating',
+                'territories',
+                'smrResourceTypes',
+                'pirResourceTypes',
+                'currentConnectionTariff',
+                'connectionTariffHistory',
+                'currentSalesTariff',
+                'salesTariffHistory',
+            ])
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -25,6 +35,8 @@ class ContractorShowController extends Controller
 
         $categoriesText = $contractor->categories->pluck('name')->implode(', ');
         $hasTariffCategory = $contractor->hasTariffCategory();
+        $hasGuaranteeingSupplierCategory = $contractor->hasGuaranteeingSupplierCategory();
+        $hasResourceSupplyingCategory = $contractor->hasResourceSupplyingCategory();
         $hasContractorCategory = $contractor->hasContractorCategory();
         $territoriesText = $contractor->territories->pluck('name')->implode(', ');
         $ratingText = (string) ($contractor->rating?->name ?? 'ААА');
@@ -107,10 +119,14 @@ class ContractorShowController extends Controller
             'email' => $email,
             'categoriesText' => $categoriesText !== '' ? $categoriesText : 'Подрядчик',
             'hasTariffCategory' => $hasTariffCategory,
+            'hasGuaranteeingSupplierCategory' => $hasGuaranteeingSupplierCategory,
+            'hasResourceSupplyingCategory' => $hasResourceSupplyingCategory,
             'hasContractorCategory' => $hasContractorCategory,
             'applicationUrl' => $applicationUrl !== '' ? $this->normalizeExternalUrl($applicationUrl) : '',
-            'currentTariff' => $contractor->currentTariff->first(),
-            'tariffHistory' => $contractor->tariffHistory,
+            'currentConnectionTariff' => $contractor->currentConnectionTariff->first(),
+            'connectionTariffHistory' => $contractor->connectionTariffHistory,
+            'currentSalesTariff' => $contractor->currentSalesTariff->first(),
+            'salesTariffHistory' => $contractor->salesTariffHistory,
             'ratingText' => $ratingText,
             'territoriesText' => $territoriesText !== '' ? $territoriesText : 'Санкт-Петербург',
             'contractorTerritoryIds' => $contractor->territories->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),

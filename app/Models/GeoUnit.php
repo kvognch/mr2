@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class GeoUnit extends Model
 {
@@ -45,20 +46,6 @@ class GeoUnit extends Model
         'meta' => 'array',
     ];
 
-    protected static function booted(): void
-    {
-        static::saving(function (self $geoUnit): void {
-            if ($geoUnit->isForcedInactiveByAdminLevel()) {
-                $geoUnit->is_active = false;
-            }
-        });
-    }
-
-    public function isForcedInactiveByAdminLevel(): bool
-    {
-        return $this->admin_level !== null && $this->admin_level <= 4;
-    }
-
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
@@ -67,6 +54,126 @@ class GeoUnit extends Model
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
+    }
+
+    /**
+     * Update this unit and all of its descendants in one transaction.
+     */
+    public function setActiveWithDescendants(bool $isActive): void
+    {
+        self::setActiveForIdsWithDescendants([$this->getKey()], $isActive);
+
+        $this->is_active = $isActive;
+    }
+
+    public function setDescendantsActive(bool $isActive): void
+    {
+        self::setActiveForDescendants([$this->getKey()], $isActive);
+    }
+
+    public function hasActiveDescendants(): bool
+    {
+        $descendantIds = self::getDescendantIds([(int) $this->getKey()]);
+
+        if ($descendantIds === []) {
+            return false;
+        }
+
+        return self::query()
+            ->whereIn('id', $descendantIds)
+            ->where('is_active', true)
+            ->exists();
+    }
+
+    /**
+     * @param  iterable<int|string>  $ids
+     */
+    public static function setActiveForIdsWithDescendants(iterable $ids, bool $isActive): void
+    {
+        $rootIds = self::normalizeIds($ids);
+
+        if ($rootIds === []) {
+            return;
+        }
+
+        DB::transaction(function () use ($rootIds, $isActive): void {
+            self::query()
+                ->whereIn('id', [...$rootIds, ...self::getDescendantIds($rootIds)])
+                ->update(['is_active' => $isActive]);
+        });
+    }
+
+    /**
+     * @param  iterable<int|string>  $ids
+     */
+    public static function setActiveForDescendants(iterable $ids, bool $isActive): void
+    {
+        $rootIds = self::normalizeIds($ids);
+
+        if ($rootIds === []) {
+            return;
+        }
+
+        DB::transaction(function () use ($rootIds, $isActive): void {
+            $descendantIds = self::getDescendantIds($rootIds);
+
+            if ($descendantIds === []) {
+                return;
+            }
+
+            self::query()
+                ->whereIn('id', $descendantIds)
+                ->update(['is_active' => $isActive]);
+        });
+    }
+
+    /**
+     * @param  iterable<int|string>  $ids
+     * @return array<int>
+     */
+    private static function normalizeIds(iterable $ids): array
+    {
+        return collect($ids)
+            ->map(fn ($id): int => (int) $id)
+            ->filter(fn (int $id): bool => $id > 0)
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array<int>  $rootIds
+     * @return array<int>
+     */
+    private static function getDescendantIds(array $rootIds): array
+    {
+        $knownIds = array_fill_keys($rootIds, true);
+        $pendingIds = $rootIds;
+        $descendantIds = [];
+
+        while ($pendingIds !== []) {
+            $childIds = self::query()
+                ->whereIn('parent_id', $pendingIds)
+                ->pluck('id')
+                ->map(fn ($id): int => (int) $id)
+                ->reject(fn (int $id): bool => isset($knownIds[$id]))
+                ->unique()
+                ->values()
+                ->all();
+
+            if ($childIds === []) {
+                break;
+            }
+
+            foreach ($childIds as $childId) {
+                $knownIds[$childId] = true;
+            }
+
+            $descendantIds = [...$descendantIds, ...$childIds];
+            $pendingIds = $childIds;
+        }
+
+        return $descendantIds;
     }
 
     public function scopeActive($query)

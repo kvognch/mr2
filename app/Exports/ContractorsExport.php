@@ -21,7 +21,7 @@ class ContractorsExport implements FromArray, WithEvents, WithHeadings, WithStyl
     public function array(): array
     {
         return Contractor::query()
-            ->with(['categories', 'territories', 'smrResourceTypes', 'pirResourceTypes', 'rating'])
+            ->with(['categories', 'territories', 'smrResourceTypes', 'pirResourceTypes', 'rating', 'owner'])
             ->orderBy('id')
             ->get()
             ->map(fn (Contractor $contractor): array => array_values(ContractorSpreadsheet::contractorToRow($contractor)))

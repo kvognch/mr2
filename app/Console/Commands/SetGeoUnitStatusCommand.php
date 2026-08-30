@@ -31,24 +31,15 @@ class SetGeoUnitStatusCommand extends Command
         }
 
         $isActive = $status === 'active';
-        $unit->is_active = $isActive;
-        $unit->save();
-
         if ((bool) $this->option('cascade')) {
-            $this->cascadeStatus($unit, $isActive);
+            $unit->setActiveWithDescendants($isActive);
+        } else {
+            $unit->is_active = $isActive;
+            $unit->save();
         }
 
         $this->info('Статус обновлен.');
 
         return self::SUCCESS;
-    }
-
-    private function cascadeStatus(GeoUnit $unit, bool $isActive): void
-    {
-        foreach ($unit->children()->get() as $child) {
-            $child->is_active = $isActive;
-            $child->save();
-            $this->cascadeStatus($child, $isActive);
-        }
     }
 }

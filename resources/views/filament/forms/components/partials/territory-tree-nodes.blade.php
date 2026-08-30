@@ -39,11 +39,23 @@
             @else
                 <span class="text-sm">{{ $name }}</span>
             @endif
+
+            @if ($canManageSchemes)
+                <button
+                    type="button"
+                    data-territory-scheme-action
+                    x-on:click.stop="$wire.mountAction('manageGeoUnitSchemes', { geoUnitId: {{ $id }} })"
+                    class="text-sm hover:underline"
+                    style="color: var(--color-gray-500);"
+                >
+                    (схемы по видам ресурсов)
+                </button>
+            @endif
         </div>
 
         @if ($hasChildren)
             <div x-show="isExpanded({{ $id }})" class="border-l pl-2" style="margin-left: 20px;">
-                @include('filament.forms.components.partials.territory-tree-nodes', ['nodes' => $children, 'level' => $level + 1])
+                @include('filament.forms.components.partials.territory-tree-nodes', ['nodes' => $children, 'level' => $level + 1, 'canManageSchemes' => $canManageSchemes])
             </div>
         @endif
     </div>

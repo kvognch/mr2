@@ -24,7 +24,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                     <h1 class="text-lg/6.5 md:text-xl/6.25 xl:text-2xl/7.5 3xl:text-3xl/10">Поиск организации</h1>
 
                     <div class="grid lg:grid-cols-4 gap-3 sm:gap-5" @keydown.enter.window.prevent="applySearch()">
-                        <label class="sm:col-span-2">
+                        <label>
                             <input
                                 type="text"
                                 class="h-10 xl:h-12.5 w-full text-sm/5.5 xl:text_6 placeholder:text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
@@ -33,21 +33,21 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                             />
                         </label>
 
-                        <div class="relative" @click.outside="territoryOpen = false">
+                        <div class="relative" @click.outside="regionOpen = false">
                             <button
                                 type="button"
                                 class="h-10 xl:h-12.5 w-full text-sm/5.5 xl:text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5"
-                                @click="territoryOpen = !territoryOpen"
-                                :aria-expanded="territoryOpen"
+                                @click="regionOpen = !regionOpen"
+                                :aria-expanded="regionOpen"
                             >
-                                <span class="min-w-0 flex-1 text-left line-clamp-1" :class="selectedTerritoryName ? 'text-brand-dark' : ''" x-text="selectedTerritoryName || 'Выберите территорию'"></span>
-                                <svg width="17" height="10" class="shrink-0 transition-transform duration-200" :class="territoryOpen && 'rotate-180'" aria-hidden="true">
+                                <span class="min-w-0 flex-1 text-left line-clamp-1" :class="selectedRegionName ? 'text-brand-dark' : ''" x-text="selectedRegionName || 'Выберите регион'"></span>
+                                <svg width="17" height="10" class="shrink-0 transition-transform duration-200" :class="regionOpen && 'rotate-180'" aria-hidden="true">
                                     <use href="#icon-select-chevron" />
                                 </svg>
                             </button>
 
                             <ul
-                                x-show="territoryOpen"
+                                x-show="regionOpen"
                                 x-cloak
                                 x-transition:enter="transition ease-out duration-200"
                                 x-transition:enter-start="opacity-0 -translate-y-1"
@@ -61,11 +61,11 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                     <button
                                         type="button"
                                         class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth px-5 py-2.5"
-                                        @click="selectTerritory(null)"
+                                        @click="selectRegion(null)"
                                     >
-                                        <span>Любая территория</span>
+                                        <span>Любой регион</span>
                                         <svg
-                                            x-show="selectedTerritoryId === null"
+                                            x-show="selectedRegionId === null"
                                             width="24"
                                             height="24"
                                             viewBox="0 0 24 24"
@@ -77,18 +77,86 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                         </svg>
                                     </button>
                                 </li>
-                                <template x-for="item in visibleTerritories" :key="item.id">
+                                <template x-for="item in territoryTree" :key="item.id">
+                                    <li>
+                                        <button
+                                            type="button"
+                                            class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth px-5 py-2.5"
+                                            @click="selectRegion(item.id)"
+                                        >
+                                            <span x-text="item.name"></span>
+                                            <svg
+                                                x-show="selectedRegionId === item.id"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                class="shrink-0 size-5"
+                                            >
+                                                <path d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z" fill="currentColor" />
+                                            </svg>
+                                        </button>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+
+                        <div class="relative" @click.outside="districtOpen = false">
+                            <button
+                                type="button"
+                                class="h-10 xl:h-12.5 w-full text-sm/5.5 xl:text_6 flex-between gap-2.5 text-brand-gray-dark bg-white outline-brand-dark rounded-xl py-2.5 px-5 disabled:opacity-50 disabled:cursor-not-allowed"
+                                @click="if (selectedRegionId !== null) districtOpen = !districtOpen"
+                                :disabled="selectedRegionId === null"
+                                :aria-expanded="districtOpen"
+                            >
+                                <span class="min-w-0 flex-1 text-left line-clamp-1" :class="selectedDistrictName ? 'text-brand-dark' : ''" x-text="selectedDistrictName || 'Выберите район'"></span>
+                                <svg width="17" height="10" class="shrink-0 transition-transform duration-200" :class="districtOpen && 'rotate-180'" aria-hidden="true">
+                                    <use href="#icon-select-chevron" />
+                                </svg>
+                            </button>
+
+                            <ul
+                                x-show="districtOpen && selectedRegionId !== null"
+                                x-cloak
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 -translate-y-1"
+                                x-transition:enter-end="opacity-100 translate-y-0"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 translate-y-0"
+                                x-transition:leave-end="opacity-0 -translate-y-1"
+                                class="w-full max-h-96 2xl:max-h-120 absolute top-full left-0 space-y-0.75 text-sm/5.5 xl:text_8 bg-white rounded-xl overflow-y-auto mt-4 z-20 shadow-lg"
+                            >
+                                <li>
+                                    <button
+                                        type="button"
+                                        class="w-full flex-between text-left hover:bg-brand-blue hover:text-white smooth px-5 py-2.5"
+                                        @click="selectDistrict(null)"
+                                    >
+                                        <span>Любой район</span>
+                                        <svg
+                                            x-show="selectedDistrictId === null"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="shrink-0 size-5"
+                                        >
+                                            <path d="M9.00016 16.17L4.83016 12L3.41016 13.41L9.00016 19L21.0002 6.99997L19.5902 5.58997L9.00016 16.17Z" fill="currentColor" />
+                                        </svg>
+                                    </button>
+                                </li>
+                                <template x-for="item in visibleDistricts" :key="item.id">
                                     <li>
                                         <div
-                                            class="w-full flex-between text-left smooth px-5 py-2.5"
-                                            :class="isTerritoryDisabled(item.id) ? 'text-brand-gray cursor-not-allowed' : 'hover:bg-brand-blue hover:text-white'"
+                                            class="w-full flex-between text-left smooth px-5 py-2.5 hover:bg-brand-blue hover:text-white"
                                             :style="`padding-left: ${20 + item.depth * 20}px`"
                                         >
                                             <button
                                                 type="button"
                                                 class="flex-1 text-left"
-                                                :disabled="isTerritoryDisabled(item.id)"
-                                                @click="selectTerritory(item.id)"
+                                                @click="selectDistrict(item.id)"
                                             >
                                                 <span x-text="item.name"></span>
                                             </button>
@@ -97,15 +165,15 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                                     type="button"
                                                     class="p-1"
                                                     x-show="item.hasChildren"
-                                                    @click.stop="toggleTerritoryExpanded(item.id)"
-                                                    :aria-label="expandedTerritoryIds[item.id] ? 'Свернуть' : 'Развернуть'"
+                                                    @click.stop="toggleDistrictExpanded(item.id)"
+                                                    :aria-label="expandedDistrictIds[item.id] ? 'Свернуть' : 'Развернуть'"
                                                 >
-                                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" class="transition-transform duration-200" :class="expandedTerritoryIds[item.id] && 'rotate-180'">
+                                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" class="transition-transform duration-200" :class="expandedDistrictIds[item.id] && 'rotate-180'">
                                                         <path d="M14 4.5L8 10.5L2 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                                                     </svg>
                                                 </button>
                                                 <svg
-                                                    x-show="selectedTerritoryId === item.id"
+                                                    x-show="selectedDistrictId === item.id"
                                                     width="24"
                                                     height="24"
                                                     viewBox="0 0 24 24"
@@ -227,7 +295,20 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
 
                     <div class="grid lg:grid-cols-2 gap-5">
                         <div class="min-h-96 lg:min-h-150 3xl:min-h-250">
-                            <div id="geo-map" class="size-full object-cover" style="min-height: 720px;"></div>
+                            <div
+                                x-show="selectedRegionId === null"
+                                class="size-full min-h-96 lg:min-h-150 3xl:min-h-250 flex-center bg-white px-5 text-center"
+                                style="min-height: 720px;"
+                            >
+                                <p class="text_6 text-brand-gray-dark">Для просмотра карты выберите регион</p>
+                            </div>
+                            <div
+                                id="geo-map"
+                                x-show="selectedRegionId !== null"
+                                x-cloak
+                                class="size-full object-cover"
+                                style="min-height: 720px;"
+                            ></div>
                         </div>
 
                         <div class="search-results-panel bg-white p-5 lg:p-6 3xl:p-10 min-h-96 lg:min-h-150 3xl:min-h-250 flex">
@@ -380,7 +461,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                                 <template x-if="paginatedContractors.length === 0">
                                                     <li class="py-6 text-brand-gray-dark">По заданным фильтрам подрядчики не найдены.</li>
                                                 </template>
-                                                <template x-for="contractor in paginatedContractors" :key="contractor.id">
+                                                <template x-for="contractor in paginatedContractors" :key="`${page}-${contractor.id}`">
                                                     <li class="py-4 3xl:py-6">
                                                         <a :href="`/agents/${contractor.slug}`" target="_blank" rel="noopener noreferrer" class="flex-between items-start gap-3 hover:text-brand-blue smooth">
                                                             <span x-text="contractor.short_name"></span>
@@ -393,7 +474,13 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                             <template x-if="totalPages > 1">
                                                 <div class="flex-end gap-2.5 text_8 -mt-5">
                                                     <template x-for="p in pageButtons" :key="`p-${p}`">
-                                                        <button class="hover:text-brand-gray smooth" :class="page === p ? 'text-brand-gray' : ''" @click="setPage(p)" x-text="p"></button>
+                                                        <button
+                                                            type="button"
+                                                            class="hover:text-brand-gray smooth"
+                                                            :class="page === p ? 'text-brand-gray' : ''"
+                                                            @click.prevent.stop="setPage(p)"
+                                                            x-text="p"
+                                                        ></button>
                                                     </template>
                                                 </div>
                                             </template>
@@ -513,23 +600,26 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                 authModalOpen: false,
                 authModalMode: 'login',
                 territorySchemesModalOpen: false,
-                territoryOpen: false,
+                regionOpen: false,
+                districtOpen: false,
                 categoryOpen: false,
                 resourceOpen: false,
                 workOpen: false,
                 segmentOpen: false,
                 filtersOpen: false,
                 sortOpen: false,
-                expandedTerritoryIds: {},
+                expandedDistrictIds: {},
                 searchQuery: '',
-                selectedTerritoryId: null,
+                selectedRegionId: null,
+                selectedDistrictId: null,
                 selectedCategoryIds: [],
                 selectedResourceIds: [],
                 workType: 'all',
                 businessSegment: '',
                 sortBy: 'rating_best',
                 appliedSearchQuery: '',
-                appliedSelectedTerritoryId: null,
+                appliedSelectedRegionId: null,
+                appliedSelectedDistrictId: null,
                 appliedSelectedCategoryIds: [],
                 appliedSelectedResourceIds: [],
                 appliedWorkType: 'all',
@@ -542,23 +632,25 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                 resourceTypes: window.searchPagePayload.resourceTypes ?? [],
                 territoryTree: window.searchPagePayload.territoryTree ?? [],
                 territoryDescendants: window.searchPagePayload.territoryDescendants ?? {},
-                mapInstance: null,
 
                 init() {
-                    for (const item of this.territoryTree) {
-                        if (item && item.id) {
-                            this.expandedTerritoryIds[item.id] = true;
-                        }
-                    }
                     this.onMapTerritorySelected = (event) => {
                         const territoryId = Number(event?.detail?.territoryId);
                         if (!Number.isInteger(territoryId) || territoryId <= 0) return;
-                        if (!this.findTerritoryById(territoryId)) return;
-                        this.selectedTerritoryId = territoryId;
+                        const territory = this.findTerritoryById(territoryId);
+                        if (!territory) return;
+
+                        const region = this.findRegionForTerritory(territoryId);
+                        if (!region) return;
+
+                        this.selectRegion(region.id);
+                        this.selectDistrict(territory.id);
+                        this.expandDistrictPath(territory.id);
                         this.applySearch();
                     };
                     window.addEventListener('geo-map-territory-selected', this.onMapTerritorySelected);
                     this.initFromQueryParams();
+                    this.$nextTick(() => this.notifyRegionChanged());
                 },
                 destroy() {
                     if (this.onMapTerritorySelected) {
@@ -574,6 +666,21 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                     if (!values.length) return true;
                     return source.some((id) => values.includes(id));
                 },
+                expandTerritoryIds(ids) {
+                    const expandedIds = new Set();
+
+                    for (const value of ids ?? []) {
+                        const id = Number(value);
+                        if (!Number.isInteger(id) || id <= 0) continue;
+
+                        expandedIds.add(id);
+                        for (const descendantId of this.territoryDescendants[id] ?? []) {
+                            expandedIds.add(Number(descendantId));
+                        }
+                    }
+
+                    return [...expandedIds];
+                },
                 parseIdsParam(value) {
                     if (!value) return [];
                     return String(value)
@@ -584,7 +691,8 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                 buildQueryParams(pageOverride = null) {
                     const params = new URLSearchParams();
                     if (this.appliedSearchQuery.trim() !== '') params.set('q', this.appliedSearchQuery.trim());
-                    if (this.appliedSelectedTerritoryId !== null) params.set('t', String(this.appliedSelectedTerritoryId));
+                    if (this.appliedSelectedRegionId !== null) params.set('r', String(this.appliedSelectedRegionId));
+                    if (this.appliedSelectedDistrictId !== null) params.set('d', String(this.appliedSelectedDistrictId));
                     if (this.appliedSelectedCategoryIds.length > 0) params.set('cat', this.appliedSelectedCategoryIds.join(','));
                     if (this.appliedSelectedResourceIds.length > 0) params.set('res', this.appliedSelectedResourceIds.join(','));
                     if (this.appliedWorkType !== 'all') params.set('work', this.appliedWorkType);
@@ -604,7 +712,9 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                 initFromQueryParams() {
                     const params = new URLSearchParams(window.location.search);
                     const q = params.get('q') ?? '';
-                    const territory = params.get('t');
+                    const rawRegion = params.get('r');
+                    const rawDistrict = params.get('d');
+                    const legacyTerritory = params.get('t');
                     const cats = this.parseIdsParam(params.get('cat'));
                     const resources = this.parseIdsParam(params.get('res'));
                     const work = ['all', 'both', 'smr', 'pir'].includes(params.get('work') ?? '') ? params.get('work') : 'all';
@@ -613,8 +723,35 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                     const sort = ['name_asc', 'rating_best'].includes(params.get('sort') ?? '') ? params.get('sort') : 'rating_best';
                     const page = Math.max(1, Number(params.get('page') || 1));
 
+                    let regionId = rawRegion ? Number(rawRegion) : null;
+                    let districtId = rawDistrict ? Number(rawDistrict) : null;
+
+                    if (regionId === null && legacyTerritory) {
+                        const legacyItem = this.findTerritoryById(Number(legacyTerritory));
+                        if (legacyItem) {
+                            const region = this.findRegionForTerritory(legacyItem.id);
+                            regionId = region ? Number(region.id) : null;
+                            districtId = Number(legacyItem.level) > 4 ? Number(legacyItem.id) : null;
+                        }
+                    }
+
+                    if (!this.findRegionById(regionId)) {
+                        regionId = null;
+                        districtId = null;
+                    }
+
+                    const district = districtId === null ? null : this.findTerritoryById(districtId);
+                    if (
+                        !district
+                        || Number(district.level) <= 4
+                        || Number(this.findRegionForTerritory(district.id)?.id) !== Number(regionId)
+                    ) {
+                        districtId = null;
+                    }
+
                     this.searchQuery = q;
-                    this.selectedTerritoryId = territory ? Number(territory) : null;
+                    this.selectedRegionId = regionId;
+                    this.selectedDistrictId = districtId;
                     this.selectedCategoryIds = cats;
                     this.selectedResourceIds = resources;
                     this.workType = work;
@@ -622,18 +759,24 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                     this.sortBy = sort;
 
                     this.appliedSearchQuery = this.searchQuery;
-                    this.appliedSelectedTerritoryId = this.selectedTerritoryId;
+                    this.appliedSelectedRegionId = this.selectedRegionId;
+                    this.appliedSelectedDistrictId = this.selectedDistrictId;
                     this.appliedSelectedCategoryIds = [...this.selectedCategoryIds];
                     this.appliedSelectedResourceIds = [...this.selectedResourceIds];
                     this.appliedWorkType = this.workType;
                     this.appliedBusinessSegment = this.businessSegment;
                     this.appliedSortBy = this.sortBy;
-                    this.page = page;
+                    this.page = Math.max(1, Math.min(page, this.totalPages));
+
+                    if (districtId !== null) {
+                        this.expandDistrictPath(districtId);
+                    }
                 },
                 searchScopedContractors() {
                     return this.filterContractors({
                         searchQuery: this.searchQuery,
-                        selectedTerritoryId: null,
+                        selectedRegionId: null,
+                        selectedDistrictId: null,
                         selectedCategoryIds: [],
                         selectedResourceIds: [],
                         workType: 'all',
@@ -644,7 +787,8 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                 filterContractors(overrides = {}) {
                     const state = {
                         searchQuery: this.searchQuery,
-                        selectedTerritoryId: this.selectedTerritoryId,
+                        selectedRegionId: this.selectedRegionId,
+                        selectedDistrictId: this.selectedDistrictId,
                         selectedCategoryIds: this.selectedCategoryIds,
                         selectedResourceIds: this.selectedResourceIds,
                         workType: this.workType,
@@ -655,15 +799,20 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                     const query = this.normalizeText(state.searchQuery);
                     const categoryIds = (state.selectedCategoryIds ?? []).map((v) => Number(v));
                     const resourceIds = (state.selectedResourceIds ?? []).map((v) => Number(v));
-                    const territoryId = state.selectedTerritoryId !== null ? Number(state.selectedTerritoryId) : null;
-                    const territoryScope = territoryId === null
+                    const regionId = state.selectedRegionId !== null ? Number(state.selectedRegionId) : null;
+                    const districtId = state.selectedDistrictId !== null ? Number(state.selectedDistrictId) : null;
+                    const regionScope = regionId === null
                         ? []
-                        : [territoryId, ...((this.territoryDescendants[territoryId] ?? []).map((id) => Number(id)))];
+                        : [regionId, ...((this.territoryDescendants[regionId] ?? []).map((id) => Number(id)))];
+                    const districtScope = districtId === null
+                        ? []
+                        : [districtId, ...((this.territoryDescendants[districtId] ?? []).map((id) => Number(id)))];
+                    const territoryScope = districtId === null ? regionScope : districtScope;
 
                     return this.contractors.filter((contractor) => {
                         if (query !== '' && !this.normalizeText(contractor.short_name).includes(query)) return false;
 
-                        const contractorTerritories = (contractor.territory_ids ?? []).map((v) => Number(v));
+                        const contractorTerritories = this.expandTerritoryIds(contractor.territory_ids ?? []);
                         if (territoryScope.length > 0 && !this.hasIntersection(contractorTerritories, territoryScope)) return false;
 
                         const contractorCategories = (contractor.category_ids ?? []).map((v) => Number(v));
@@ -708,7 +857,8 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                 get filteredContractors() {
                     return this.sortContractors(this.filterContractors({
                         searchQuery: this.appliedSearchQuery,
-                        selectedTerritoryId: this.appliedSelectedTerritoryId,
+                        selectedRegionId: this.appliedSelectedRegionId,
+                        selectedDistrictId: this.appliedSelectedDistrictId,
                         selectedCategoryIds: this.appliedSelectedCategoryIds,
                         selectedResourceIds: this.appliedSelectedResourceIds,
                         workType: this.appliedWorkType,
@@ -720,7 +870,8 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                 },
                 get hasAppliedSearch() {
                     return this.appliedSearchQuery.trim() !== ''
-                        || this.appliedSelectedTerritoryId !== null
+                        || this.appliedSelectedRegionId !== null
+                        || this.appliedSelectedDistrictId !== null
                         || this.appliedSelectedCategoryIds.length > 0
                         || this.appliedSelectedResourceIds.length > 0
                         || this.appliedWorkType !== 'all'
@@ -729,8 +880,11 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                 get totalPages() {
                     return Math.max(1, Math.ceil(this.appliedCount / this.perPage));
                 },
+                get currentPage() {
+                    return Math.max(1, Math.min(Number(this.page) || 1, this.totalPages));
+                },
                 get paginatedContractors() {
-                    const page = Math.min(this.page, this.totalPages);
+                    const page = this.currentPage;
                     return this.filteredContractors.slice((page - 1) * this.perPage, page * this.perPage);
                 },
                 get futureCount() {
@@ -744,8 +898,12 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                     return Array.from({ length: (end - adjustedStart) + 1 }, (_, i) => adjustedStart + i);
                 },
                 setPage(value) {
-                    this.page = Math.max(1, Math.min(this.totalPages, Number(value) || 1));
-                    this.syncQueryParams();
+                    const nextPage = Math.max(1, Math.min(this.totalPages, Number(value) || 1));
+
+                    if (nextPage === this.page) return;
+
+                    this.page = nextPage;
+                    this.syncQueryParams(nextPage);
                 },
 
                 get activeFiltersCount() {
@@ -786,17 +944,23 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
 
                 resetFilters() {
                     this.searchQuery = '';
-                    this.selectedTerritoryId = null;
+                    this.selectedRegionId = null;
+                    this.selectedDistrictId = null;
                     this.selectedCategoryIds = [];
                     this.selectedResourceIds = [];
                     this.workType = 'all';
                     this.businessSegment = '';
                     this.sortBy = 'rating_best';
+                    this.regionOpen = false;
+                    this.districtOpen = false;
+                    this.expandedDistrictIds = {};
+                    this.notifyRegionChanged();
                     this.applySearch();
                 },
                 applySearch() {
                     this.appliedSearchQuery = this.searchQuery;
-                    this.appliedSelectedTerritoryId = this.selectedTerritoryId;
+                    this.appliedSelectedRegionId = this.selectedRegionId;
+                    this.appliedSelectedDistrictId = this.selectedDistrictId;
                     this.appliedSelectedCategoryIds = [...this.selectedCategoryIds];
                     this.appliedSelectedResourceIds = [...this.selectedResourceIds];
                     this.appliedWorkType = this.workType;
@@ -829,12 +993,31 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                         this.selectedCategoryIds = this.selectedCategoryIds[0] === numericId ? [] : [numericId];
                     }
                 },
-                selectTerritory(id) {
-                    this.selectedTerritoryId = id === null ? null : Number(id);
-                    this.territoryOpen = false;
+                selectRegion(id) {
+                    const nextRegionId = id === null ? null : Number(id);
+                    const regionChanged = this.selectedRegionId !== nextRegionId;
+
+                    this.selectedRegionId = nextRegionId;
+                    this.selectedDistrictId = null;
+                    this.regionOpen = false;
+                    this.districtOpen = false;
+                    this.expandedDistrictIds = {};
+
+                    if (regionChanged) {
+                        this.$nextTick(() => this.notifyRegionChanged());
+                    }
                 },
-                toggleTerritoryExpanded(id) {
-                    this.expandedTerritoryIds[id] = !this.expandedTerritoryIds[id];
+                selectDistrict(id) {
+                    this.selectedDistrictId = id === null ? null : Number(id);
+                    this.districtOpen = false;
+                },
+                toggleDistrictExpanded(id) {
+                    this.expandedDistrictIds[id] = !this.expandedDistrictIds[id];
+                },
+                notifyRegionChanged() {
+                    window.dispatchEvent(new CustomEvent('search-region-changed', {
+                        detail: { regionId: this.selectedRegionId },
+                    }));
                 },
                 isCategoryDisabled(id) {
                     return false;
@@ -848,12 +1031,18 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                 isSegmentDisabled(value) {
                     return false;
                 },
-                isTerritoryDisabled(id) {
-                    return false;
+                get selectedTerritoryId() {
+                    return this.selectedDistrictId ?? this.selectedRegionId;
+                },
+                get selectedRegionName() {
+                    return this.findRegionById(this.selectedRegionId)?.name ?? '';
+                },
+                get selectedDistrictName() {
+                    if (this.selectedDistrictId === null) return '';
+                    return this.findTerritoryById(this.selectedDistrictId)?.name ?? '';
                 },
                 get selectedTerritoryName() {
-                    if (this.selectedTerritoryId === null) return '';
-                    return this.findTerritoryById(this.selectedTerritoryId)?.name ?? '';
+                    return this.selectedDistrictName || this.selectedRegionName;
                 },
                 get selectedTerritorySchemes() {
                     if (this.selectedTerritoryId === null) return [];
@@ -874,26 +1063,59 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                     };
                     return walk(this.territoryTree);
                 },
-                get visibleTerritories() {
+                findRegionById(id) {
+                    const numericId = Number(id);
+                    if (!Number.isInteger(numericId) || numericId <= 0) return null;
+                    return this.territoryTree.find((item) => Number(item.id) === numericId) ?? null;
+                },
+                findRegionForTerritory(id) {
+                    let item = this.findTerritoryById(id);
+
+                    while (item && Number(item.level) !== 4) {
+                        item = this.findTerritoryById(item.parent_id);
+                    }
+
+                    return item;
+                },
+                expandDistrictPath(id) {
+                    let item = this.findTerritoryById(id);
+
+                    while (item && Number(item.level) > 4) {
+                        const parent = this.findTerritoryById(item.parent_id);
+                        if (parent && Number(parent.level) > 4) {
+                            this.expandedDistrictIds[parent.id] = true;
+                        }
+
+                        item = parent;
+                    }
+                },
+                get visibleDistricts() {
+                    const region = this.findRegionById(this.selectedRegionId);
+                    if (!region) return [];
+
                     const result = [];
-                    const walk = (items, depth) => {
+                    const districts = (region.children ?? []).filter((item) => [5, 6].includes(Number(item.level)));
+
+                    const appendNodes = (items, depth) => {
                         for (const item of items) {
+                            const children = Array.isArray(item.children) ? item.children : [];
                             result.push({
                                 id: Number(item.id),
                                 name: item.name,
                                 depth,
-                                hasChildren: Array.isArray(item.children) && item.children.length > 0,
+                                hasChildren: children.length > 0,
                             });
-                            if (Array.isArray(item.children) && item.children.length > 0 && this.expandedTerritoryIds[item.id]) {
-                                walk(item.children, depth + 1);
+
+                            if (children.length > 0 && this.expandedDistrictIds[item.id]) {
+                                appendNodes(children, depth + 1);
                             }
                         }
                     };
-                    walk(this.territoryTree, 0);
+
+                    appendNodes(districts, 0);
+
                     return result;
                 },
-
-                initMap() {},
             }));
         });
     </script>
@@ -901,103 +1123,188 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
         (function initSearchGeoMap() {
             const containerId = 'geo-map';
             const container = document.getElementById(containerId);
-            if (!container || typeof ymaps === 'undefined') {
+            if (!container) {
                 return;
             }
 
-            ymaps.ready(async function () {
-                const map = new ymaps.Map(containerId, {
+            let map = null;
+            let mapsReady = null;
+            let requestController = null;
+            let requestToken = 0;
+            let resizeHandlerBound = false;
+            let displayedRegionId = null;
+            let loadingRegionId = null;
+
+            const getMaps = () => {
+                if (typeof ymaps === 'undefined') {
+                    return Promise.reject(new Error('Yandex Maps API is unavailable'));
+                }
+
+                if (!mapsReady) {
+                    mapsReady = new Promise((resolve) => ymaps.ready(() => resolve(ymaps)));
+                }
+
+                return mapsReady;
+            };
+
+            const destroyMap = () => {
+                if (!map) return;
+
+                map.destroy();
+                map = null;
+            };
+
+            const ensureMap = (maps) => {
+                if (map) return map;
+
+                map = new maps.Map(containerId, {
                     center: [61.5240, 105.3188],
                     zoom: 3,
                     controls: ['zoomControl', 'typeSelector', 'fullscreenControl']
                 });
 
                 map.container.fitToViewport();
-                window.addEventListener('resize', () => map.container.fitToViewport(), { passive: true });
+                if (!resizeHandlerBound) {
+                    window.addEventListener('resize', () => map?.container.fitToViewport(), { passive: true });
+                    resizeHandlerBound = true;
+                }
+
+                return map;
+            };
+
+            const renderFeatures = (maps, items) => {
+                const collection = new maps.GeoObjectCollection();
+                const bounds = [];
+
+                for (const item of items) {
+                    const geometry = item.geometry;
+                    if (!geometry || !geometry.type || !geometry.coordinates) {
+                        continue;
+                    }
+
+                    const objectOptions = {
+                        fillColor: '#1450a3',
+                        fillOpacity: 0.2,
+                        strokeColor: '#1450a3',
+                        strokeWidth: 2,
+                        interactivityModel: 'default#geoObject',
+                        cursor: 'pointer',
+                    };
+                    const addPolygon = (coordinates) => {
+                        const obj = new maps.Polygon(
+                            coordinates,
+                            { hintContent: item.name },
+                            objectOptions
+                        );
+                        obj.events.add('mouseenter', () => obj.options.set('fillOpacity', 0.4));
+                        obj.events.add('mouseleave', () => obj.options.set('fillOpacity', 0.2));
+                        obj.events.add('click', () => {
+                            window.dispatchEvent(new CustomEvent('geo-map-territory-selected', {
+                                detail: {
+                                    territoryId: Number(item.id),
+                                    adminLevel: Number(item.admin_level),
+                                },
+                            }));
+                        });
+                        collection.add(obj);
+                    };
+
+                    if (geometry.type === 'Polygon') {
+                        addPolygon(geometry.coordinates);
+                    } else if (geometry.type === 'MultiPolygon') {
+                        for (const polygonCoordinates of geometry.coordinates) {
+                            addPolygon(polygonCoordinates);
+                        }
+                    } else {
+                        continue;
+                    }
+
+                    if (
+                        item.bbox
+                        && item.bbox.min_lat !== null
+                        && item.bbox.min_lon !== null
+                        && item.bbox.max_lat !== null
+                        && item.bbox.max_lon !== null
+                    ) {
+                        bounds.push([
+                            [Number(item.bbox.min_lat), Number(item.bbox.min_lon)],
+                            [Number(item.bbox.max_lat), Number(item.bbox.max_lon)],
+                        ]);
+                    }
+                }
+
+                map.geoObjects.add(collection);
+
+                if (bounds.length) {
+                    const merged = [
+                        [Math.min(...bounds.map((b) => b[0][0])), Math.min(...bounds.map((b) => b[0][1]))],
+                        [Math.max(...bounds.map((b) => b[1][0])), Math.max(...bounds.map((b) => b[1][1]))],
+                    ];
+                    map.setBounds(merged, { checkZoomRange: true, zoomMargin: 20 });
+                } else {
+                    map.container.fitToViewport();
+                }
+            };
+
+            const loadRegion = async (regionId) => {
+                const numericRegionId = Number(regionId);
+
+                if (numericRegionId === loadingRegionId) {
+                    return;
+                }
+
+                if (numericRegionId === displayedRegionId && loadingRegionId === null) {
+                    return;
+                }
+
+                const token = ++requestToken;
+                requestController?.abort();
+                requestController = null;
+
+                if (!Number.isInteger(numericRegionId) || numericRegionId <= 0) {
+                    displayedRegionId = null;
+                    loadingRegionId = null;
+                    destroyMap();
+                    return;
+                }
+
+                loadingRegionId = numericRegionId;
 
                 try {
-                    const response = await fetch('/api/geo/map-features');
+                    const maps = await getMaps();
+                    if (token !== requestToken) return;
+
+                    const currentMap = ensureMap(maps);
+                    currentMap.geoObjects.removeAll();
+                    requestController = new AbortController();
+
+                    const response = await fetch(
+                        `/api/geo/map-features?region_id=${encodeURIComponent(numericRegionId)}`,
+                        { signal: requestController.signal },
+                    );
+                    if (!response.ok) {
+                        throw new Error(`Map features request failed: ${response.status}`);
+                    }
+
                     const payload = await response.json();
-                    const items = payload?.data ?? [];
+                    if (token !== requestToken) return;
 
-                    if (!items.length) {
-                        return;
-                    }
-
-                    const collection = new ymaps.GeoObjectCollection();
-                    const bounds = [];
-
-                    for (const item of items) {
-                        const geometry = item.geometry;
-                        if (!geometry || !geometry.type || !geometry.coordinates) {
-                            continue;
-                        }
-
-                        const objectOptions = {
-                            fillColor: '#1450a3',
-                            fillOpacity: 0.2,
-                            strokeColor: '#1450a3',
-                            strokeWidth: 2,
-                            interactivityModel: 'default#geoObject',
-                            cursor: 'pointer',
-                        };
-
-                        if (geometry.type === 'Polygon') {
-                            const obj = new ymaps.Polygon(
-                                geometry.coordinates,
-                                { hintContent: item.name },
-                                objectOptions
-                            );
-                            obj.events.add('mouseenter', () => obj.options.set('fillOpacity', 0.4));
-                            obj.events.add('mouseleave', () => obj.options.set('fillOpacity', 0.2));
-                            obj.events.add('click', () => {
-                                window.dispatchEvent(new CustomEvent('geo-map-territory-selected', {
-                                    detail: { territoryId: Number(item.id) },
-                                }));
-                            });
-                            collection.add(obj);
-                        } else if (geometry.type === 'MultiPolygon') {
-                            for (const polygonCoordinates of geometry.coordinates) {
-                                const obj = new ymaps.Polygon(
-                                    polygonCoordinates,
-                                    { hintContent: item.name },
-                                    objectOptions
-                                );
-                                obj.events.add('mouseenter', () => obj.options.set('fillOpacity', 0.4));
-                                obj.events.add('mouseleave', () => obj.options.set('fillOpacity', 0.2));
-                                obj.events.add('click', () => {
-                                    window.dispatchEvent(new CustomEvent('geo-map-territory-selected', {
-                                        detail: { territoryId: Number(item.id) },
-                                    }));
-                                });
-                                collection.add(obj);
-                            }
-                        } else {
-                            continue;
-                        }
-
-                        if (item.bbox && item.bbox.min_lat !== null) {
-                            bounds.push([
-                                [Number(item.bbox.min_lat), Number(item.bbox.min_lon)],
-                                [Number(item.bbox.max_lat), Number(item.bbox.max_lon)],
-                            ]);
-                        }
-                    }
-
-                    map.geoObjects.add(collection);
-
-                    if (bounds.length) {
-                        const merged = [
-                            [Math.min(...bounds.map(b => b[0][0])), Math.min(...bounds.map(b => b[0][1]))],
-                            [Math.max(...bounds.map(b => b[1][0])), Math.max(...bounds.map(b => b[1][1]))],
-                        ];
-                        map.setBounds(merged, { checkZoomRange: true, zoomMargin: 20 });
-                    } else {
-                        map.container.fitToViewport();
-                    }
+                    renderFeatures(maps, payload?.data ?? []);
+                    displayedRegionId = numericRegionId;
+                    loadingRegionId = null;
                 } catch (error) {
-                    console.error('Failed to load map features', error);
+                    if (token === requestToken) {
+                        loadingRegionId = null;
+                    }
+
+                    if (error?.name !== 'AbortError') {
+                        console.error('Failed to load map features', error);
+                    }
                 }
+            };
+
+            window.addEventListener('search-region-changed', (event) => {
+                loadRegion(event?.detail?.regionId);
             });
         })();
     </script>

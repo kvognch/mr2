@@ -45,6 +45,18 @@ class ListGeoUnits extends ListRecords
         return $query;
     }
 
+    public function shouldShowDescendantStatusColumn(): bool
+    {
+        if ($this->parentId === null) {
+            return false;
+        }
+
+        return GeoUnit::query()
+            ->whereKey($this->parentId)
+            ->where('admin_level', '>=', 4)
+            ->exists();
+    }
+
     protected function getHeaderActions(): array
     {
         $actions = [];

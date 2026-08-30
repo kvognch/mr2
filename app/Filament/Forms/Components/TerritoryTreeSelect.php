@@ -13,6 +13,8 @@ class TerritoryTreeSelect extends Field
 
     protected array|Closure $descendants = [];
 
+    protected bool|Closure $schemesManageable = false;
+
     public function tree(array|Closure $tree): static
     {
         $this->tree = $tree;
@@ -27,6 +29,13 @@ class TerritoryTreeSelect extends Field
         return $this;
     }
 
+    public function manageSchemes(bool|Closure $condition = true): static
+    {
+        $this->schemesManageable = $condition;
+
+        return $this;
+    }
+
     public function getTree(): array
     {
         return $this->evaluate($this->tree) ?? [];
@@ -35,5 +44,10 @@ class TerritoryTreeSelect extends Field
     public function getDescendants(): array
     {
         return $this->evaluate($this->descendants) ?? [];
+    }
+
+    public function canManageSchemes(): bool
+    {
+        return (bool) $this->evaluate($this->schemesManageable);
     }
 }

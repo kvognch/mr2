@@ -89,22 +89,31 @@ class Contractor extends Model
         return $this->belongsToMany(ContractorCategory::class, 'contractor_contractor_category')->withTimestamps();
     }
 
+    public function hasGuaranteeingSupplierCategory(): bool
+    {
+        return $this->hasCategory('Гарантирующий поставщик');
+    }
+
+    public function hasResourceSupplyingCategory(): bool
+    {
+        return $this->hasCategory('Ресурсо-снабжающая организация');
+    }
+
     public function hasTariffCategory(): bool
     {
-        $tariffCategories = [
-            'Гарантирующий поставщик',
-            'Ресурсо-снабжающая организация',
-        ];
+        return $this->hasGuaranteeingSupplierCategory() || $this->hasResourceSupplyingCategory();
+    }
 
+    protected function hasCategory(string $categoryName): bool
+    {
         if ($this->relationLoaded('categories')) {
             return $this->categories
                 ->pluck('name')
-                ->intersect($tariffCategories)
-                ->isNotEmpty();
+                ->contains($categoryName);
         }
 
         return $this->categories()
-            ->whereIn('name', $tariffCategories)
+            ->where('name', $categoryName)
             ->exists();
     }
 
@@ -156,27 +165,74 @@ class Contractor extends Model
         return $this->hasMany(ContractorTariff::class)->latest();
     }
 
-    public function currentTariff(): HasMany
+    public function currentConnectionTariff(): HasMany
     {
         return $this->hasMany(ContractorTariff::class)
+            ->where('tariff_type', ContractorTariff::TYPE_CONNECTION)
             ->where('is_current', true)
             ->latest();
     }
 
-    public function tariffHistory(): HasMany
+    public function connectionTariffHistory(): HasMany
     {
         return $this->hasMany(ContractorTariff::class)
+            ->where('tariff_type', ContractorTariff::TYPE_CONNECTION)
             ->where('is_current', false)
             ->latest();
     }
 
+    public function currentSalesTariff(): HasMany
+    {
+        return $this->hasMany(ContractorTariff::class)
+            ->where('tariff_type', ContractorTariff::TYPE_SALES)
+            ->where('is_current', true)
+            ->latest();
+    }
+
+    public function salesTariffHistory(): HasMany
+    {
+        return $this->hasMany(ContractorTariff::class)
+            ->where('tariff_type', ContractorTariff::TYPE_SALES)
+            ->where('is_current', false)
+            ->latest();
+    }
+
+    public function currentTariff(): HasMany
+    {
+        return $this->currentConnectionTariff();
+    }
+
+    public function tariffHistory(): HasMany
+    {
+        return $this->connectionTariffHistory();
+    }
+
+    public function addConnectionTariff(string $path): ContractorTariff
+    {
+        return $this->addTariff($path, ContractorTariff::TYPE_CONNECTION);
+    }
+
+    public function addSalesTariff(string $path): ContractorTariff
+    {
+        return $this->addTariff($path, ContractorTariff::TYPE_SALES);
+    }
+
     public function addCurrentTariff(string $path): ContractorTariff
     {
-        $this->tariffs()->where('is_current', true)->update(['is_current' => false]);
+        return $this->addConnectionTariff($path);
+    }
+
+    protected function addTariff(string $path, string $tariffType): ContractorTariff
+    {
+        $this->tariffs()
+            ->where('tariff_type', $tariffType)
+            ->where('is_current', true)
+            ->update(['is_current' => false]);
 
         $disk = Storage::disk('public');
 
         return $this->tariffs()->create([
+            'tariff_type' => $tariffType,
             'path' => $path,
             'original_name' => basename($path),
             'mime_type' => $disk->exists($path) ? $disk->mimeType($path) : null,

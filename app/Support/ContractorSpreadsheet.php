@@ -14,6 +14,7 @@ class ContractorSpreadsheet
     public const COLUMN_FULL_NAME = 'Полное название';
     public const COLUMN_BUSINESS_SEGMENTS = 'Сегмент бизнеса';
     public const COLUMN_WEBSITE = 'Сайт';
+    public const COLUMN_APPLICATION_URL = 'Ссылка на форму заявки';
     public const COLUMN_SOCIAL_TELEGRAM = 'Telegram';
     public const COLUMN_SOCIAL_VK = 'ВКонтакте';
     public const COLUMN_SOCIAL_WHATSAPP = 'WhatsApp';
@@ -37,6 +38,7 @@ class ContractorSpreadsheet
     public const COLUMN_ADDITIONAL_INFO = 'Дополнительная информация';
     public const COLUMN_RATING = 'Рейтинг';
     public const COLUMN_STATUS = 'Статус';
+    public const COLUMN_OWNER = 'Владелец (email)';
 
     public static function headings(): array
     {
@@ -47,6 +49,7 @@ class ContractorSpreadsheet
             self::COLUMN_FULL_NAME,
             self::COLUMN_BUSINESS_SEGMENTS,
             self::COLUMN_WEBSITE,
+            self::COLUMN_APPLICATION_URL,
             self::COLUMN_SOCIAL_TELEGRAM,
             self::COLUMN_SOCIAL_VK,
             self::COLUMN_SOCIAL_WHATSAPP,
@@ -70,6 +73,7 @@ class ContractorSpreadsheet
             self::COLUMN_ADDITIONAL_INFO,
             self::COLUMN_RATING,
             self::COLUMN_STATUS,
+            self::COLUMN_OWNER,
         ];
     }
 
@@ -103,6 +107,7 @@ class ContractorSpreadsheet
                     ->all()
             ),
             self::COLUMN_WEBSITE => $contractor->website,
+            self::COLUMN_APPLICATION_URL => $contractor->application_url,
             self::COLUMN_SOCIAL_TELEGRAM => $contractor->social_telegram,
             self::COLUMN_SOCIAL_VK => $contractor->social_vk,
             self::COLUMN_SOCIAL_WHATSAPP => $contractor->social_whatsapp,
@@ -132,6 +137,7 @@ class ContractorSpreadsheet
             self::COLUMN_ADDITIONAL_INFO => $contractor->additional_info,
             self::COLUMN_RATING => $contractor->rating?->name,
             self::COLUMN_STATUS => static::contractorStatusOptions()[$contractor->status] ?? $contractor->status,
+            self::COLUMN_OWNER => $contractor->owner?->email,
         ];
     }
 

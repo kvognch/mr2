@@ -175,6 +175,7 @@ class SearchController extends Controller
         unset($node);
 
         $this->sortTreeNodes($roots);
+        $this->addInheritedResourceSchemes($roots);
 
         return $roots;
     }
@@ -192,6 +193,49 @@ class SearchController extends Controller
             }
         }
         unset($node);
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $nodes
+     * @param  array<int, array<string, string>>  $inheritedSchemes
+     */
+    private function addInheritedResourceSchemes(array &$nodes, array $inheritedSchemes = []): void
+    {
+        foreach ($nodes as &$node) {
+            $node['resource_schemes'] = $this->mergeResourceSchemes(
+                is_array($node['resource_schemes'] ?? null) ? $node['resource_schemes'] : [],
+                $inheritedSchemes,
+            );
+
+            if (! empty($node['children'])) {
+                $this->addInheritedResourceSchemes($node['children'], $node['resource_schemes']);
+            }
+        }
+        unset($node);
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $schemes
+     * @param  array<int, array<string, mixed>>  $inheritedSchemes
+     * @return array<int, array<string, mixed>>
+     */
+    private function mergeResourceSchemes(array $schemes, array $inheritedSchemes): array
+    {
+        $merged = [];
+        $seenUrls = [];
+
+        foreach (array_merge($schemes, $inheritedSchemes) as $scheme) {
+            $url = trim((string) ($scheme['url'] ?? ''));
+
+            if ($url === '' || isset($seenUrls[$url])) {
+                continue;
+            }
+
+            $seenUrls[$url] = true;
+            $merged[] = $scheme;
+        }
+
+        return $merged;
     }
 
     /**

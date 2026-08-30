@@ -152,6 +152,12 @@
 
             livewireHooksRegistered = true;
 
+            window.Livewire.hook('morph', ({ el }) => {
+                el.querySelectorAll(SCROLLER_SELECTOR).forEach((scope) => {
+                    destroyTopScrollbar(scope);
+                });
+            });
+
             window.Livewire.hook('morph.updated', () => {
                 initTopScrollbars();
             });
