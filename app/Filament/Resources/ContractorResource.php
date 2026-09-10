@@ -179,7 +179,7 @@ class ContractorResource extends Resource
                         ->label('Территория работы')
                         ->tree(fn (): array => static::getTerritoryTree())
                         ->descendants(fn (): array => static::getTerritoryDescendants())
-                        ->manageSchemes(fn (): bool => (bool) (auth()->user()?->isSuperadmin() || auth()->user()?->isManager()))
+                        ->manageSchemes(fn (): bool => auth()->check())
                         ->columnSpanFull(),
                 ])
                 ->columns(1),

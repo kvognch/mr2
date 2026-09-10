@@ -57,9 +57,7 @@ class EditContractor extends EditRecord
 
     protected function canManageGeoUnitSchemes(): bool
     {
-        $user = auth()->user();
-
-        return (bool) ($user?->isSuperadmin() || $user?->isManager());
+        return auth()->check();
     }
 
     protected function mutateFormDataBeforeFill(array $data): array

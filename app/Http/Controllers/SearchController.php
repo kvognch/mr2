@@ -15,6 +15,7 @@ class SearchController extends Controller
     public function __invoke(): View
     {
         $settings = HomepageSettings::all();
+        $territoryParentIds = $this->buildTerritoryParentMap();
 
         $contractors = Contractor::query()
             ->with(['categories:id,name', 'rating:id,name,sort_order', 'territories:id,name', 'smrResourceTypes:id', 'pirResourceTypes:id'])
@@ -22,7 +23,7 @@ class SearchController extends Controller
             ->orderBy('short_name')
             ->get();
 
-        $contractorItems = $contractors->map(function (Contractor $contractor): array {
+        $contractorItems = $contractors->map(function (Contractor $contractor) use ($territoryParentIds): array {
             return [
                 'id' => $contractor->id,
                 'short_name' => $contractor->short_name,
@@ -30,7 +31,10 @@ class SearchController extends Controller
                 'rating_name' => (string) ($contractor->rating?->name ?? ''),
                 'rating_sort_order' => (int) ($contractor->rating?->sort_order ?? 9999),
                 'category_ids' => $contractor->categories->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
-                'territory_ids' => $contractor->territories->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
+                'territory_ids' => $this->expandTerritoryIdsWithAncestors(
+                    $contractor->territories->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
+                    $territoryParentIds,
+                ),
                 'smr_resource_ids' => $contractor->smrResourceTypes->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
                 'pir_resource_ids' => $contractor->pirResourceTypes->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
                 'business_segments' => collect($contractor->business_segments ?? [])
@@ -178,6 +182,55 @@ class SearchController extends Controller
         $this->addInheritedResourceSchemes($roots);
 
         return $roots;
+    }
+
+    /**
+     * @return array<int, int|null>
+     */
+    private function buildTerritoryParentMap(): array
+    {
+        return GeoUnit::query()
+            ->pluck('parent_id', 'id')
+            ->mapWithKeys(fn ($parentId, $id): array => [
+                (int) $id => $parentId !== null ? (int) $parentId : null,
+            ])
+            ->all();
+    }
+
+    /**
+     * @param  array<int, int>  $territoryIds
+     * @param  array<int, int|null>  $parentIds
+     * @return array<int, int>
+     */
+    private function expandTerritoryIdsWithAncestors(array $territoryIds, array $parentIds): array
+    {
+        $expandedIds = [];
+
+        foreach ($territoryIds as $territoryId) {
+            $territoryId = (int) $territoryId;
+
+            if ($territoryId <= 0) {
+                continue;
+            }
+
+            $expandedIds[$territoryId] = true;
+            $visited = [];
+            $parentId = $parentIds[$territoryId] ?? null;
+
+            while ($parentId !== null && ! isset($visited[$parentId])) {
+                $parentId = (int) $parentId;
+
+                if ($parentId <= 0) {
+                    break;
+                }
+
+                $expandedIds[$parentId] = true;
+                $visited[$parentId] = true;
+                $parentId = $parentIds[$parentId] ?? null;
+            }
+        }
+
+        return array_map('intval', array_keys($expandedIds));
     }
 
     /**
