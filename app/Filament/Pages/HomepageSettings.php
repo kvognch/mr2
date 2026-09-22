@@ -116,6 +116,18 @@ class HomepageSettings extends Page implements HasForms
                     ->collapsed()
                     ->footerActions([$this->saveSectionAction('save_footer')]),
 
+                Section::make('Google reCAPTCHA')
+                    ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                TextInput::make('google_recaptcha.site_key')->label('Site key')->required(),
+                                TextInput::make('google_recaptcha.secret_key')->label('Secret key')->required(),
+                            ]),
+                    ])
+                    ->collapsible()
+                    ->collapsed()
+                    ->footerActions([$this->saveSectionAction('save_google_recaptcha')]),
+
             ])
             ->statePath('data');
     }

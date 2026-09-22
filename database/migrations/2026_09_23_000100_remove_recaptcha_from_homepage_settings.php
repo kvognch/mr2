@@ -1,15 +1,13 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        DB::table('settings')
-            ->where('key', 'homepage.google_recaptcha')
-            ->delete();
+        // reCAPTCHA remains configurable in the admin panel; credentials now
+        // come from environment-backed defaults instead of source code.
     }
 
     public function down(): void
