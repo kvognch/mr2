@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\ContractorResource\Pages;
 
+use App\Filament\Resources\ContractorResource;
 use App\Filament\Resources\GeoUnitResource;
-use App\Models\GeoUnit;
 use App\Models\ContractorTariff;
+use App\Models\GeoUnit;
+use App\Support\ContractorSeo;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
-use App\Filament\Resources\ContractorResource;
 use Filament\Resources\Pages\EditRecord;
 
 class EditContractor extends EditRecord
@@ -25,7 +26,7 @@ class EditContractor extends EditRecord
     {
         return Action::make('manageGeoUnitSchemes')
             ->label('Схемы по видам ресурсов')
-            ->modalHeading(fn (array $arguments): string => 'Схемы по видам ресурсов: ' . $this->getGeoUnitForSchemes($arguments)->name)
+            ->modalHeading(fn (array $arguments): string => 'Схемы по видам ресурсов: '.$this->getGeoUnitForSchemes($arguments)->name)
             ->modalWidth('4xl')
             ->modalSubmitActionLabel('Сохранить')
             ->schema(GeoUnitResource::resourceSchemesFormComponents())
@@ -64,6 +65,10 @@ class EditContractor extends EditRecord
     {
         $data['territory_ids'] = $this->record->territories()->pluck('geo_units.id')->map(fn ($id) => (int) $id)->all();
 
+        if (ContractorResource::canManageSeo()) {
+            $data = array_replace($data, ContractorSeo::formValues($this->record));
+        }
+
         return $data;
     }
 
@@ -71,6 +76,12 @@ class EditContractor extends EditRecord
     {
         if (auth()->user()?->isClient()) {
             $data['status'] = 'pending';
+        }
+
+        if (ContractorResource::canManageSeo()) {
+            $data = ContractorSeo::prepareForSave($data, $this->record);
+        } else {
+            unset($data['seo_h1'], $data['seo_title'], $data['seo_description'], $data['slug']);
         }
 
         unset($data['territory_ids'], $data['connection_tariff_upload'], $data['sales_tariff_upload']);

@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AuthModalController;
 use App\Http\Controllers\ContractorExportController;
 use App\Http\Controllers\ContractorShowController;
 use App\Http\Controllers\ContractorTariffController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InfoPageController;
 use App\Http\Controllers\PublicFormController;
 use App\Http\Controllers\PublicReviewController;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\AuthModalController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -25,6 +26,18 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/reviews/contractor/{contractor}', [PublicReviewController::class, 'storeContractor'])->name('reviews.contractor.store');
 });
 Route::get('/search', SearchController::class)->name('search.index');
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
+Route::get('/sitemap-static.xml', [SitemapController::class, 'staticMap'])->name('sitemap.static');
+Route::get('/sitemap-organizations-{part}.xml', [SitemapController::class, 'organizations'])
+    ->where('part', '[0-9]+')
+    ->name('sitemap.organizations');
+Route::get('/robots.txt', function () {
+    return response("User-agent: *\nDisallow:\nSitemap: ".route('sitemap.index')."\n")
+        ->header('Content-Type', 'text/plain; charset=UTF-8');
+})->name('robots');
 Route::get('/info/{slug}', InfoPageController::class)->name('info.show');
-Route::get('/agent/{slug}', ContractorShowController::class)->name('agent.show');
-Route::get('/agents/{slug}', ContractorShowController::class)->name('agents.show');
+Route::get('/organizations/{slug}', ContractorShowController::class)->name('organizations.show');
+Route::get('/agent/{slug}', fn (string $slug) => redirect()->route('organizations.show', ['slug' => $slug], 301))
+    ->name('agent.show');
+Route::get('/agents/{slug}', fn (string $slug) => redirect()->route('organizations.show', ['slug' => $slug], 301))
+    ->name('agents.show');

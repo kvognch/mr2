@@ -2,53 +2,48 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\UserRole;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\FileUpload;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Fieldset;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Schemas\Components\Html;
-use App\Filament\Resources\ContractorResource\Pages\ListContractors;
-use App\Filament\Resources\ContractorResource\Pages\ListContractorCategoryContractors;
+use App\Filament\Forms\Components\TerritoryTreeSelect;
 use App\Filament\Resources\ContractorResource\Pages\CreateContractor;
 use App\Filament\Resources\ContractorResource\Pages\EditContractor;
+use App\Filament\Resources\ContractorResource\Pages\ListContractorCategoryContractors;
+use App\Filament\Resources\ContractorResource\Pages\ListContractors;
 use App\Filament\Resources\ContractorResource\Pages\ListGuaranteeingSuppliers;
 use App\Filament\Resources\ContractorResource\Pages\ListResourceSupplyingOrganizations;
-use App\Filament\Forms\Components\TerritoryTreeSelect;
-use App\Filament\Resources\ContractorResource\Pages;
 use App\Models\Contractor;
 use App\Models\ContractorCategory;
 use App\Models\ContractorTariff;
 use App\Models\GeoUnit;
-use App\Models\User;
+use App\Support\ContractorSeo;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Navigation\NavigationItem;
-use Filament\Forms;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Html;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
-use BackedEnum;
-use UnitEnum;
 
 class ContractorResource extends Resource
 {
     protected static ?string $model = Contractor::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-office-2';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Организации';
+    protected static string|\UnitEnum|null $navigationGroup = 'Организации';
 
     protected static ?string $navigationLabel = 'Подрядчики';
 
@@ -76,6 +71,10 @@ class ContractorResource extends Resource
                     TextInput::make('short_name')
                         ->label('Краткое название')
                         ->required()
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (Get $get, Set $set, mixed $old, mixed $state): void {
+                            static::refreshSeoDefaults($get, $set, 'short_name', $old, $state);
+                        })
                         ->maxLength(255),
                     TextInput::make('full_name')
                         ->label('Полное название')
@@ -124,6 +123,9 @@ class ContractorResource extends Resource
                         ->multiple()
                         ->required()
                         ->live()
+                        ->afterStateUpdated(function (Get $get, Set $set, mixed $old, mixed $state): void {
+                            static::refreshSeoDefaults($get, $set, 'categories', $old, $state);
+                        })
                         ->preload()
                         ->searchable(),
                     TextInput::make('response_time')
@@ -180,6 +182,10 @@ class ContractorResource extends Resource
                         ->tree(fn (): array => static::getTerritoryTree())
                         ->descendants(fn (): array => static::getTerritoryDescendants())
                         ->manageSchemes(fn (): bool => auth()->check())
+                        ->live()
+                        ->afterStateUpdated(function (Get $get, Set $set, mixed $old, mixed $state): void {
+                            static::refreshSeoDefaults($get, $set, 'territory_ids', $old, $state);
+                        })
                         ->columnSpanFull(),
                 ])
                 ->columns(1),
@@ -195,6 +201,10 @@ class ContractorResource extends Resource
                                 ->label('СМР (Строительно-монтажные работы)')
                                 ->relationship('smrResourceTypes', 'name')
                                 ->multiple()
+                                ->live()
+                                ->afterStateUpdated(function (Get $get, Set $set, mixed $old, mixed $state): void {
+                                    static::refreshSeoDefaults($get, $set, 'smrResourceTypes', $old, $state);
+                                })
                                 ->preload()
                                 ->searchable(),
                             Toggle::make('smr_has_sro')
@@ -207,6 +217,10 @@ class ContractorResource extends Resource
                                 ->label('ПИР/ПСД (Проектно-изыскательские работы / Проектно-сметная документация)')
                                 ->relationship('pirResourceTypes', 'name')
                                 ->multiple()
+                                ->live()
+                                ->afterStateUpdated(function (Get $get, Set $set, mixed $old, mixed $state): void {
+                                    static::refreshSeoDefaults($get, $set, 'pirResourceTypes', $old, $state);
+                                })
                                 ->preload()
                                 ->searchable(),
                             Toggle::make('pir_has_sro')
@@ -277,6 +291,36 @@ class ContractorResource extends Resource
                         ->searchable()
                         ->preload()
                         ->default(fn () => auth()->id()),
+                ])
+                ->columns(1),
+
+            Section::make('SEO')
+                ->visible(fn (): bool => static::canManageSeo())
+                ->collapsible()
+                ->collapsed()
+                ->schema([
+                    TextInput::make('seo_h1')
+                        ->label('H1')
+                        ->default(fn (Get $get): string => ContractorSeo::defaultsFromData(static::getSeoFormData($get))['seo_h1'])
+                        ->maxLength(255)
+                        ->helperText('По умолчанию совпадает с кратким названием организации.'),
+                    TextInput::make('seo_title')
+                        ->label('Title')
+                        ->default(fn (Get $get): string => ContractorSeo::defaultsFromData(static::getSeoFormData($get))['seo_title'])
+                        ->maxLength(255)
+                        ->helperText('Оставьте автоматически сформированное значение или задайте свой вариант.'),
+                    Textarea::make('seo_description')
+                        ->label('Description')
+                        ->default(fn (Get $get): string => ContractorSeo::defaultsFromData(static::getSeoFormData($get))['seo_description'])
+                        ->rows(4)
+                        ->helperText('Оставьте автоматически сформированное значение или задайте свой вариант.')
+                        ->columnSpanFull(),
+                    TextInput::make('slug')
+                        ->label('Slug')
+                        ->maxLength(255)
+                        ->unique(ignoreRecord: true)
+                        ->regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/')
+                        ->helperText('Используется в URL /organizations/{slug}. Оставьте пустым для автоматической генерации.'),
                 ])
                 ->columns(1),
         ])->columns(1);
@@ -449,6 +493,48 @@ class ContractorResource extends Resource
         return auth()->check();
     }
 
+    public static function canManageSeo(): bool
+    {
+        return auth()->user()?->isSuperadmin() || auth()->user()?->isManager();
+    }
+
+    protected static function refreshSeoDefaults(
+        Get $get,
+        Set $set,
+        string $changedField,
+        mixed $oldState,
+        mixed $newState,
+    ): void {
+        $newData = static::getSeoFormData($get);
+        $newData[$changedField] = $newState;
+        $oldData = $newData;
+        $oldData[$changedField] = $oldState;
+        $oldDefaults = ContractorSeo::defaultsFromData($oldData);
+        $newDefaults = ContractorSeo::defaultsFromData($newData);
+
+        foreach (['seo_h1', 'seo_title', 'seo_description'] as $field) {
+            $currentValue = trim((string) ($get($field) ?? ''));
+
+            if ($currentValue === '' || $currentValue === trim($oldDefaults[$field])) {
+                $set($field, $newDefaults[$field]);
+            }
+        }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected static function getSeoFormData(Get $get): array
+    {
+        return [
+            'short_name' => $get('short_name'),
+            'categories' => $get('categories'),
+            'smrResourceTypes' => $get('smrResourceTypes'),
+            'pirResourceTypes' => $get('pirResourceTypes'),
+            'territory_ids' => $get('territory_ids'),
+        ];
+    }
+
     protected static function hasTariffCategorySelected(mixed $categoryIds): bool
     {
         return static::hasCategorySelected($categoryIds, 'Гарантирующий поставщик')
@@ -577,7 +663,7 @@ class ContractorResource extends Resource
         return $count > 0 ? (string) $count : null;
     }
 
-    public static function getNavigationBadgeColor(): string | array | null
+    public static function getNavigationBadgeColor(): string|array|null
     {
         return 'warning';
     }
@@ -598,21 +684,21 @@ class ContractorResource extends Resource
             NavigationItem::make('Гарантирующие поставщики')
                 ->group(static::getNavigationGroup())
                 ->icon(static::getNavigationIcon())
-                ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.guaranteeing-suppliers'))
+                ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName().'.guaranteeing-suppliers'))
                 ->sort(10)
                 ->badge(fn (): ?string => static::getPendingCountForCategory('Гарантирующий поставщик'), color: 'warning')
                 ->url(static::getUrl('guaranteeing-suppliers')),
             NavigationItem::make('Подрядчики')
                 ->group(static::getNavigationGroup())
                 ->icon(static::getNavigationIcon())
-                ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.category-contractors'))
+                ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName().'.category-contractors'))
                 ->sort(12)
                 ->badge(fn (): ?string => static::getPendingCountForCategory('Подрядчик'), color: 'warning')
                 ->url(static::getUrl('category-contractors')),
             NavigationItem::make('РСО')
                 ->group(static::getNavigationGroup())
                 ->icon(static::getNavigationIcon())
-                ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName() . '.resource-supplying-organizations'))
+                ->isActiveWhen(fn (): bool => request()->routeIs(static::getRouteBaseName().'.resource-supplying-organizations'))
                 ->sort(11)
                 ->badge(fn (): ?string => static::getPendingCountForCategory('Ресурсо-снабжающая организация'), color: 'warning')
                 ->url(static::getUrl('resource-supplying-organizations')),

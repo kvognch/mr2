@@ -77,7 +77,7 @@
             <div
               class="flex-between flex-col sm:flex-row items-start sm:items-center gap-8"
             >
-              <h1>{{ $contractor->short_name }}</h1>
+              <h1>{{ $seo['h1'] }}</h1>
 
               <div class="flex-base gap-5 sm:gap-10">
                 @foreach ($segmentBadges as $segmentBadge)

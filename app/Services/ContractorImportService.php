@@ -19,7 +19,7 @@ class ContractorImportService
 {
     public function importFromLocalPath(string $path): array
     {
-        $sheet = Excel::toCollection(new ContractorsSheetImport(), storage_path('app/' . ltrim($path, '/')))->first();
+        $sheet = Excel::toCollection(new ContractorsSheetImport, storage_path('app/'.ltrim($path, '/')))->first();
 
         if ($sheet === null || $sheet->isEmpty()) {
             return ['created' => 0, 'updated' => 0, 'skipped' => 0, 'errors' => 0];
@@ -66,13 +66,16 @@ class ContractorImportService
                     $isExisting = $contractor !== null;
 
                     if (! $contractor) {
-                        $contractor = new Contractor();
+                        $contractor = new Contractor;
                     }
 
                     $attributes = [];
 
                     foreach ([
                         ContractorSpreadsheet::COLUMN_SHORT_NAME => 'short_name',
+                        ContractorSpreadsheet::COLUMN_SEO_H1 => 'seo_h1',
+                        ContractorSpreadsheet::COLUMN_SEO_TITLE => 'seo_title',
+                        ContractorSpreadsheet::COLUMN_SEO_DESCRIPTION => 'seo_description',
                         ContractorSpreadsheet::COLUMN_FULL_NAME => 'full_name',
                         ContractorSpreadsheet::COLUMN_WEBSITE => 'website',
                         ContractorSpreadsheet::COLUMN_APPLICATION_URL => 'application_url',

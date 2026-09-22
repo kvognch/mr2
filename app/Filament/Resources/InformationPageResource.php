@@ -9,24 +9,26 @@ use App\Models\InformationPage;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class InformationPageResource extends Resource
 {
     protected static ?string $model = InformationPage::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Настройки';
+    protected static string|\UnitEnum|null $navigationGroup = 'Настройки';
 
     protected static ?string $navigationLabel = 'Информация';
 
@@ -45,7 +47,7 @@ class InformationPageResource extends Resource
         return $schema
             ->components([
                 TextInput::make('title')
-                    ->label('Заголовок')
+                    ->label('Название страницы')
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state): void {
@@ -59,8 +61,18 @@ class InformationPageResource extends Resource
                         $set('slug', Str::slug(Str::transliterate((string) $state)));
                     })
                     ->maxLength(255),
+                TextInput::make('h1')
+                    ->label('H1')
+                    ->maxLength(255),
+                TextInput::make('meta_title')
+                    ->label('SEO Title')
+                    ->maxLength(255),
+                Textarea::make('meta_description')
+                    ->label('SEO Description')
+                    ->rows(3)
+                    ->maxLength(1000),
                 TextInput::make('slug')
-                    ->label('Алиас')
+                    ->label('Slug')
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true)
@@ -95,13 +107,6 @@ class InformationPageResource extends Resource
                     ->rows(20)
                     ->visible(fn (Get $get): bool => ! $get('use_rich_editor'))
                     ->extraAttributes(['style' => 'font-family: monospace;']),
-                TextInput::make('meta_title')
-                    ->label('SEO Title')
-                    ->maxLength(255),
-                Textarea::make('meta_description')
-                    ->label('SEO Description')
-                    ->rows(3)
-                    ->maxLength(1000),
                 Toggle::make('is_active')
                     ->label('Статус')
                     ->default(true),
@@ -150,12 +155,12 @@ class InformationPageResource extends Resource
         return static::canViewAny();
     }
 
-    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canEdit(Model $record): bool
     {
         return static::canViewAny();
     }
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return static::canViewAny();
     }
@@ -164,5 +169,4 @@ class InformationPageResource extends Resource
     {
         return static::canViewAny();
     }
-
 }

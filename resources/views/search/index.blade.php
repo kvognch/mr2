@@ -463,7 +463,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                                                 </template>
                                                 <template x-for="contractor in paginatedContractors" :key="`${page}-${contractor.id}`">
                                                     <li class="py-4 3xl:py-6">
-                                                        <a :href="`/agents/${contractor.slug}`" target="_blank" rel="noopener noreferrer" class="flex-between items-start gap-3 hover:text-brand-blue smooth">
+                                                        <a :href="`/organizations/${contractor.slug}`" target="_blank" rel="noopener noreferrer" class="flex-between items-start gap-3 hover:text-brand-blue smooth">
                                                             <span x-text="contractor.short_name"></span>
                                                             <span x-text="contractor.rating_name || '—'"></span>
                                                         </a>

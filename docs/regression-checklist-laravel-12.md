@@ -23,8 +23,8 @@ ddev exec tail -n 200 storage/logs/laravel.log
 1. `/`
 2. `/search`
 3. `/geo-map`
-4. `/agent/{slug}`
-5. `/agents/{slug}`
+4. `/organizations/{slug}`
+5. `/agent/{slug}` and `/agents/{slug}` legacy redirects to `/organizations/{slug}`
 
 Что должно быть:
 

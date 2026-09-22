@@ -6,6 +6,7 @@ use App\Models\Contractor;
 use App\Models\ContractorReview;
 use App\Models\GeoUnit;
 use App\Models\ResourceType;
+use App\Support\ContractorSeo;
 use App\Support\HomepageSettings;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\View;
@@ -26,6 +27,7 @@ class ContractorShowController extends Controller
                 'currentSalesTariff',
                 'salesTariffHistory',
             ])
+            ->where('status', 'approved')
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -73,6 +75,7 @@ class ContractorShowController extends Controller
         }
 
         $settings = HomepageSettings::all();
+        $seo = ContractorSeo::resolve($contractor);
         $applicationUrl = trim((string) ($contractor->application_url ?? ''));
 
         $resourceOrder = ['ГС' => 1, 'НВ' => 2, 'НК' => 3, 'ТС' => 4, 'ЭС' => 5];
@@ -114,6 +117,7 @@ class ContractorShowController extends Controller
 
         return view('agent.show', [
             'contractor' => $contractor,
+            'seo' => $seo,
             'settings' => $settings,
             'segmentBadges' => $segmentBadges,
             'website' => $website !== '' ? $website : '#',

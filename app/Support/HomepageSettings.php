@@ -9,20 +9,6 @@ class HomepageSettings
     public static function defaults(): array
     {
         return [
-            'meta' => [
-                'home' => [
-                    'title' => 'МНОГОРЕСУРСОВ',
-                    'description' => 'Поиск и подбор ресурсоснабжающих, сбытовых компаний и подрядчиков для выполнения подключений к инженерной инфраструктуре.',
-                ],
-                'search' => [
-                    'title' => 'Поиск организаций',
-                    'description' => 'Поиск подрядчиков и ресурсоснабжающих организаций',
-                ],
-                'contractor' => [
-                    'title' => '%name%',
-                    'description' => '%name% — карточка подрядчика на платформе МНОГОРЕСУРСОВ.',
-                ],
-            ],
             'google_recaptcha' => [
                 'site_key' => '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
                 'secret_key' => '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe',
@@ -215,6 +201,8 @@ class HomepageSettings
             $settings['join']['cta_button_text_guest'] = $settings['join']['cta_button_text'];
         }
 
+        $settings['meta'] = SeoSettings::all();
+
         return $settings;
     }
 
@@ -237,5 +225,4 @@ class HomepageSettings
             );
         }
     }
-
 }

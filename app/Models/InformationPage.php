@@ -12,6 +12,7 @@ class InformationPage extends Model
 
     protected $fillable = [
         'title',
+        'h1',
         'slug',
         'body',
         'use_rich_editor',
@@ -49,7 +50,7 @@ class InformationPage extends Model
             ->when($exceptId, fn ($query) => $query->where('id', '!=', $exceptId))
             ->where('slug', $slug)
             ->exists()) {
-            $slug = $base . '-' . $suffix;
+            $slug = $base.'-'.$suffix;
             $suffix++;
         }
 

@@ -2,30 +2,27 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
-use Filament\Actions\Action;
 use App\Support\HomepageSettings as HomepageSettingsStore;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use BackedEnum;
-use UnitEnum;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class HomepageSettings extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
     protected static ?string $navigationLabel = 'Общие настройки';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Настройки';
+    protected static string|\UnitEnum|null $navigationGroup = 'Настройки';
 
     protected static ?int $navigationSort = 1;
 
@@ -118,38 +115,6 @@ class HomepageSettings extends Page implements HasForms
                     ->collapsible()
                     ->collapsed()
                     ->footerActions([$this->saveSectionAction('save_footer')]),
-
-                Section::make('Общие')
-                    ->schema([
-                        Section::make('Главная страница')
-                            ->schema([
-                                Grid::make(2)
-                                    ->schema([
-                                        TextInput::make('meta.home.title')->label('Title')->required(),
-                                        Textarea::make('meta.home.description')->label('Description')->rows(3),
-                                    ]),
-                            ]),
-                        Section::make('Страница поиска')
-                            ->schema([
-                                Grid::make(2)
-                                    ->schema([
-                                        TextInput::make('meta.search.title')->label('Title')->required(),
-                                        Textarea::make('meta.search.description')->label('Description')->rows(3),
-                                    ]),
-                            ]),
-                        Section::make('Карточка подрядчика')
-                            ->schema([
-                                Grid::make(2)
-                                    ->schema([
-                                        TextInput::make('meta.contractor.title')->label('Title')->helperText('Используйте %name% для краткого названия подрядчика.')->required(),
-                                        Textarea::make('meta.contractor.description')->label('Description')->rows(3)->helperText('Используйте %name% для краткого названия подрядчика.'),
-                                    ]),
-                            ]),
-                    ])
-                    ->heading('SEO')
-                    ->collapsible()
-                    ->collapsed()
-                    ->footerActions([$this->saveSectionAction('save_meta')]),
 
                 Section::make('Google reCAPTCHA')
                     ->schema([

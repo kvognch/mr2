@@ -1,12 +1,7 @@
 @extends('layouts.app')
 
-@php
-    $contractorMetaTitle = str_replace('%name%', $contractor->short_name, $settings['meta']['contractor']['title'] ?? '%name%');
-    $contractorMetaDescription = str_replace('%name%', $contractor->short_name, $settings['meta']['contractor']['description'] ?? '');
-@endphp
-
-@section('title', $contractorMetaTitle)
-@section('meta-description', $contractorMetaDescription)
+@section('title', $seo['title'])
+@section('meta-description', $seo['description'])
 @section('body-attrs')
 x-data="{ mobileMenuOpen: false, requestModalOpen: false, ratingInfoModalOpen: false, contractorTerritoryMapModalOpen: false, contractorReviewModalOpen: false, extractInfoModalOpen: false, authModalOpen: false, authModalMode: 'login' }" x-effect="window.setBodyScrollLock(mobileMenuOpen || requestModalOpen || ratingInfoModalOpen || contractorTerritoryMapModalOpen || contractorReviewModalOpen || extractInfoModalOpen || authModalOpen || $store.reviewModalOpen)"
 @endsection

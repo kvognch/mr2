@@ -9,35 +9,71 @@ class ContractorSpreadsheet
     public const MULTI_VALUE_SEPARATOR = '|';
 
     public const COLUMN_ID = 'ID';
+
     public const COLUMN_SHORT_NAME = 'Краткое название';
+
     public const COLUMN_SLUG = 'Алиас';
+
+    public const COLUMN_SEO_H1 = 'SEO H1';
+
+    public const COLUMN_SEO_TITLE = 'SEO Title';
+
+    public const COLUMN_SEO_DESCRIPTION = 'SEO Description';
+
     public const COLUMN_FULL_NAME = 'Полное название';
+
     public const COLUMN_BUSINESS_SEGMENTS = 'Сегмент бизнеса';
+
     public const COLUMN_WEBSITE = 'Сайт';
+
     public const COLUMN_APPLICATION_URL = 'Ссылка на форму заявки';
+
     public const COLUMN_SOCIAL_TELEGRAM = 'Telegram';
+
     public const COLUMN_SOCIAL_VK = 'ВКонтакте';
+
     public const COLUMN_SOCIAL_WHATSAPP = 'WhatsApp';
+
     public const COLUMN_SOCIAL_MAX = 'Max';
+
     public const COLUMN_PHONE = 'Телефон';
+
     public const COLUMN_EMAIL = 'Электронная почта';
+
     public const COLUMN_CATEGORIES = 'Категория';
+
     public const COLUMN_RESPONSE_TIME = 'Сроки ответа';
+
     public const COLUMN_WORK_VOLUME = 'Объем выполняемых работ, ₽';
+
     public const COLUMN_TERRITORIES = 'Территория работы';
+
     public const COLUMN_SMR_RESOURCE_TYPES = 'СМР (ресурсы)';
+
     public const COLUMN_SMR_HAS_SRO = 'Наличие СРО СМР';
+
     public const COLUMN_PIR_RESOURCE_TYPES = 'ПИР/ПСД (ресурсы)';
+
     public const COLUMN_PIR_HAS_SRO = 'Наличие СРО ПИР/ПСД';
+
     public const COLUMN_OGRN = 'ОГРН';
+
     public const COLUMN_INN = 'ИНН';
+
     public const COLUMN_KPP = 'КПП';
+
     public const COLUMN_REGISTRATION_DATE = 'Дата регистрации';
+
     public const COLUMN_LEGAL_ADDRESS = 'Юридический адрес';
+
     public const COLUMN_BRANCH_CONTACTS = 'Адреса и телефоны филиалов';
+
     public const COLUMN_ADDITIONAL_INFO = 'Дополнительная информация';
+
     public const COLUMN_RATING = 'Рейтинг';
+
     public const COLUMN_STATUS = 'Статус';
+
     public const COLUMN_OWNER = 'Владелец (email)';
 
     public static function headings(): array
@@ -46,6 +82,9 @@ class ContractorSpreadsheet
             self::COLUMN_ID,
             self::COLUMN_SHORT_NAME,
             self::COLUMN_SLUG,
+            self::COLUMN_SEO_H1,
+            self::COLUMN_SEO_TITLE,
+            self::COLUMN_SEO_DESCRIPTION,
             self::COLUMN_FULL_NAME,
             self::COLUMN_BUSINESS_SEGMENTS,
             self::COLUMN_WEBSITE,
@@ -100,6 +139,9 @@ class ContractorSpreadsheet
             self::COLUMN_ID => $contractor->id,
             self::COLUMN_SHORT_NAME => $contractor->short_name,
             self::COLUMN_SLUG => $contractor->slug,
+            self::COLUMN_SEO_H1 => $contractor->seo_h1,
+            self::COLUMN_SEO_TITLE => $contractor->seo_title,
+            self::COLUMN_SEO_DESCRIPTION => $contractor->seo_description,
             self::COLUMN_FULL_NAME => $contractor->full_name,
             self::COLUMN_BUSINESS_SEGMENTS => static::implodeValues(
                 collect($contractor->business_segments ?? [])
@@ -149,7 +191,7 @@ class ContractorSpreadsheet
             ->values()
             ->all();
 
-        return $normalized === [] ? null : implode(' ' . self::MULTI_VALUE_SEPARATOR . ' ', $normalized);
+        return $normalized === [] ? null : implode(' '.self::MULTI_VALUE_SEPARATOR.' ', $normalized);
     }
 
     public static function explodeValues(mixed $value): array

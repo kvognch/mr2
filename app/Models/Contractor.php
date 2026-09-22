@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,6 +17,9 @@ class Contractor extends Model
 
     protected $fillable = [
         'short_name',
+        'seo_h1',
+        'seo_title',
+        'seo_description',
         'slug',
         'full_name',
         'business_segments',
@@ -55,7 +58,31 @@ class Contractor extends Model
     protected static function booted(): void
     {
         static::saving(function (self $contractor): void {
-            if (! $contractor->isDirty('short_name') && ! empty($contractor->slug)) {
+            if (! $contractor->isDirty('short_name') && ! blank($contractor->slug)) {
+                return;
+            }
+
+            if ($contractor->isDirty('slug') && filled($contractor->slug)) {
+                return;
+            }
+
+            if ($contractor->isDirty('slug') && blank($contractor->slug)) {
+                $contractor->slug = static::generateUniqueSlug((string) $contractor->short_name, $contractor->id);
+
+                return;
+            }
+
+            $originalName = (string) $contractor->getRawOriginal('short_name');
+            $originalSlug = (string) $contractor->getRawOriginal('slug');
+            $originalGeneratedSlug = $originalName !== ''
+                ? static::generateUniqueSlug($originalName, $contractor->id)
+                : '';
+
+            if (
+                $contractor->exists
+                && $originalSlug !== ''
+                && $originalSlug !== $originalGeneratedSlug
+            ) {
                 return;
             }
 
@@ -67,7 +94,7 @@ class Contractor extends Model
     {
         $base = Str::slug(Str::transliterate($name));
         if ($base === '') {
-            $base = 'agent';
+            $base = 'organization';
         }
 
         $slug = $base;
@@ -77,7 +104,7 @@ class Contractor extends Model
             ->when($exceptId, fn ($query) => $query->where('id', '!=', $exceptId))
             ->where('slug', $slug)
             ->exists()) {
-            $slug = $base . '-' . $suffix;
+            $slug = $base.'-'.$suffix;
             $suffix++;
         }
 
@@ -244,7 +271,7 @@ class Contractor extends Model
     public function scopeOrderedForModeration(Builder $query): Builder
     {
         return $query->orderByRaw(
-            "case status when ? then 0 when ? then 1 else 2 end",
+            'case status when ? then 0 when ? then 1 else 2 end',
             ['pending', 'approved']
         );
     }

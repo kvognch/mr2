@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\ContractorResource\Pages;
 
-use App\Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\ContractorResource;
+use App\Filament\Resources\Pages\CreateRecord;
 use App\Models\ContractorTariff;
+use App\Support\ContractorSeo;
 
 class CreateContractor extends CreateRecord
 {
@@ -15,6 +16,13 @@ class CreateContractor extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['owner_id'] ??= auth()->id();
+
+        if (ContractorResource::canManageSeo()) {
+            $data = ContractorSeo::prepareForSave($data);
+        } else {
+            unset($data['seo_h1'], $data['seo_title'], $data['seo_description'], $data['slug']);
+        }
+
         unset($data['territory_ids'], $data['connection_tariff_upload'], $data['sales_tariff_upload']);
 
         return $data;
