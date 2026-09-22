@@ -17,6 +17,7 @@ final class SeoSettings
                 'title' => 'Поиск организаций',
                 'description' => 'Поиск подрядчиков и ресурсоснабжающих организаций',
             ],
+            'robots' => "User-agent: *\nDisallow:\nSitemap: /sitemap.xml",
             'tracking' => [
                 'yandex_metrica' => '',
             ],

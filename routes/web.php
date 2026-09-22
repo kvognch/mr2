@@ -10,6 +10,7 @@ use App\Http\Controllers\PublicFormController;
 use App\Http\Controllers\PublicReviewController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
+use App\Support\SeoSettings;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -32,7 +33,13 @@ Route::get('/sitemap-organizations-{part}.xml', [SitemapController::class, 'orga
     ->where('part', '[0-9]+')
     ->name('sitemap.organizations');
 Route::get('/robots.txt', function () {
-    return response("User-agent: *\nDisallow:\nSitemap: ".route('sitemap.index')."\n")
+    $robots = trim((string) (SeoSettings::all()['robots'] ?? ''));
+
+    if ($robots === '') {
+        $robots = "User-agent: *\nDisallow:\nSitemap: /sitemap.xml";
+    }
+
+    return response($robots."\n")
         ->header('Content-Type', 'text/plain; charset=UTF-8');
 })->name('robots');
 Route::get('/info/{slug}', InfoPageController::class)->name('info.show');

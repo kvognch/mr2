@@ -10,6 +10,7 @@ use App\Models\ServiceReview;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class ReviewDemoSeeder extends Seeder
 {
@@ -157,6 +158,11 @@ class ReviewDemoSeeder extends Seeder
     private function resolveUser(string $name, int $index): User
     {
         $slug = Str::slug(Str::transliterate($name));
+        $password = config('services.review_demo.password');
+
+        if (! is_string($password) || $password === '') {
+            throw new RuntimeException('REVIEW_DEMO_PASSWORD must be configured before running ReviewDemoSeeder.');
+        }
 
         return User::query()->firstOrCreate(
             ['email' => sprintf('%s.review.%d@mrnr.local', $slug ?: 'reviewer', $index)],
@@ -165,7 +171,7 @@ class ReviewDemoSeeder extends Seeder
                 'phone' => sprintf('+7 (900) %03d-%02d-%02d', intdiv($index, 100) % 1000, intdiv($index, 10) % 10, $index % 10),
                 'role' => UserRole::Client,
                 'is_active' => true,
-                'password' => 'Reviewer123!',
+                'password' => $password,
             ],
         );
     }

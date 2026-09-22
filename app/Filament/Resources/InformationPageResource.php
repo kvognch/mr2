@@ -61,22 +61,6 @@ class InformationPageResource extends Resource
                         $set('slug', Str::slug(Str::transliterate((string) $state)));
                     })
                     ->maxLength(255),
-                TextInput::make('h1')
-                    ->label('H1')
-                    ->maxLength(255),
-                TextInput::make('meta_title')
-                    ->label('SEO Title')
-                    ->maxLength(255),
-                Textarea::make('meta_description')
-                    ->label('SEO Description')
-                    ->rows(3)
-                    ->maxLength(1000),
-                TextInput::make('slug')
-                    ->label('Slug')
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(ignoreRecord: true)
-                    ->helperText('Используется в URL страницы. Должен быть уникальным.'),
                 Toggle::make('use_rich_editor')
                     ->label('Визуальный редактор')
                     ->helperText('Выключите, чтобы править HTML-код вручную.')
@@ -107,6 +91,22 @@ class InformationPageResource extends Resource
                     ->rows(20)
                     ->visible(fn (Get $get): bool => ! $get('use_rich_editor'))
                     ->extraAttributes(['style' => 'font-family: monospace;']),
+                TextInput::make('h1')
+                    ->label('H1')
+                    ->maxLength(255),
+                TextInput::make('meta_title')
+                    ->label('Title')
+                    ->maxLength(255),
+                Textarea::make('meta_description')
+                    ->label('Description')
+                    ->rows(3)
+                    ->maxLength(1000),
+                TextInput::make('slug')
+                    ->label('Slug')
+                    ->required()
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true)
+                    ->helperText('Используется в URL страницы. Должен быть уникальным.'),
                 Toggle::make('is_active')
                     ->label('Статус')
                     ->default(true),

@@ -24,7 +24,7 @@ class SeoSettings extends Page implements HasForms
 
     protected static string|\UnitEnum|null $navigationGroup = 'Настройки';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 4;
 
     protected static ?string $title = 'SEO';
 
@@ -68,31 +68,30 @@ class SeoSettings extends Page implements HasForms
                     ])
                     ->collapsible()
                     ->collapsed(),
-                Section::make('Счетчики и аналитика')
-                    ->description('Вставьте полный код Яндекс Метрики. Если Тег Менеджер подключен в Метрике, он устанавливается этим же кодом.')
+                Section::make('Description организаций')
                     ->schema([
-                        Textarea::make('tracking.yandex_metrica')
-                            ->label('Код Яндекс Метрики')
-                            ->rows(8)
-                            ->helperText('Полный код счетчика из настроек Яндекс Метрики, включая подключенный Тег Менеджер.'),
+                        TextInput::make('organizations.description_prefix')
+                            ->label('Начальный текст')
+                            ->required(),
+                        TextInput::make('organizations.description_suffix')
+                            ->label('Конечный текст')
+                            ->required(),
+                    ])
+                    ->columns(2)
+                    ->collapsible()
+                    ->collapsed()
+                    ->footerActions([$this->saveSectionAction()]),
+                Section::make('Robots.txt')
+                    ->schema([
+                        Textarea::make('robots')
+                            ->label('Директивы')
+                            ->rows(12)
+                            ->required(),
                     ])
                     ->columns(1)
                     ->collapsible()
-                    ->collapsed(),
-                Section::make('Description организаций')
-                    ->description('Эти тексты используются при автоматическом формировании Description карточек организаций.')
-                    ->schema([
-                        Textarea::make('organizations.description_prefix')
-                            ->label('Начальный текст')
-                            ->rows(3)
-                            ->required(),
-                        Textarea::make('organizations.description_suffix')
-                            ->label('Конечный текст')
-                            ->rows(3)
-                            ->required(),
-                    ])
-                    ->columns(1)
-                    ->footerActions([$this->saveSectionAction()]),
+                    ->collapsed()
+                    ->footerActions([$this->saveSectionAction('save_robots')]),
             ])
             ->statePath('data');
     }
@@ -107,9 +106,9 @@ class SeoSettings extends Page implements HasForms
             ->send();
     }
 
-    protected function saveSectionAction(): Action
+    protected function saveSectionAction(string $name = 'save_seo'): Action
     {
-        return Action::make('save_seo')
+        return Action::make($name)
             ->label('Сохранить')
             ->submit('save')
             ->color('primary');

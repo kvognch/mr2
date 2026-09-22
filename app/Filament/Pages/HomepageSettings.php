@@ -3,8 +3,10 @@
 namespace App\Filament\Pages;
 
 use App\Support\HomepageSettings as HomepageSettingsStore;
+use App\Support\SeoSettings as SeoSettingsStore;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -116,6 +118,18 @@ class HomepageSettings extends Page implements HasForms
                     ->collapsed()
                     ->footerActions([$this->saveSectionAction('save_footer')]),
 
+                Section::make('Счетчики и аналитика')
+                    ->schema([
+                        Textarea::make('meta.tracking.yandex_metrica')
+                            ->label('Код Яндекс Метрики')
+                            ->rows(8)
+                            ->helperText('Полный код счетчика из настроек Яндекс Метрики, включая подключенный Тег Менеджер.'),
+                    ])
+                    ->columns(1)
+                    ->collapsible()
+                    ->collapsed()
+                    ->footerActions([$this->saveSectionAction('save_tracking')]),
+
                 Section::make('Google reCAPTCHA')
                     ->schema([
                         Grid::make(2)
@@ -135,8 +149,14 @@ class HomepageSettings extends Page implements HasForms
     public function save(): void
     {
         $state = $this->form->getState();
+        $tracking = data_get($state, 'meta.tracking');
+        unset($state['meta']);
 
         HomepageSettingsStore::save($state);
+
+        if (is_array($tracking)) {
+            SeoSettingsStore::save(['tracking' => $tracking]);
+        }
 
         Notification::make()
             ->title('Общие настройки сохранены')

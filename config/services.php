@@ -40,4 +40,8 @@ return [
         'secret_key' => env('RECAPTCHA_SECRET_KEY'),
     ],
 
+    'review_demo' => [
+        'password' => env('REVIEW_DEMO_PASSWORD'),
+    ],
+
 ];
