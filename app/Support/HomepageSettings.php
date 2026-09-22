@@ -9,10 +9,6 @@ class HomepageSettings
     public static function defaults(): array
     {
         return [
-            'google_recaptcha' => [
-                'site_key' => '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
-                'secret_key' => '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe',
-            ],
             'header' => [
                 'brand' => 'МНОГОРЕСУРСОВ',
                 'login_button_text_guest' => 'Вход / Регистрация',
@@ -201,6 +197,9 @@ class HomepageSettings
             $settings['join']['cta_button_text_guest'] = $settings['join']['cta_button_text'];
         }
 
+        $settings['google_recaptcha'] = [
+            'site_key' => (string) config('services.recaptcha.site_key', ''),
+        ];
         $settings['meta'] = SeoSettings::all();
 
         return $settings;

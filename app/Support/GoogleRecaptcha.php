@@ -9,8 +9,7 @@ class GoogleRecaptcha
 {
     public static function assertValid(string $token, string $errorBag): void
     {
-        $settings = HomepageSettings::all();
-        $secretKey = $settings['google_recaptcha']['secret_key'] ?? null;
+        $secretKey = config('services.recaptcha.secret_key');
 
         if (! $secretKey) {
             static::throwValidationException($errorBag, 'Не настроена Google reCAPTCHA.');
