@@ -28,9 +28,9 @@
             </ul>
 
             @if (auth()->check())
-                <a href="{{ $settings['header']['login_button_url'] ?? '/dashboard' }}" class="button_1 hidden lg:block">{{ $settings['header']['login_button_text_auth'] ?? 'Личный кабинет' }}</a>
+                <a href="{{ $settings['header']['login_button_url'] ?? '/dashboard' }}" class="button_1 !hidden lg:!inline-flex">{{ $settings['header']['login_button_text_auth'] ?? 'Личный кабинет' }}</a>
             @else
-                <button type="button" class="button_1 hidden lg:block" @click="authModalOpen = true; authModalMode = 'login'">{{ $settings['header']['login_button_text_guest'] ?? 'Вход / Регистрация' }}</button>
+                <button type="button" class="button_1 !hidden lg:!inline-flex" @click="authModalOpen = true; authModalMode = 'login'">{{ $settings['header']['login_button_text_guest'] ?? 'Вход / Регистрация' }}</button>
             @endif
 
             <div class="relative lg:hidden">
