@@ -100,8 +100,8 @@ class HomepageSettings extends Page implements HasForms
                             ])
                             ->columns(2)
                             ->collapsible(),
-                        TextInput::make('footer.email')->label('Email')->required()->email(),
-                        TextInput::make('footer.phone_display')->label('Телефон')->required(),
+                        TextInput::make('footer.email')->label('Email')->email()->nullable(),
+                        TextInput::make('footer.phone_display')->label('Телефон')->nullable(),
                         Repeater::make('footer.socials')
                             ->label('Соцсети')
                             ->addActionLabel('Добавить')

@@ -1,5 +1,10 @@
 @php
-    $footerPhoneDisplay = (string) ($settings['footer']['phone_display'] ?? ($settings['footer']['phone'] ?? ''));
+    $footerSettings = $settings['footer'] ?? [];
+    $footerEmail = trim((string) ($footerSettings['email'] ?? ''));
+    $footerPhoneDisplay = array_key_exists('phone_display', $footerSettings)
+        ? (string) $footerSettings['phone_display']
+        : (string) ($footerSettings['phone'] ?? '');
+    $footerPhoneDisplay = trim($footerPhoneDisplay);
     $footerPhoneHref = preg_replace('/[\s()-]+/', '', $footerPhoneDisplay);
     $footerPhoneHref = is_string($footerPhoneHref) ? $footerPhoneHref : $footerPhoneDisplay;
 @endphp
@@ -31,8 +36,12 @@
 
             <div class="flex xs:items-center lg:items-end flex-col gap-10">
                 <div class="flex xs:items-center lg:items-end flex-col gap-2.25">
-                    <a href="mailto:{{ $settings['footer']['email'] }}" class="text_5 hover:underline underline-offset-1">{{ $settings['footer']['email'] }}</a>
-                    <a href="tel:{{ $footerPhoneHref }}" class="text_5 hover:underline underline-offset-1">{{ $footerPhoneDisplay }}</a>
+                    @if ($footerEmail !== '')
+                        <a href="mailto:{{ $footerEmail }}" class="text_5 hover:underline underline-offset-1">{{ $footerEmail }}</a>
+                    @endif
+                    @if ($footerPhoneDisplay !== '')
+                        <a href="tel:{{ $footerPhoneHref }}" class="text_5 hover:underline underline-offset-1">{{ $footerPhoneDisplay }}</a>
+                    @endif
                 </div>
 
                 <div class="admin-shell-socials flex-base gap-6">
