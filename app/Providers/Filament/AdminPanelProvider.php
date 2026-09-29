@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Resources\ContractorResource;
+use App\Http\Middleware\SetFilamentMemoryLimit;
 use App\Support\HomepageSettings;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -17,6 +18,7 @@ use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Foundation\Vite;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
@@ -50,7 +52,7 @@ class AdminPanelProvider extends PanelProvider
             )
             ->renderHook(
                 PanelsRenderHook::STYLES_AFTER,
-                fn (): string => app(\Illuminate\Foundation\Vite::class)('resources/css/app.css')->toHtml(),
+                fn (): string => app(Vite::class)('resources/css/app.css')->toHtml(),
             )
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
@@ -83,6 +85,9 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->middleware([
+                SetFilamentMemoryLimit::class,
+            ], isPersistent: true)
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
