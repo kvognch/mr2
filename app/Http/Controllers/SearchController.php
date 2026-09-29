@@ -26,7 +26,7 @@ class SearchController extends Controller
             ->orderBy('short_name')
             ->get();
 
-        $contractorItems = $contractors->map(function (Contractor $contractor) use ($territoryParentIds): array {
+        $contractorItems = $contractors->map(function (Contractor $contractor) use ($territoryParentIds, $territoryDescendants): array {
             return [
                 'id' => $contractor->id,
                 'short_name' => $contractor->short_name,
@@ -170,6 +170,7 @@ class SearchController extends Controller
             $parentId = $node['parent_id'];
             if ($parentId !== null && isset($byId[$parentId])) {
                 $byId[$parentId]['children'][] = &$node;
+
                 continue;
             }
 
@@ -199,7 +200,7 @@ class SearchController extends Controller
     }
 
     /**
-     * @param array<int, array<string, mixed>> $nodes
+     * @param  array<int, array<string, mixed>>  $nodes
      */
     private function sortTreeNodes(array &$nodes): void
     {
@@ -257,7 +258,7 @@ class SearchController extends Controller
     }
 
     /**
-     * @param array<int, array<string, mixed>> $tree
+     * @param  array<int, array<string, mixed>>  $tree
      * @return array<int, array<int>>
      */
     private function buildDescendantsMap(array $tree): array
