@@ -44,7 +44,7 @@ class ListContractors extends ListRecords
                 ->icon('heroicon-o-arrow-down-tray')
                 ->url(route('contractors.export'))
                 ->openUrlInNewTab()
-                ->visible(fn (): bool => auth()->user()?->isSuperadmin() || auth()->user()?->isManager()),
+                ->visible(fn (): bool => auth()->user()?->canManageContractors() ?? false),
             Actions\Action::make('importXlsx')
                 ->label('Импорт XLSX')
                 ->icon('heroicon-o-arrow-up-tray')
@@ -96,7 +96,7 @@ class ListContractors extends ListRecords
                         ->success()
                         ->send();
                 })
-                ->visible(fn (): bool => auth()->user()?->isSuperadmin() || auth()->user()?->isManager()),
+                ->visible(fn (): bool => auth()->user()?->canManageContractors() ?? false),
             CreateAction::make()->label('Добавить'),
         ];
     }

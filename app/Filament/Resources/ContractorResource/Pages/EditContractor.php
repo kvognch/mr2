@@ -26,6 +26,7 @@ class EditContractor extends EditRecord
     {
         return Action::make('manageGeoUnitSchemes')
             ->label('Схемы по видам ресурсов')
+            ->visible(fn (): bool => $this->canManageGeoUnitSchemes())
             ->modalHeading(fn (array $arguments): string => 'Схемы по видам ресурсов: '.$this->getGeoUnitForSchemes($arguments)->name)
             ->modalWidth('4xl')
             ->modalSubmitActionLabel('Сохранить')
@@ -58,7 +59,7 @@ class EditContractor extends EditRecord
 
     protected function canManageGeoUnitSchemes(): bool
     {
-        return auth()->check();
+        return auth()->user()?->canManageContractors() ?? false;
     }
 
     protected function mutateFormDataBeforeFill(array $data): array
@@ -74,7 +75,9 @@ class EditContractor extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        if (auth()->user()?->isClient()) {
+        $actor = auth()->user();
+
+        if ($actor?->isClient()) {
             $data['status'] = 'pending';
         }
 

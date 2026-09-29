@@ -133,6 +133,21 @@ class ContractorSpreadsheet
         ];
     }
 
+    public static function parseContractorStatus(mixed $value): string
+    {
+        $normalized = static::normalizeLookupValue($value);
+
+        if ($normalized === '') {
+            return 'approved';
+        }
+
+        $reverse = collect(static::contractorStatusOptions())
+            ->mapWithKeys(fn (string $label, string $key): array => [static::normalizeLookupValue($label) => $key])
+            ->all();
+
+        return $reverse[$normalized] ?? (array_key_exists($normalized, static::contractorStatusOptions()) ? $normalized : 'pending');
+    }
+
     public static function contractorToRow(Contractor $contractor): array
     {
         return [

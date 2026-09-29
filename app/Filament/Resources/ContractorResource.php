@@ -14,6 +14,8 @@ use App\Models\ContractorCategory;
 use App\Models\ContractorTariff;
 use App\Models\GeoUnit;
 use App\Support\ContractorSeo;
+use App\Support\ContractorSpreadsheet;
+use Filament\Actions\BulkAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -181,7 +183,7 @@ class ContractorResource extends Resource
                         ->label('Территория работы')
                         ->tree(fn (): array => static::getTerritoryTree())
                         ->descendants(fn (): array => static::getTerritoryDescendants())
-                        ->manageSchemes(fn (): bool => auth()->check())
+                        ->manageSchemes(fn (): bool => auth()->user()?->canManageContractors() ?? false)
                         ->live()
                         ->afterStateUpdated(function (Get $get, Set $set, mixed $old, mixed $state): void {
                             static::refreshSeoDefaults($get, $set, 'territory_ids', $old, $state);
@@ -279,12 +281,8 @@ class ContractorResource extends Resource
                     Select::make('status')
                         ->label('Статус')
                         ->required()
-                        ->options([
-                            'pending' => 'На рассмотрении',
-                            'approved' => 'Одобрен',
-                            'rejected' => 'Отклонён',
-                        ])
-                        ->default('pending'),
+                        ->options(ContractorSpreadsheet::contractorStatusOptions())
+                        ->default(fn (): string => auth()->user()?->canManageContractors() ? 'approved' : 'pending'),
                     Select::make('owner_id')
                         ->label('Владелец')
                         ->relationship('owner', 'name')
@@ -413,11 +411,7 @@ class ContractorResource extends Resource
             ->filters([
                 SelectFilter::make('status')
                     ->label('Статус')
-                    ->options([
-                        'pending' => 'На рассмотрении',
-                        'approved' => 'Одобрен',
-                        'rejected' => 'Отклонён',
-                    ]),
+                    ->options(ContractorSpreadsheet::contractorStatusOptions()),
                 SelectFilter::make('categories')
                     ->label('Категория')
                     ->relationship('categories', 'name')
@@ -471,6 +465,35 @@ class ContractorResource extends Resource
                     }),
             ])
             ->toolbarActions([
+                BulkAction::make('changeStatus')
+                    ->label('Изменить статус')
+                    ->icon('heroicon-o-adjustments-horizontal')
+                    ->form([
+                        Select::make('status')
+                            ->label('Новый статус')
+                            ->options(ContractorSpreadsheet::contractorStatusOptions())
+                            ->required(),
+                    ])
+                    ->requiresConfirmation()
+                    ->fetchSelectedRecords(false)
+                    ->action(function (BulkAction $action, array $data): void {
+                        abort_unless(auth()->user()?->canManageContractors(), 403);
+
+                        $status = $data['status'] ?? null;
+                        abort_unless(
+                            is_string($status) && array_key_exists($status, ContractorSpreadsheet::contractorStatusOptions()),
+                            422,
+                        );
+
+                        $query = $action->getSelectedRecordsQuery();
+
+                        // Sorting is only needed for the table display. Raw sort bindings
+                        // are not part of UPDATE SQL and can trigger PDO HY093 errors.
+                        $query->reorder()->update(['status' => $status]);
+                    })
+                    ->deselectRecordsAfterCompletion()
+                    ->successNotificationTitle('Статус выбранных организаций изменён')
+                    ->visible(fn (): bool => auth()->user()?->canManageContractors() ?? false),
                 DeleteBulkAction::make(),
             ])
             ->defaultSort('short_name');
@@ -495,7 +518,7 @@ class ContractorResource extends Resource
 
     public static function canManageSeo(): bool
     {
-        return auth()->user()?->isSuperadmin() || auth()->user()?->isManager();
+        return auth()->user()?->canManageContractors() ?? false;
     }
 
     protected static function refreshSeoDefaults(

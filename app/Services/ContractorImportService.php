@@ -10,6 +10,7 @@ use App\Models\Rating;
 use App\Models\ResourceType;
 use App\Models\User;
 use App\Support\ContractorSpreadsheet;
+use App\Support\ContractorStatus;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,6 +20,9 @@ class ContractorImportService
 {
     public function importFromLocalPath(string $path): array
     {
+        $actor = auth()->user();
+        abort_unless($actor?->canManageContractors(), 403);
+
         $sheet = Excel::toCollection(new ContractorsSheetImport, storage_path('app/'.ltrim($path, '/')))->first();
 
         if ($sheet === null || $sheet->isEmpty()) {
@@ -60,7 +64,7 @@ class ContractorImportService
             }
 
             try {
-                DB::transaction(function () use ($mappedRow, $headerIndexes, $categoryMap, $territoryMap, $resourceTypeMap, $ratingMap, $ownerMap, &$stats): void {
+                DB::transaction(function () use ($mappedRow, $headerIndexes, $categoryMap, $territoryMap, $resourceTypeMap, $ratingMap, $ownerMap, $actor, &$stats): void {
                     $id = $this->parseInteger($mappedRow[ContractorSpreadsheet::COLUMN_ID] ?? null);
                     $contractor = $id ? Contractor::query()->find($id) : null;
                     $isExisting = $contractor !== null;
@@ -130,8 +134,12 @@ class ContractorImportService
                     }
 
                     if ($this->hasHeading($headerIndexes, ContractorSpreadsheet::COLUMN_STATUS)) {
-                        $attributes['status'] = $this->parseContractorStatus($mappedRow[ContractorSpreadsheet::COLUMN_STATUS] ?? null);
+                        $attributes['status'] = ContractorSpreadsheet::parseContractorStatus(
+                            $mappedRow[ContractorSpreadsheet::COLUMN_STATUS] ?? null
+                        );
                     }
+
+                    $attributes = ContractorStatus::applyManagementDefault($attributes, $actor);
 
                     if ($this->hasHeading($headerIndexes, ContractorSpreadsheet::COLUMN_OWNER)) {
                         $attributes['owner_id'] = $this->resolveSingleRelationId($mappedRow[ContractorSpreadsheet::COLUMN_OWNER] ?? null, $ownerMap);
@@ -264,21 +272,6 @@ class ContractorImportService
             ->unique()
             ->values()
             ->all();
-    }
-
-    private function parseContractorStatus(mixed $value): string
-    {
-        $normalized = ContractorSpreadsheet::normalizeLookupValue($value);
-
-        if ($normalized === '') {
-            return 'pending';
-        }
-
-        $reverse = collect(ContractorSpreadsheet::contractorStatusOptions())
-            ->mapWithKeys(fn (string $label, string $key): array => [ContractorSpreadsheet::normalizeLookupValue($label) => $key])
-            ->all();
-
-        return $reverse[$normalized] ?? (array_key_exists($normalized, ContractorSpreadsheet::contractorStatusOptions()) ? $normalized : 'pending');
     }
 
     private function parseNullableString(mixed $value): ?string

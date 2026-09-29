@@ -6,6 +6,7 @@ use App\Filament\Resources\ContractorResource;
 use App\Filament\Resources\Pages\CreateRecord;
 use App\Models\ContractorTariff;
 use App\Support\ContractorSeo;
+use App\Support\ContractorStatus;
 
 class CreateContractor extends CreateRecord
 {
@@ -16,6 +17,7 @@ class CreateContractor extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['owner_id'] ??= auth()->id();
+        $data = ContractorStatus::applyManagementDefault($data, auth()->user());
 
         if (ContractorResource::canManageSeo()) {
             $data = ContractorSeo::prepareForSave($data);

@@ -24,7 +24,7 @@ class ContractorPolicy
 
     public function update(User $user, Contractor $contractor): bool
     {
-        if ($user->isSuperadmin() || $user->isManager()) {
+        if ($user->canManageContractors()) {
             return true;
         }
 
@@ -38,6 +38,6 @@ class ContractorPolicy
 
     public function deleteAny(User $user): bool
     {
-        return $user->isSuperadmin() || $user->isManager();
+        return $user->canManageContractors();
     }
 }

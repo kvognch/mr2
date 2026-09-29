@@ -666,21 +666,6 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                     if (!values.length) return true;
                     return source.some((id) => values.includes(id));
                 },
-                expandTerritoryIds(ids) {
-                    const expandedIds = new Set();
-
-                    for (const value of ids ?? []) {
-                        const id = Number(value);
-                        if (!Number.isInteger(id) || id <= 0) continue;
-
-                        expandedIds.add(id);
-                        for (const descendantId of this.territoryDescendants[id] ?? []) {
-                            expandedIds.add(Number(descendantId));
-                        }
-                    }
-
-                    return [...expandedIds];
-                },
                 parseIdsParam(value) {
                     if (!value) return [];
                     return String(value)
@@ -812,7 +797,7 @@ x-data="searchPage()" x-effect="window.setBodyScrollLock(mobileMenuOpen || reque
                     return this.contractors.filter((contractor) => {
                         if (query !== '' && !this.normalizeText(contractor.short_name).includes(query)) return false;
 
-                        const contractorTerritories = this.expandTerritoryIds(contractor.territory_ids ?? []);
+                        const contractorTerritories = (contractor.territory_scope_ids ?? []).map((id) => Number(id));
                         if (territoryScope.length > 0 && !this.hasIntersection(contractorTerritories, territoryScope)) return false;
 
                         const contractorCategories = (contractor.category_ids ?? []).map((v) => Number(v));

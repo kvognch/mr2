@@ -6,6 +6,7 @@ use App\Models\Contractor;
 use App\Models\ContractorCategory;
 use App\Models\GeoUnit;
 use App\Models\ResourceType;
+use App\Support\ContractorTerritoryScope;
 use App\Support\HomepageSettings;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -16,6 +17,8 @@ class SearchController extends Controller
     {
         $settings = HomepageSettings::all();
         $territoryParentIds = $this->buildTerritoryParentMap();
+        $territoryTree = $this->buildActiveTerritoryTree();
+        $territoryDescendants = $this->buildDescendantsMap($territoryTree);
 
         $contractors = Contractor::query()
             ->with(['categories:id,name', 'rating:id,name,sort_order', 'territories:id,name', 'smrResourceTypes:id', 'pirResourceTypes:id'])
@@ -31,9 +34,10 @@ class SearchController extends Controller
                 'rating_name' => (string) ($contractor->rating?->name ?? ''),
                 'rating_sort_order' => (int) ($contractor->rating?->sort_order ?? 9999),
                 'category_ids' => $contractor->categories->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
-                'territory_ids' => $this->expandTerritoryIdsWithAncestors(
+                'territory_scope_ids' => ContractorTerritoryScope::forAssignments(
                     $contractor->territories->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
                     $territoryParentIds,
+                    $territoryDescendants,
                 ),
                 'smr_resource_ids' => $contractor->smrResourceTypes->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
                 'pir_resource_ids' => $contractor->pirResourceTypes->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
@@ -63,9 +67,6 @@ class SearchController extends Controller
                 'abbreviation' => (string) $resourceType->abbreviation,
             ])
             ->values();
-
-        $territoryTree = $this->buildActiveTerritoryTree();
-        $territoryDescendants = $this->buildDescendantsMap($territoryTree);
 
         return view('search.index', [
             'settings' => $settings,
@@ -195,42 +196,6 @@ class SearchController extends Controller
                 (int) $id => $parentId !== null ? (int) $parentId : null,
             ])
             ->all();
-    }
-
-    /**
-     * @param  array<int, int>  $territoryIds
-     * @param  array<int, int|null>  $parentIds
-     * @return array<int, int>
-     */
-    private function expandTerritoryIdsWithAncestors(array $territoryIds, array $parentIds): array
-    {
-        $expandedIds = [];
-
-        foreach ($territoryIds as $territoryId) {
-            $territoryId = (int) $territoryId;
-
-            if ($territoryId <= 0) {
-                continue;
-            }
-
-            $expandedIds[$territoryId] = true;
-            $visited = [];
-            $parentId = $parentIds[$territoryId] ?? null;
-
-            while ($parentId !== null && ! isset($visited[$parentId])) {
-                $parentId = (int) $parentId;
-
-                if ($parentId <= 0) {
-                    break;
-                }
-
-                $expandedIds[$parentId] = true;
-                $visited[$parentId] = true;
-                $parentId = $parentIds[$parentId] ?? null;
-            }
-        }
-
-        return array_map('intval', array_keys($expandedIds));
     }
 
     /**

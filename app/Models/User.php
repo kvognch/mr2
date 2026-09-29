@@ -84,6 +84,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->role === UserRole::Manager;
     }
 
+    public function canManageContractors(): bool
+    {
+        return $this->isSuperadmin() || $this->isManager();
+    }
+
     public function isClient(): bool
     {
         return $this->role === UserRole::Client;

@@ -10,7 +10,7 @@ class ContractorExportController extends Controller
 {
     public function __invoke(): BinaryFileResponse
     {
-        abort_unless(auth()->user()?->isSuperadmin() || auth()->user()?->isManager(), 403);
+        abort_unless(auth()->user()?->canManageContractors(), 403);
 
         return Excel::download(
             new ContractorsExport(),
