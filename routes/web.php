@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthModalController;
 use App\Http\Controllers\ContractorExportController;
 use App\Http\Controllers\ContractorShowController;
 use App\Http\Controllers\ContractorTariffController;
+use App\Http\Controllers\DirectoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InfoPageController;
 use App\Http\Controllers\PublicFormController;
@@ -27,6 +28,11 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/reviews/contractor/{contractor}', [PublicReviewController::class, 'storeContractor'])->name('reviews.contractor.store');
 });
 Route::get('/search', SearchController::class)->name('search.index');
+Route::get('/catalog', [DirectoryController::class, 'catalog'])->name('catalog.index');
+Route::get('/catalog/{slug}', [DirectoryController::class, 'catalogCategory'])->name('catalog.category');
+Route::get('/directions', [DirectoryController::class, 'directions'])->name('directions.index');
+Route::get('/directions/{slug}', [DirectoryController::class, 'direction'])->name('directions.show');
+Route::get('/organizations', fn () => redirect()->route('catalog.index', status: 301))->name('organizations.index');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
 Route::get('/sitemap-static.xml', [SitemapController::class, 'staticMap'])->name('sitemap.static');
 Route::get('/sitemap-organizations-{part}.xml', [SitemapController::class, 'organizations'])

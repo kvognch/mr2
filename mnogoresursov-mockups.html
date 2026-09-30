@@ -1,0 +1,2657 @@
+<!doctype html>
+<html lang="en" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Макеты разделов Многоресурсов</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="Макеты разделов Многоресурсов" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot; data-visualize-standalone&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;Макеты разделов Многоресурсов&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --icon-size: 16px;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --corner-shape: round;
+  --radius: var(--border-radius-lg, 10px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: var(--visualize-paint-gutter, 0px);
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive &gt; .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align=&quot;right&quot;]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align=&quot;center&quot;]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: var(--corner-shape);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+hr {
+  width: 100%;
+  height: 1px;
+  margin-block: 6px;
+  border: 0;
+  background: var(--border);
+}
+
+.nav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress {
+  display: flex;
+  height: 8px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 8px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar:only-child {
+  border-radius: var(--radius-full);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.nav-link,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn,
+.nav-link {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover,
+.nav-link:not(:disabled):not([aria-disabled=&quot;true&quot;]):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.nav-pills .nav-link {
+  min-width: 0;
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.nav-justified .nav-link {
+  flex: 1 1 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.nav-pills .nav-link.active {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.btn:disabled,
+.nav-link:disabled,
+.nav-link[aria-disabled=&quot;true&quot;] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: var(--corner-shape);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed=&quot;true&quot;],
+  [aria-selected=&quot;true&quot;],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .btn,
+  .nav-link,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Keep small-screen WebKit from zooming when a text field receives focus. */
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type=&quot;file&quot;]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type=&quot;color&quot;] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type=&quot;date&quot;],
+    [type=&quot;datetime-local&quot;],
+    [type=&quot;month&quot;],
+    [type=&quot;time&quot;],
+    [type=&quot;week&quot;]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: &quot;&quot;;
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;mr-three-sections&quot;&gt;
+  &lt;style&gt;
+    #mr-three-sections {
+      color-scheme: light dark;
+      --mr-bg: light-dark(#f5f7fa, #101722);
+      --mr-surface: light-dark(#ffffff, #192231);
+      --mr-soft: light-dark(#eef3f9, #222e40);
+      --mr-text: light-dark(#17345f, #edf4ff);
+      --mr-muted: light-dark(#6e8099, #aebbd0);
+      --mr-line: light-dark(#d9e1eb, #334257);
+      --mr-blue: light-dark(#245dad, #6ea4ef);
+      --mr-blue-text: light-dark(#ffffff, #071424);
+      --mr-green: light-dark(#3e8b62, #70c997);
+      --mr-map: light-dark(#dcebdc, #263b38);
+      --mr-water: light-dark(#c9e4f3, #284458);
+      --mr-info-bg: light-dark(#eaf3ff, #1c314c);
+      --mr-info-line: light-dark(#8bb8ef, #4f83bd);
+      --mr-warn-bg: light-dark(#fff4d7, #3d321d);
+      --mr-warn-line: light-dark(#e5b849, #a98331);
+      --mr-ok-bg: light-dark(#e9f7ee, #1d3829);
+      --mr-ok-line: light-dark(#75b88d, #4f9669);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;
+      background: transparent;
+      color: var(--mr-text);
+    }
+
+    #mr-three-sections * { box-sizing: border-box; }
+    #mr-three-sections button,
+    #mr-three-sections input { font: inherit; }
+
+    #mr-three-sections .mr-switcher {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    #mr-three-sections .mr-switcher button {
+      min-height: 42px;
+      padding: 8px 16px;
+      border: 1px solid var(--mr-line);
+      border-radius: 10px;
+      background: var(--mr-surface);
+      color: var(--mr-text);
+      cursor: pointer;
+    }
+
+    #mr-three-sections .mr-switcher button[aria-selected=&quot;true&quot;] {
+      background: var(--mr-blue);
+      color: var(--mr-blue-text);
+      border-color: var(--mr-blue);
+    }
+
+    #mr-three-sections .mr-window {
+      background: var(--mr-bg);
+      border: 1px solid var(--mr-line);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    #mr-three-sections .mr-header {
+      min-height: 72px;
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      background: var(--mr-surface);
+      border-bottom: 1px solid var(--mr-line);
+    }
+
+    #mr-three-sections .mr-window.is-structure-view &gt; .mr-header {
+      display: none;
+    }
+
+    #mr-three-sections .mr-logo { font-weight: 500; letter-spacing: .02em; }
+    #mr-three-sections .mr-nav { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+    #mr-three-sections .mr-nav a { color: var(--mr-text); text-decoration: none; }
+    #mr-three-sections .mr-nav a.is-active { color: var(--mr-blue); font-weight: 500; }
+    #mr-three-sections .mr-about-menu { position: relative; }
+    #mr-three-sections .mr-about-trigger {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--mr-text);
+      cursor: pointer;
+    }
+    #mr-three-sections .mr-dropdown {
+      position: absolute;
+      z-index: 20;
+      top: calc(100% + 12px);
+      right: 0;
+      width: 220px;
+      padding: 8px;
+      border: 1px solid var(--mr-line);
+      border-radius: 10px;
+      background: var(--mr-surface);
+      box-shadow: 0 12px 30px light-dark(rgb(25 52 92 / 16%), rgb(0 0 0 / 35%));
+    }
+    #mr-three-sections .mr-dropdown[hidden] { display: none; }
+    #mr-three-sections .mr-dropdown a {
+      display: block;
+      padding: 10px;
+      border-radius: 7px;
+      color: var(--mr-text);
+      text-decoration: none;
+    }
+    #mr-three-sections .mr-dropdown a:hover { background: var(--mr-soft); }
+    #mr-three-sections .mr-login {
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--mr-blue);
+      color: var(--mr-blue-text);
+    }
+
+    #mr-three-sections .mr-content { padding: 24px 28px 30px; }
+    #mr-three-sections .mr-crumb { color: var(--mr-muted); margin-bottom: 8px; }
+    #mr-three-sections h1 { margin: 0 0 8px; font-size: 28px; line-height: 1.2; font-weight: 500; }
+    #mr-three-sections h2 { margin: 0; font-size: 20px; line-height: 1.3; font-weight: 500; }
+    #mr-three-sections h3 { margin: 0; font-size: 16px; line-height: 1.35; font-weight: 500; }
+    #mr-three-sections p { margin: 0; }
+    #mr-three-sections .mr-lead { color: var(--mr-muted); margin-bottom: 20px; }
+
+    #mr-three-sections .mr-fields {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr auto;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    #mr-three-sections .mr-field {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 14px;
+      border: 1px solid var(--mr-line);
+      border-radius: 10px;
+      background: var(--mr-surface);
+      color: var(--mr-text);
+      text-align: left;
+    }
+
+    #mr-three-sections .mr-submit {
+      min-height: 48px;
+      padding: 11px 20px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--mr-blue);
+      color: var(--mr-blue-text);
+      white-space: nowrap;
+    }
+
+    #mr-three-sections .mr-chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    #mr-three-sections .mr-chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--mr-soft);
+      color: var(--mr-text);
+      border: 0;
+    }
+
+    #mr-three-sections .mr-map-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+      gap: 16px;
+    }
+
+    #mr-three-sections .mr-map {
+      min-height: 405px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 14px;
+      background:
+        linear-gradient(18deg, transparent 28%, var(--mr-water) 29% 38%, transparent 39%),
+        radial-gradient(circle at 24% 28%, var(--mr-water) 0 12%, transparent 12.5%),
+        radial-gradient(circle at 72% 66%, var(--mr-water) 0 17%, transparent 17.5%),
+        var(--mr-map);
+      border: 1px solid var(--mr-line);
+    }
+
+    #mr-three-sections .mr-map-label {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: var(--mr-surface);
+      color: var(--mr-text);
+    }
+
+    #mr-three-sections .mr-pin {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 50% 50% 50% 8px;
+      transform: rotate(-45deg);
+      background: var(--mr-blue);
+      color: var(--mr-blue-text);
+      cursor: pointer;
+    }
+
+    #mr-three-sections .mr-pin span { display: block; transform: rotate(45deg); }
+    #mr-three-sections .mr-pin-one { left: 31%; top: 42%; }
+    #mr-three-sections .mr-pin-two { left: 58%; top: 28%; }
+    #mr-three-sections .mr-pin-three { left: 67%; top: 62%; }
+
+    #mr-three-sections .mr-results,
+    #mr-three-sections .mr-section-block { min-width: 0; }
+    #mr-three-sections .mr-result-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    #mr-three-sections .mr-count { color: var(--mr-muted); white-space: nowrap; }
+    #mr-three-sections .mr-org {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px 14px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--mr-line);
+    }
+
+    #mr-three-sections .mr-org:last-child { border-bottom: 0; }
+    #mr-three-sections .mr-org-meta { color: var(--mr-muted); }
+    #mr-three-sections .mr-rating { color: var(--mr-green); font-weight: 500; }
+    #mr-three-sections .mr-open { color: var(--mr-blue); text-decoration: none; align-self: end; }
+
+    #mr-three-sections #mr-panel-structure .mr-lead {
+      max-width: 720px;
+      margin-bottom: 32px;
+      color: var(--mr-text);
+      font-size: 18px;
+      line-height: 1.55;
+    }
+    #mr-three-sections .mr-menu-compare { display: grid; gap: 24px; margin: 24px 0 30px; }
+    #mr-three-sections .mr-demo-label {
+      margin-bottom: 12px;
+      color: var(--mr-text);
+      font-size: 19px;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+    #mr-three-sections .mr-demo-header {
+      min-height: 68px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border: 1px solid var(--mr-line);
+      border-radius: 12px;
+      background: var(--mr-surface);
+    }
+    #mr-three-sections .mr-demo-logo { font-weight: 500; }
+    #mr-three-sections .mr-demo-nav { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; }
+    #mr-three-sections .mr-demo-nav a { color: var(--mr-text); text-decoration: none; }
+    #mr-three-sections .mr-demo-nav a.is-new { color: var(--mr-blue); font-weight: 500; }
+    #mr-three-sections .mr-demo-action {
+      padding: 9px 12px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--mr-blue);
+      color: var(--mr-blue-text);
+      white-space: nowrap;
+    }
+    #mr-three-sections .mr-demo-about { position: relative; }
+    #mr-three-sections .mr-demo-about &gt; button {
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--mr-soft);
+      color: var(--mr-text);
+      cursor: pointer;
+    }
+    #mr-three-sections .mr-demo-about .mr-dropdown { top: calc(100% + 8px); }
+    #mr-three-sections .mr-change-arrow {
+      padding: 16px 20px;
+      border-radius: 10px;
+      background: var(--mr-info-bg);
+      color: var(--mr-blue);
+      font-size: 18px;
+      line-height: 1.45;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    #mr-three-sections .mr-alerts { display: grid; gap: 10px; margin: 18px 0 22px; }
+    #mr-three-sections .mr-alert {
+      padding: 14px 16px;
+      border-left: 4px solid var(--mr-info-line);
+      border-radius: 8px;
+      background: var(--mr-info-bg);
+    }
+    #mr-three-sections .mr-alert.is-warning { border-left-color: var(--mr-warn-line); background: var(--mr-warn-bg); }
+    #mr-three-sections .mr-alert.is-success { border-left-color: var(--mr-ok-line); background: var(--mr-ok-bg); }
+    #mr-three-sections .mr-page-alert { margin-bottom: 22px; }
+    #mr-three-sections .mr-map-seo-alert { margin-top: 22px; }
+    #mr-three-sections .mr-preview-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 10px 0 12px;
+      color: var(--mr-blue);
+      font-size: 13px;
+      line-height: 1.3;
+      font-weight: 500;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    #mr-three-sections .mr-preview-label::after {
+      content: &quot;&quot;;
+      height: 1px;
+      flex: 1;
+      background: var(--mr-line);
+    }
+    #mr-three-sections .mr-preview-frame {
+      padding: 22px;
+      border: 2px solid var(--mr-line);
+      border-radius: 14px;
+      background: var(--mr-surface);
+      box-shadow: 0 14px 34px light-dark(rgb(25 52 92 / 10%), rgb(0 0 0 / 24%));
+    }
+    #mr-three-sections .mr-map-seo-scheme { margin-top: 24px; }
+    #mr-three-sections .mr-map-seo-scheme &gt; h2 { margin-bottom: 14px; }
+    #mr-three-sections .mr-public-preset {
+      margin-top: 32px;
+      padding-top: 28px;
+      border-top: 1px solid var(--mr-line);
+    }
+    #mr-three-sections .mr-public-preset &gt; h2 { margin-bottom: 9px; }
+    #mr-three-sections .mr-preset-window {
+      margin: 20px 0 22px;
+      overflow: hidden;
+      border: 1px solid var(--mr-line);
+      border-radius: 12px;
+      background: var(--mr-surface);
+    }
+    #mr-three-sections .mr-preset-address {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--mr-line);
+      background: var(--mr-soft);
+      color: var(--mr-blue);
+      overflow-wrap: anywhere;
+    }
+    #mr-three-sections .mr-preset-body { padding: 20px; }
+    #mr-three-sections .mr-preset-title {
+      margin: 0 0 7px;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 500;
+    }
+    #mr-three-sections .mr-preset-description {
+      max-width: 760px;
+      margin-bottom: 17px;
+      color: var(--mr-muted);
+      line-height: 1.5;
+    }
+    #mr-three-sections .mr-preset-fields {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    #mr-three-sections .mr-preset-field {
+      padding: 11px 13px;
+      border-bottom: 2px solid var(--mr-line);
+      background: var(--mr-soft);
+    }
+    #mr-three-sections .mr-preset-field.is-fixed { border-bottom-color: var(--mr-blue); }
+    #mr-three-sections .mr-preset-field span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--mr-muted);
+      font-size: 12px;
+    }
+    #mr-three-sections .mr-preset-window .mr-map { min-height: 275px; }
+    #mr-three-sections .mr-preset-window .mr-results { padding: 17px; }
+    #mr-three-sections .mr-area-links {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    #mr-three-sections .mr-area-links strong { margin-right: 3px; font-weight: 500; }
+    #mr-three-sections .mr-area-links a {
+      padding: 7px 10px;
+      border-radius: 8px;
+      background: var(--mr-soft);
+      color: var(--mr-blue);
+      text-decoration: none;
+    }
+    #mr-three-sections .mr-public-list { margin: 9px 0 0; padding-left: 20px; }
+    #mr-three-sections .mr-public-list li + li { margin-top: 5px; }
+    #mr-three-sections .mr-alert strong { display: block; margin-bottom: 4px; font-weight: 500; }
+    #mr-three-sections .mr-alert p { color: var(--mr-text); }
+
+    #mr-three-sections .mr-structure {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    #mr-three-sections .mr-branch {
+      padding: 14px;
+      border-top: 3px solid var(--mr-blue);
+      background: var(--mr-surface);
+    }
+    #mr-three-sections .mr-branch h3 { margin-bottom: 5px; }
+    #mr-three-sections .mr-route { color: var(--mr-blue); margin-bottom: 10px; }
+    #mr-three-sections .mr-branch ul { margin: 0; padding-left: 18px; color: var(--mr-muted); }
+    #mr-three-sections .mr-branch li + li { margin-top: 5px; }
+
+    #mr-three-sections .mr-location-section {
+      margin-top: 34px;
+      padding-top: 30px;
+      border-top: 1px solid var(--mr-line);
+    }
+    #mr-three-sections .mr-location-section &gt; h2 { margin-bottom: 9px; }
+    #mr-three-sections .mr-location-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 9px;
+    }
+    #mr-three-sections .mr-location-heading h2 { margin: 0; }
+    #mr-three-sections .mr-hidden-label {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--mr-soft);
+      color: var(--mr-muted);
+      font-size: 13px;
+      line-height: 1.2;
+      font-weight: 500;
+    }
+    #mr-three-sections .mr-location-intro {
+      max-width: 780px;
+      margin-bottom: 22px;
+      color: var(--mr-text);
+      font-size: 17px;
+      line-height: 1.55;
+    }
+    #mr-three-sections .mr-location-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: stretch;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    #mr-three-sections .mr-location-step {
+      padding: 16px;
+      background: var(--mr-surface);
+      border-top: 3px solid var(--mr-blue);
+    }
+    #mr-three-sections .mr-location-step strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 17px;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+    #mr-three-sections .mr-location-step p { color: var(--mr-muted); line-height: 1.5; }
+    #mr-three-sections .mr-location-step code {
+      display: block;
+      margin-top: 10px;
+      color: var(--mr-blue);
+      overflow-wrap: anywhere;
+    }
+    #mr-three-sections .mr-flow-arrow {
+      align-self: center;
+      color: var(--mr-blue);
+      font-size: 24px;
+      line-height: 1;
+    }
+    #mr-three-sections .mr-location-tree {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 0 22px;
+    }
+    #mr-three-sections .mr-location-node {
+      min-height: 88px;
+      padding: 14px;
+      background: var(--mr-soft);
+    }
+    #mr-three-sections .mr-location-node strong {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    #mr-three-sections .mr-location-node span { color: var(--mr-muted); line-height: 1.45; }
+    #mr-three-sections .mr-org-placement {
+      margin-top: 30px;
+      padding-top: 28px;
+      border-top: 1px solid var(--mr-line);
+    }
+    #mr-three-sections .mr-org-placement &gt; h2 { margin-bottom: 9px; }
+    #mr-three-sections .mr-org-placement &gt; p {
+      max-width: 800px;
+      margin-bottom: 20px;
+      color: var(--mr-text);
+      font-size: 17px;
+      line-height: 1.55;
+    }
+    #mr-three-sections .mr-org-linking {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) auto minmax(260px, .8fr);
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    #mr-three-sections .mr-source-pages { display: grid; gap: 9px; }
+    #mr-three-sections .mr-source-page {
+      display: grid;
+      grid-template-columns: 125px minmax(0, 1fr);
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--mr-soft);
+    }
+    #mr-three-sections .mr-source-page strong { font-weight: 500; }
+    #mr-three-sections .mr-source-page code { color: var(--mr-blue); overflow-wrap: anywhere; }
+    #mr-three-sections .mr-canonical-card {
+      padding: 18px;
+      border-left: 4px solid var(--mr-blue);
+      background: var(--mr-surface);
+    }
+    #mr-three-sections .mr-canonical-card span {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--mr-muted);
+    }
+    #mr-three-sections .mr-canonical-card strong {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 18px;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+    #mr-three-sections .mr-canonical-card code { color: var(--mr-blue); overflow-wrap: anywhere; }
+
+    #mr-three-sections .mr-category-grid,
+    #mr-three-sections .mr-direction-grid {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 24px;
+    }
+    #mr-three-sections .mr-category-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    #mr-three-sections .mr-direction-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    #mr-three-sections .mr-category,
+    #mr-three-sections .mr-direction {
+      min-height: 112px;
+      padding: 16px;
+      border: 1px solid var(--mr-line);
+      border-radius: 12px;
+      background: var(--mr-surface);
+      color: var(--mr-text);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    #mr-three-sections .mr-category.is-selected,
+    #mr-three-sections .mr-direction.is-selected {
+      border-color: var(--mr-blue);
+      background: var(--mr-soft);
+    }
+
+    #mr-three-sections .mr-category strong,
+    #mr-three-sections .mr-direction strong { display: block; font-weight: 500; margin-bottom: 8px; }
+    #mr-three-sections .mr-category span,
+    #mr-three-sections .mr-direction span { color: var(--mr-muted); }
+    #mr-three-sections .mr-direction i { display: block; width: 22px; height: 22px; margin-bottom: 12px; color: var(--mr-blue); }
+
+    #mr-three-sections .mr-two-col {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    #mr-three-sections .mr-side {
+      padding: 16px;
+      border-radius: 12px;
+      background: var(--mr-surface);
+      border: 1px solid var(--mr-line);
+    }
+
+    #mr-three-sections .mr-side h3 { margin-bottom: 12px; }
+    #mr-three-sections .mr-side button {
+      display: block;
+      width: 100%;
+      padding: 10px 8px;
+      border: 0;
+      border-bottom: 1px solid var(--mr-line);
+      background: transparent;
+      color: var(--mr-text);
+      text-align: left;
+    }
+
+    #mr-three-sections .mr-side button:last-of-type { border-bottom: 0; }
+    #mr-three-sections .mr-side button.is-selected { color: var(--mr-blue); font-weight: 500; }
+    #mr-three-sections .mr-side .mr-side-alert {
+      grid-column: 1 / -1;
+      margin-top: 14px;
+    }
+    #mr-three-sections .mr-journey-scenario {
+      margin: 22px 0;
+      padding: 18px 20px;
+      border-left: 4px solid var(--mr-blue);
+      background: var(--mr-info-bg);
+    }
+    #mr-three-sections .mr-journey-scenario span { display: block; margin-bottom: 6px; color: var(--mr-muted); }
+    #mr-three-sections .mr-journey-scenario strong { font-size: 20px; line-height: 1.4; font-weight: 500; }
+    #mr-three-sections .mr-journey-arrow {
+      margin: 12px 0;
+      color: var(--mr-blue);
+      font-size: 28px;
+      line-height: 1;
+      text-align: center;
+    }
+    #mr-three-sections .mr-entry-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    #mr-three-sections .mr-entry-point {
+      min-height: 158px;
+      padding: 15px;
+      border-top: 3px solid var(--mr-blue);
+      background: var(--mr-surface);
+    }
+    #mr-three-sections .mr-entry-point.is-seo { border-top-color: var(--mr-warn-line); }
+    #mr-three-sections .mr-entry-point strong { display: block; margin-bottom: 6px; font-size: 17px; font-weight: 500; }
+    #mr-three-sections .mr-entry-point p { color: var(--mr-muted); line-height: 1.45; }
+    #mr-three-sections .mr-entry-point code { display: block; margin-top: 10px; color: var(--mr-blue); overflow-wrap: anywhere; }
+    #mr-three-sections .mr-common-result,
+    #mr-three-sections .mr-final-card {
+      padding: 18px 20px;
+      text-align: center;
+    }
+    #mr-three-sections .mr-common-result { background: var(--mr-soft); }
+    #mr-three-sections .mr-final-card { background: var(--mr-ok-bg); border-bottom: 3px solid var(--mr-ok-line); }
+    #mr-three-sections .mr-common-result strong,
+    #mr-three-sections .mr-final-card strong { display: block; margin-bottom: 5px; font-size: 18px; font-weight: 500; }
+    #mr-three-sections .mr-common-result p,
+    #mr-three-sections .mr-final-card p { color: var(--mr-muted); }
+    #mr-three-sections .mr-final-card code { display: block; margin-top: 8px; color: var(--mr-blue); }
+    #mr-three-sections .mr-url-guide { margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--mr-line); }
+    #mr-three-sections .mr-url-guide &gt; h2 { margin-bottom: 8px; }
+    #mr-three-sections .mr-url-guide &gt; p { margin-bottom: 16px; color: var(--mr-muted); }
+    #mr-three-sections .mr-url-list { border-top: 1px solid var(--mr-line); }
+    #mr-three-sections .mr-url-row {
+      display: grid;
+      grid-template-columns: minmax(200px, .9fr) minmax(260px, 1.6fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--mr-line);
+    }
+    #mr-three-sections .mr-url-row code { color: var(--mr-blue); overflow-wrap: anywhere; }
+    #mr-three-sections .mr-url-row p { color: var(--mr-muted); }
+    #mr-three-sections .mr-url-status {
+      justify-self: end;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 1.2;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    #mr-three-sections .mr-url-status.is-index { background: var(--mr-ok-bg); color: var(--mr-green); }
+    #mr-three-sections .mr-url-status.is-noindex { background: var(--mr-warn-bg); color: var(--mr-text); }
+    #mr-three-sections .mr-url-status.is-redirect { background: var(--mr-soft); color: var(--mr-muted); }
+    #mr-three-sections .mr-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    #mr-three-sections [role=&quot;tabpanel&quot;][hidden] { display: none; }
+
+    @media (max-width: 820px) {
+      #mr-three-sections .mr-header { align-items: flex-start; padding: 16px 18px; }
+      #mr-three-sections .mr-nav { display: none; }
+      #mr-three-sections .mr-content { padding: 20px 18px 24px; }
+      #mr-three-sections .mr-preview-frame { padding: 16px; }
+      #mr-three-sections .mr-fields { grid-template-columns: 1fr 1fr; }
+      #mr-three-sections .mr-submit { width: 100%; }
+      #mr-three-sections .mr-map-layout { grid-template-columns: 1fr; }
+      #mr-three-sections .mr-map { min-height: 280px; }
+      #mr-three-sections .mr-category-grid,
+      #mr-three-sections .mr-direction-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #mr-three-sections .mr-two-col { grid-template-columns: 1fr; }
+      #mr-three-sections .mr-structure { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #mr-three-sections .mr-location-flow { grid-template-columns: 1fr; }
+      #mr-three-sections .mr-flow-arrow { transform: rotate(90deg); justify-self: center; }
+      #mr-three-sections .mr-location-tree { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #mr-three-sections .mr-org-linking { grid-template-columns: 1fr; }
+      #mr-three-sections .mr-preset-fields { grid-template-columns: 1fr; }
+      #mr-three-sections .mr-entry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #mr-three-sections .mr-demo-header { align-items: flex-start; }
+      #mr-three-sections .mr-demo-nav { justify-content: flex-start; }
+      #mr-three-sections .mr-side { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+      #mr-three-sections .mr-side h3 { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 460px) {
+      #mr-three-sections .mr-switcher { display: grid; grid-template-columns: 1fr; }
+      #mr-three-sections .mr-header { min-height: 62px; }
+      #mr-three-sections .mr-login { padding: 9px 10px; }
+      #mr-three-sections .mr-fields,
+      #mr-three-sections .mr-category-grid,
+      #mr-three-sections .mr-direction-grid { grid-template-columns: 1fr; }
+      #mr-three-sections .mr-map-layout { display: flex; flex-direction: column-reverse; }
+      #mr-three-sections .mr-map { min-height: 220px; }
+      #mr-three-sections .mr-org { grid-template-columns: 1fr; }
+      #mr-three-sections .mr-open { justify-self: start; }
+      #mr-three-sections .mr-demo-header { display: grid; grid-template-columns: 1fr auto; }
+      #mr-three-sections .mr-demo-nav { grid-column: 1 / -1; }
+      #mr-three-sections .mr-structure { grid-template-columns: 1fr; }
+      #mr-three-sections .mr-location-tree { grid-template-columns: 1fr; }
+      #mr-three-sections .mr-source-page { grid-template-columns: 1fr; gap: 4px; }
+      #mr-three-sections .mr-entry-grid { grid-template-columns: 1fr; }
+      #mr-three-sections .mr-url-row { grid-template-columns: 1fr; gap: 5px; }
+      #mr-three-sections .mr-url-status { justify-self: start; }
+    }
+  &lt;/style&gt;
+
+  &lt;div class=&quot;mr-switcher&quot; role=&quot;tablist&quot; aria-label=&quot;Макеты разделов&quot;&gt;
+    &lt;button id=&quot;mr-tab-structure&quot; type=&quot;button&quot; role=&quot;tab&quot; aria-controls=&quot;mr-panel-structure&quot; aria-selected=&quot;true&quot;&gt;1. Меню и структура&lt;/button&gt;
+    &lt;button id=&quot;mr-tab-map&quot; type=&quot;button&quot; role=&quot;tab&quot; aria-controls=&quot;mr-panel-map&quot; aria-selected=&quot;false&quot;&gt;2. Карта и поиск&lt;/button&gt;
+    &lt;button id=&quot;mr-tab-catalog&quot; type=&quot;button&quot; role=&quot;tab&quot; aria-controls=&quot;mr-panel-catalog&quot; aria-selected=&quot;false&quot;&gt;3. Каталог организаций&lt;/button&gt;
+    &lt;button id=&quot;mr-tab-directions&quot; type=&quot;button&quot; role=&quot;tab&quot; aria-controls=&quot;mr-panel-directions&quot; aria-selected=&quot;false&quot;&gt;4. Направления&lt;/button&gt;
+    &lt;button id=&quot;mr-tab-journey&quot; type=&quot;button&quot; role=&quot;tab&quot; aria-controls=&quot;mr-panel-journey&quot; aria-selected=&quot;false&quot;&gt;5. Путь пользователя&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;mr-window is-structure-view&quot;&gt;
+    &lt;header class=&quot;mr-header&quot;&gt;
+      &lt;div class=&quot;mr-logo&quot;&gt;МНОГОРЕСУРСОВ&lt;/div&gt;
+      &lt;nav class=&quot;mr-nav&quot; aria-label=&quot;Основная навигация&quot;&gt;
+        &lt;a href=&quot;#&quot; data-nav=&quot;map&quot;&gt;Карта и поиск&lt;/a&gt;
+        &lt;a href=&quot;#&quot; data-nav=&quot;catalog&quot;&gt;Каталог&lt;/a&gt;
+        &lt;a href=&quot;#&quot; data-nav=&quot;directions&quot;&gt;Направления&lt;/a&gt;
+        &lt;div class=&quot;mr-about-menu&quot;&gt;
+          &lt;button class=&quot;mr-about-trigger&quot; type=&quot;button&quot; aria-expanded=&quot;false&quot;&gt;О платформе ▾&lt;/button&gt;
+          &lt;div class=&quot;mr-dropdown&quot; hidden&gt;
+            &lt;a href=&quot;#&quot;&gt;О платформе&lt;/a&gt;
+            &lt;a href=&quot;#&quot;&gt;Присоединиться&lt;/a&gt;
+            &lt;a href=&quot;#&quot;&gt;Помощь в подборе&lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/nav&gt;
+      &lt;button class=&quot;mr-login&quot; type=&quot;button&quot;&gt;Вход / Регистрация&lt;/button&gt;
+    &lt;/header&gt;
+
+    &lt;section id=&quot;mr-panel-structure&quot; role=&quot;tabpanel&quot; aria-labelledby=&quot;mr-tab-structure&quot;&gt;
+      &lt;div class=&quot;mr-content&quot;&gt;
+        &lt;div class=&quot;mr-crumb&quot;&gt;Проектирование навигации&lt;/div&gt;
+        &lt;h1&gt;Меню и структура сайта&lt;/h1&gt;
+        &lt;p class=&quot;mr-lead&quot;&gt;Как основная навигация меняется вместе с появлением каталога.&lt;/p&gt;
+
+        &lt;div class=&quot;mr-menu-compare&quot;&gt;
+          &lt;div&gt;
+            &lt;p class=&quot;mr-demo-label&quot;&gt;Сейчас&lt;/p&gt;
+            &lt;div class=&quot;mr-demo-header&quot;&gt;
+              &lt;div class=&quot;mr-demo-logo&quot;&gt;МНОГОРЕСУРСОВ&lt;/div&gt;
+              &lt;nav class=&quot;mr-demo-nav&quot; aria-label=&quot;Текущее меню&quot;&gt;
+                &lt;a href=&quot;#&quot;&gt;О платформе&lt;/a&gt;
+                &lt;a href=&quot;#&quot;&gt;Присоединиться&lt;/a&gt;
+                &lt;a href=&quot;#&quot;&gt;Помощь в подборе&lt;/a&gt;
+              &lt;/nav&gt;
+              &lt;button class=&quot;mr-demo-action&quot; type=&quot;button&quot;&gt;Вход / Регистрация&lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;mr-change-arrow&quot;&gt;↓ добавляем основные способы поиска организаций&lt;/div&gt;
+
+          &lt;div&gt;
+            &lt;p class=&quot;mr-demo-label&quot;&gt;После внедрения структуры&lt;/p&gt;
+            &lt;div class=&quot;mr-demo-header&quot;&gt;
+              &lt;div class=&quot;mr-demo-logo&quot;&gt;МНОГОРЕСУРСОВ&lt;/div&gt;
+              &lt;nav class=&quot;mr-demo-nav&quot; aria-label=&quot;Новое меню&quot;&gt;
+                &lt;a class=&quot;is-new&quot; href=&quot;#&quot;&gt;Карта и поиск&lt;/a&gt;
+                &lt;a class=&quot;is-new&quot; href=&quot;#&quot;&gt;Каталог&lt;/a&gt;
+                &lt;a class=&quot;is-new&quot; href=&quot;#&quot;&gt;Направления&lt;/a&gt;
+                &lt;div class=&quot;mr-demo-about&quot;&gt;
+                  &lt;button type=&quot;button&quot; aria-expanded=&quot;false&quot;&gt;О платформе ▾&lt;/button&gt;
+                  &lt;div class=&quot;mr-dropdown&quot; hidden&gt;
+                    &lt;a href=&quot;#&quot;&gt;О платформе&lt;/a&gt;
+                    &lt;a href=&quot;#&quot;&gt;Присоединиться&lt;/a&gt;
+                    &lt;a href=&quot;#&quot;&gt;Помощь в подборе&lt;/a&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/nav&gt;
+              &lt;button class=&quot;mr-demo-action&quot; type=&quot;button&quot;&gt;Вход / Регистрация&lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;mr-alerts&quot;&gt;
+          &lt;div class=&quot;mr-alert&quot; role=&quot;note&quot;&gt;
+            &lt;strong&gt;Почему новые разделы должны быть в хедере&lt;/strong&gt;
+            &lt;p&gt;Карта, каталог и направления — три главных способа найти организацию. Если оставить их только внутри страниц, пользователь не увидит структуру сервиса, а важные разделы получат меньше внутренних переходов.&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;mr-alert is-warning&quot; role=&quot;note&quot;&gt;
+            &lt;strong&gt;Нормально ли объединить старые пункты в «О платформе»&lt;/strong&gt;
+            &lt;p&gt;Да, это делает меню компактнее. Но «Присоединиться» и «Помощь в подборе» являются целевыми действиями, поэтому их дополнительно нужно повторять заметными кнопками на подходящих страницах — даже если в хедере они находятся внутри списка.&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;mr-alert is-success&quot; role=&quot;note&quot;&gt;
+            &lt;strong&gt;Рекомендуемое решение&lt;/strong&gt;
+            &lt;p&gt;В хедере оставить четыре смысловых пункта: «Карта и поиск», «Каталог», «Направления» и выпадающий пункт «О платформе». Справа сохранить отдельную кнопку входа.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;h2&gt;Схема разделов&lt;/h2&gt;
+        &lt;div class=&quot;mr-structure&quot; aria-label=&quot;Структура основного меню&quot;&gt;
+          &lt;section class=&quot;mr-branch&quot;&gt;
+            &lt;h3&gt;Карта и поиск&lt;/h3&gt;
+            &lt;p class=&quot;mr-route&quot;&gt;/search&lt;/p&gt;
+            &lt;ul&gt;&lt;li&gt;Интерактивная карта&lt;/li&gt;&lt;li&gt;Поиск организаций&lt;/li&gt;&lt;li&gt;Регионы → города, районы и МО&lt;/li&gt;&lt;/ul&gt;
+          &lt;/section&gt;
+          &lt;section class=&quot;mr-branch&quot;&gt;
+            &lt;h3&gt;Каталог&lt;/h3&gt;
+            &lt;p class=&quot;mr-route&quot;&gt;/catalog&lt;/p&gt;
+            &lt;ul&gt;&lt;li&gt;Гарантирующий поставщик&lt;/li&gt;&lt;li&gt;Ресурсоснабжающие&lt;/li&gt;&lt;li&gt;Подрядные&lt;/li&gt;&lt;li&gt;Проектные&lt;/li&gt;&lt;li&gt;Строительные&lt;/li&gt;&lt;/ul&gt;
+          &lt;/section&gt;
+          &lt;section class=&quot;mr-branch&quot;&gt;
+            &lt;h3&gt;Направления&lt;/h3&gt;
+            &lt;p class=&quot;mr-route&quot;&gt;/directions&lt;/p&gt;
+            &lt;ul&gt;&lt;li&gt;Электричество&lt;/li&gt;&lt;li&gt;Водоснабжение&lt;/li&gt;&lt;li&gt;Канализация&lt;/li&gt;&lt;li&gt;Тепло&lt;/li&gt;&lt;li&gt;Газ&lt;/li&gt;&lt;/ul&gt;
+          &lt;/section&gt;
+          &lt;section class=&quot;mr-branch&quot;&gt;
+            &lt;h3&gt;О платформе&lt;/h3&gt;
+            &lt;p class=&quot;mr-route&quot;&gt;выпадающий список&lt;/p&gt;
+            &lt;ul&gt;&lt;li&gt;О платформе&lt;/li&gt;&lt;li&gt;Присоединиться&lt;/li&gt;&lt;li&gt;Помощь в подборе&lt;/li&gt;&lt;/ul&gt;
+          &lt;/section&gt;
+        &lt;/div&gt;
+
+        &lt;section class=&quot;mr-location-section&quot; aria-labelledby=&quot;mr-location-title&quot;&gt;
+          &lt;div class=&quot;mr-location-heading&quot;&gt;
+            &lt;h2 id=&quot;mr-location-title&quot;&gt;Разделы по месту&lt;/h2&gt;
+            &lt;span class=&quot;mr-hidden-label&quot;&gt;скрыт из главного меню&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;p class=&quot;mr-location-intro&quot;&gt;Это тоже структурный раздел сайта, но скрытый только из основного меню. Для каждой территории создаётся постоянная страница со своей подборкой организаций. Выглядеть она будет как та же карта и список из поиска, но с заранее установленным пресетом: уже выбран конкретный регион, город, район или МО. Страница получает понятный адрес, заголовок и содержание для индексации.&lt;/p&gt;
+
+          &lt;div class=&quot;mr-location-flow&quot; aria-label=&quot;Как создаётся индексируемая территориальная страница&quot;&gt;
+            &lt;div class=&quot;mr-location-step&quot;&gt;
+              &lt;strong&gt;1. Выбираем территорию&lt;/strong&gt;
+              &lt;p&gt;Регион, город, район или муниципальное образование.&lt;/p&gt;
+              &lt;code&gt;/search?region=47&lt;/code&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;mr-flow-arrow&quot; aria-hidden=&quot;true&quot;&gt;→&lt;/div&gt;
+            &lt;div class=&quot;mr-location-step&quot;&gt;
+              &lt;strong&gt;2. Фильтруем организации&lt;/strong&gt;
+              &lt;p&gt;Показываем только компании, которые работают на выбранной территории.&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;mr-flow-arrow&quot; aria-hidden=&quot;true&quot;&gt;→&lt;/div&gt;
+            &lt;div class=&quot;mr-location-step&quot;&gt;
+              &lt;strong&gt;3. Публикуем SEO-страницу&lt;/strong&gt;
+              &lt;p&gt;Страница доступна из структуры сайта и может индексироваться.&lt;/p&gt;
+              &lt;code&gt;/regions/leningradskaya-oblast&lt;/code&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;mr-location-tree&quot; aria-label=&quot;Вложенность территориальных страниц&quot;&gt;
+            &lt;div class=&quot;mr-location-node&quot;&gt;&lt;strong&gt;Регионы&lt;/strong&gt;&lt;span&gt;/regions/&lt;br&gt;leningradskaya-oblast&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-location-node&quot;&gt;&lt;strong&gt;Города&lt;/strong&gt;&lt;span&gt;…/cities/&lt;br&gt;vsevolozhsk&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-location-node&quot;&gt;&lt;strong&gt;Районы&lt;/strong&gt;&lt;span&gt;…/districts/&lt;br&gt;vsevolozhskiy-rayon&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-location-node&quot;&gt;&lt;strong&gt;МО&lt;/strong&gt;&lt;span&gt;…/municipalities/&lt;br&gt;sertolovskoe-mo&lt;/span&gt;&lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;mr-alert&quot; role=&quot;note&quot;&gt;
+            &lt;strong&gt;Что именно индексируем&lt;/strong&gt;
+            &lt;p&gt;Индексируем подготовленные страницы территорий с организациями и полезным содержанием. Произвольные комбинации фильтров в адресе поиска не индексируем, чтобы не создавать множество дублей.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;section class=&quot;mr-org-placement&quot; aria-labelledby=&quot;mr-org-placement-title&quot;&gt;
+          &lt;h2 id=&quot;mr-org-placement-title&quot;&gt;Куда вложены карточки организаций&lt;/h2&gt;
+          &lt;p&gt;У каждой организации должна быть одна постоянная карточка в общем разделе организаций. Территориальные страницы, каталог и направления не создают свои копии карточки — они показывают организацию в выдаче и ведут на один основной адрес.&lt;/p&gt;
+
+          &lt;div class=&quot;mr-org-linking&quot; aria-label=&quot;Связь разделов сайта с единой карточкой организации&quot;&gt;
+            &lt;div class=&quot;mr-source-pages&quot;&gt;
+              &lt;div class=&quot;mr-source-page&quot;&gt;&lt;strong&gt;Раздел по месту&lt;/strong&gt;&lt;code&gt;/regions/leningradskaya-oblast&lt;/code&gt;&lt;/div&gt;
+              &lt;div class=&quot;mr-source-page&quot;&gt;&lt;strong&gt;Каталог&lt;/strong&gt;&lt;code&gt;/catalog/contractors&lt;/code&gt;&lt;/div&gt;
+              &lt;div class=&quot;mr-source-page&quot;&gt;&lt;strong&gt;Направление&lt;/strong&gt;&lt;code&gt;/directions/electricity&lt;/code&gt;&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;mr-flow-arrow&quot; aria-hidden=&quot;true&quot;&gt;→&lt;/div&gt;
+            &lt;article class=&quot;mr-canonical-card&quot;&gt;
+              &lt;span&gt;единая основная карточка&lt;/span&gt;
+              &lt;strong&gt;ООО «Каппа»&lt;/strong&gt;
+              &lt;code&gt;/organizations/ooo-kappa&lt;/code&gt;
+            &lt;/article&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;mr-alert is-success&quot; role=&quot;note&quot;&gt;
+            &lt;strong&gt;Почему карточка не вкладывается внутрь региона или категории&lt;/strong&gt;
+            &lt;p&gt;Одна организация может работать сразу в нескольких регионах, относиться к нескольким типам и направлениям. Единый адрес не создаёт дубли, собирает весь SEO-вес и остаётся стабильным при изменении территории или специализации. Текущий адрес /agents/ooo-kappa лучше перенаправить на /organizations/ooo-kappa.&lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;mr-alert&quot; role=&quot;note&quot;&gt;
+            &lt;strong&gt;Будет ли доступен сам раздел /organizations&lt;/strong&gt;
+            &lt;p&gt;Отдельную страницу со списком на /organizations создавать не нужно: она будет дублировать «Каталог организаций». При открытии /organizations пользователь автоматически переходит на /catalog. Публичный список, категории и фильтры находятся в /catalog, а пространство /organizations используется для постоянных адресов отдельных карточек — например /organizations/ooo-kappa. Наличие такой карточки не требует отдельной родительской страницы.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/section&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;section id=&quot;mr-panel-map&quot; role=&quot;tabpanel&quot; aria-labelledby=&quot;mr-tab-map&quot; hidden&gt;
+      &lt;div class=&quot;mr-content&quot;&gt;
+        &lt;div class=&quot;mr-alert is-success mr-page-alert&quot; role=&quot;note&quot;&gt;
+          &lt;strong&gt;Уже существующий функционал&lt;/strong&gt;
+          &lt;p&gt;Это уже существующая страница интерактивного подбора организаций. В новой структуре она сохраняется как основной рабочий инструмент раздела «Карта и поиск».&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;mr-preview-label&quot;&gt;Макет существующей страницы&lt;/div&gt;
+        &lt;div class=&quot;mr-preview-frame&quot;&gt;
+          &lt;div class=&quot;mr-crumb&quot;&gt;Главная → Карта и поиск&lt;/div&gt;
+          &lt;h1&gt;Поиск организаций на карте&lt;/h1&gt;
+          &lt;p class=&quot;mr-lead&quot;&gt;Выберите территорию, тип организации и направление.&lt;/p&gt;
+
+          &lt;div class=&quot;mr-fields&quot; aria-label=&quot;Фильтры поиска&quot;&gt;
+            &lt;button class=&quot;mr-field&quot; type=&quot;button&quot;&gt;&lt;span&gt;Ленинградская область&lt;/span&gt;&lt;span&gt;⌄&lt;/span&gt;&lt;/button&gt;
+            &lt;button class=&quot;mr-field&quot; type=&quot;button&quot;&gt;&lt;span&gt;Все типы&lt;/span&gt;&lt;span&gt;⌄&lt;/span&gt;&lt;/button&gt;
+            &lt;button class=&quot;mr-field&quot; type=&quot;button&quot;&gt;&lt;span&gt;Электричество&lt;/span&gt;&lt;span&gt;⌄&lt;/span&gt;&lt;/button&gt;
+            &lt;button class=&quot;mr-submit&quot; type=&quot;button&quot;&gt;Показать 18&lt;/button&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;mr-chip-row&quot; aria-label=&quot;Выбранные фильтры&quot;&gt;
+            &lt;button class=&quot;mr-chip&quot; type=&quot;button&quot;&gt;Ленинградская область ×&lt;/button&gt;
+            &lt;button class=&quot;mr-chip&quot; type=&quot;button&quot;&gt;Электричество ×&lt;/button&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;mr-map-layout&quot;&gt;
+            &lt;div class=&quot;mr-map&quot; role=&quot;img&quot; aria-label=&quot;Интерактивная карта организаций Ленинградской области&quot;&gt;
+              &lt;span class=&quot;mr-map-label&quot;&gt;Ленинградская область · 18 организаций&lt;/span&gt;
+              &lt;button class=&quot;mr-pin mr-pin-one&quot; type=&quot;button&quot; aria-label=&quot;3 организации&quot;&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
+              &lt;button class=&quot;mr-pin mr-pin-two&quot; type=&quot;button&quot; aria-label=&quot;5 организаций&quot;&gt;&lt;span&gt;5&lt;/span&gt;&lt;/button&gt;
+              &lt;button class=&quot;mr-pin mr-pin-three&quot; type=&quot;button&quot; aria-label=&quot;1 организация&quot;&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;mr-results&quot;&gt;
+              &lt;div class=&quot;mr-result-head&quot;&gt;&lt;h2&gt;Организации&lt;/h2&gt;&lt;span class=&quot;mr-count&quot;&gt;18 найдено&lt;/span&gt;&lt;/div&gt;
+              &lt;article class=&quot;mr-org&quot;&gt;&lt;div&gt;&lt;h3&gt;ООО «Каппа»&lt;/h3&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Подрядная · Электричество&lt;/p&gt;&lt;/div&gt;&lt;span class=&quot;mr-rating&quot;&gt;AAA&lt;/span&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Санкт-Петербург и 6 районов&lt;/p&gt;&lt;a class=&quot;mr-open&quot; href=&quot;#&quot;&gt;Открыть карточку →&lt;/a&gt;&lt;/article&gt;
+              &lt;article class=&quot;mr-org&quot;&gt;&lt;div&gt;&lt;h3&gt;ООО «МачЭнерджи»&lt;/h3&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Подрядная · Проектная&lt;/p&gt;&lt;/div&gt;&lt;span class=&quot;mr-rating&quot;&gt;AAA&lt;/span&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Ленинградская область&lt;/p&gt;&lt;a class=&quot;mr-open&quot; href=&quot;#&quot;&gt;Открыть карточку →&lt;/a&gt;&lt;/article&gt;
+              &lt;article class=&quot;mr-org&quot;&gt;&lt;div&gt;&lt;h3&gt;ООО «Тета»&lt;/h3&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Ресурсоснабжающая&lt;/p&gt;&lt;/div&gt;&lt;span class=&quot;mr-rating&quot;&gt;A&lt;/span&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Всеволожский район&lt;/p&gt;&lt;a class=&quot;mr-open&quot; href=&quot;#&quot;&gt;Открыть карточку →&lt;/a&gt;&lt;/article&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;mr-alert mr-map-seo-alert&quot; role=&quot;note&quot;&gt;
+          &lt;strong&gt;Скрытый структурный раздел по регионам — /regions&lt;/strong&gt;
+          &lt;p&gt;Помимо интерактивного поиска, будет создана скрытая из главного меню ветка территориальных страниц. Каждая такая страница выглядит как карта выше, но открывается с готовым набором настроек: регион уже выбран, карта сфокусирована на его территории, а список отфильтрован по работающим там организациям. Страница получает постоянный понятный адрес — например /regions/leningradskaya-oblast — и продвигается как индексируемый SEO-фильтр. Произвольные параметры обычного поиска при этом не индексируются.&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;section class=&quot;mr-map-seo-scheme&quot; aria-labelledby=&quot;mr-map-seo-title&quot;&gt;
+          &lt;h2 id=&quot;mr-map-seo-title&quot;&gt;Как работает территориальный SEO-фильтр&lt;/h2&gt;
+          &lt;div class=&quot;mr-location-flow&quot; aria-label=&quot;Переход от поиска к индексируемой территориальной странице&quot;&gt;
+            &lt;div class=&quot;mr-location-step&quot;&gt;
+              &lt;strong&gt;1. Выбираем территорию&lt;/strong&gt;
+              &lt;p&gt;Регион, город, район или муниципальное образование.&lt;/p&gt;
+              &lt;code&gt;/search?region=47&lt;/code&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;mr-flow-arrow&quot; aria-hidden=&quot;true&quot;&gt;→&lt;/div&gt;
+            &lt;div class=&quot;mr-location-step&quot;&gt;
+              &lt;strong&gt;2. Сохраняем готовый пресет&lt;/strong&gt;
+              &lt;p&gt;Карта, границы территории и список организаций открываются уже отфильтрованными.&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;mr-flow-arrow&quot; aria-hidden=&quot;true&quot;&gt;→&lt;/div&gt;
+            &lt;div class=&quot;mr-location-step&quot;&gt;
+              &lt;strong&gt;3. Индексируем и продвигаем&lt;/strong&gt;
+              &lt;p&gt;Готовая страница получает постоянный адрес, заголовок и содержание.&lt;/p&gt;
+              &lt;code&gt;/regions/leningradskaya-oblast&lt;/code&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;mr-location-tree&quot; aria-label=&quot;Вложенность территориальных SEO-страниц&quot;&gt;
+            &lt;div class=&quot;mr-location-node&quot;&gt;&lt;strong&gt;Регионы&lt;/strong&gt;&lt;span&gt;/regions/&lt;br&gt;leningradskaya-oblast&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-location-node&quot;&gt;&lt;strong&gt;Города&lt;/strong&gt;&lt;span&gt;…/cities/&lt;br&gt;vsevolozhsk&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-location-node&quot;&gt;&lt;strong&gt;Районы&lt;/strong&gt;&lt;span&gt;…/districts/&lt;br&gt;vsevolozhskiy-rayon&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-location-node&quot;&gt;&lt;strong&gt;МО&lt;/strong&gt;&lt;span&gt;…/municipalities/&lt;br&gt;sertolovskoe-mo&lt;/span&gt;&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;section class=&quot;mr-public-preset&quot; aria-labelledby=&quot;mr-public-preset-title&quot;&gt;
+          &lt;h2 id=&quot;mr-public-preset-title&quot;&gt;Макет карты с заранее заложенным пресетом&lt;/h2&gt;
+          &lt;p class=&quot;mr-location-intro&quot;&gt;Пример публичной SEO-страницы, на которой территория уже выбрана системой до открытия страницы.&lt;/p&gt;
+
+          &lt;div class=&quot;mr-preset-window&quot;&gt;
+            &lt;div class=&quot;mr-preset-address&quot;&gt;многоресурсов.рф/regions/leningradskaya-oblast&lt;/div&gt;
+            &lt;div class=&quot;mr-preset-body&quot;&gt;
+              &lt;div class=&quot;mr-crumb&quot;&gt;Главная → Регионы → Ленинградская область&lt;/div&gt;
+              &lt;div class=&quot;mr-preset-title&quot;&gt;Организации Ленинградской области&lt;/div&gt;
+              &lt;p class=&quot;mr-preset-description&quot;&gt;Ресурсоснабжающие, подрядные, проектные и строительные организации, работающие на территории Ленинградской области.&lt;/p&gt;
+
+              &lt;div class=&quot;mr-preset-fields&quot; aria-label=&quot;Заранее установленные и доступные фильтры&quot;&gt;
+                &lt;div class=&quot;mr-preset-field is-fixed&quot;&gt;&lt;span&gt;задано страницей&lt;/span&gt;Регион: Ленинградская область&lt;/div&gt;
+                &lt;div class=&quot;mr-preset-field&quot;&gt;&lt;span&gt;можно уточнить&lt;/span&gt;Тип: все организации&lt;/div&gt;
+                &lt;div class=&quot;mr-preset-field&quot;&gt;&lt;span&gt;можно уточнить&lt;/span&gt;Направление: все&lt;/div&gt;
+              &lt;/div&gt;
+
+              &lt;div class=&quot;mr-map-layout&quot;&gt;
+                &lt;div class=&quot;mr-map&quot; role=&quot;img&quot; aria-label=&quot;Карта организаций Ленинградской области с заранее выбранным регионом&quot;&gt;
+                  &lt;span class=&quot;mr-map-label&quot;&gt;Ленинградская область · пресет применён&lt;/span&gt;
+                  &lt;button class=&quot;mr-pin mr-pin-one&quot; type=&quot;button&quot; aria-label=&quot;3 организации&quot;&gt;&lt;span&gt;3&lt;/span&gt;&lt;/button&gt;
+                  &lt;button class=&quot;mr-pin mr-pin-two&quot; type=&quot;button&quot; aria-label=&quot;5 организаций&quot;&gt;&lt;span&gt;5&lt;/span&gt;&lt;/button&gt;
+                  &lt;button class=&quot;mr-pin mr-pin-three&quot; type=&quot;button&quot; aria-label=&quot;1 организация&quot;&gt;&lt;span&gt;1&lt;/span&gt;&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;mr-results&quot;&gt;
+                  &lt;div class=&quot;mr-result-head&quot;&gt;&lt;h2&gt;Организации региона&lt;/h2&gt;&lt;span class=&quot;mr-count&quot;&gt;18 найдено&lt;/span&gt;&lt;/div&gt;
+                  &lt;article class=&quot;mr-org&quot;&gt;&lt;div&gt;&lt;h3&gt;ООО «Каппа»&lt;/h3&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Подрядная · Электричество&lt;/p&gt;&lt;/div&gt;&lt;span class=&quot;mr-rating&quot;&gt;AAA&lt;/span&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Работает в 6 районах&lt;/p&gt;&lt;a class=&quot;mr-open&quot; href=&quot;#&quot;&gt;Открыть карточку →&lt;/a&gt;&lt;/article&gt;
+                  &lt;article class=&quot;mr-org&quot;&gt;&lt;div&gt;&lt;h3&gt;ООО «МачЭнерджи»&lt;/h3&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Проектная · Строительная&lt;/p&gt;&lt;/div&gt;&lt;span class=&quot;mr-rating&quot;&gt;AAA&lt;/span&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Ленинградская область&lt;/p&gt;&lt;a class=&quot;mr-open&quot; href=&quot;#&quot;&gt;Открыть карточку →&lt;/a&gt;&lt;/article&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+
+              &lt;nav class=&quot;mr-area-links&quot; aria-label=&quot;Вложенные территории Ленинградской области&quot;&gt;
+                &lt;strong&gt;Уточнить место:&lt;/strong&gt;
+                &lt;a href=&quot;#&quot;&gt;Всеволожский район&lt;/a&gt;
+                &lt;a href=&quot;#&quot;&gt;Выборгский район&lt;/a&gt;
+                &lt;a href=&quot;#&quot;&gt;Всеволожск&lt;/a&gt;
+                &lt;a href=&quot;#&quot;&gt;Сертоловское МО&lt;/a&gt;
+              &lt;/nav&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;mr-alert is-success&quot; role=&quot;note&quot;&gt;
+            &lt;strong&gt;Что выводится в публичной части&lt;/strong&gt;
+            &lt;ul class=&quot;mr-public-list&quot;&gt;
+              &lt;li&gt;хлебные крошки, уникальный заголовок и краткое описание территории;&lt;/li&gt;
+              &lt;li&gt;карта, уже сфокусированная на выбранном регионе;&lt;/li&gt;
+              &lt;li&gt;готовый территориальный фильтр и возможность дополнительно выбрать тип организации или направление;&lt;/li&gt;
+              &lt;li&gt;список подходящих организаций со ссылками на их единые карточки;&lt;/li&gt;
+              &lt;li&gt;ссылки на вложенные города, районы и муниципальные образования.&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/div&gt;
+        &lt;/section&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;section id=&quot;mr-panel-catalog&quot; role=&quot;tabpanel&quot; aria-labelledby=&quot;mr-tab-catalog&quot; hidden&gt;
+      &lt;div class=&quot;mr-content&quot;&gt;
+        &lt;div class=&quot;mr-alert is-success mr-page-alert&quot; role=&quot;note&quot;&gt;
+          &lt;strong&gt;Новый публичный раздел: каталог по типам организаций&lt;/strong&gt;
+          &lt;p&gt;Здесь пользователь выбирает, какую организацию он ищет: гарантирующего поставщика, ресурсоснабжающую, подрядную, проектную или строительную организацию. На общей странице /catalog выводятся карточки типов и полный список организаций. Внутри выбранного типа остаются дополнительные фильтры по территории и направлению, а отдельные страницы категорий — например /catalog/contractors — могут индексироваться и продвигаться.&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;mr-preview-label&quot;&gt;Макет новой страницы&lt;/div&gt;
+        &lt;div class=&quot;mr-preview-frame&quot;&gt;
+          &lt;div class=&quot;mr-crumb&quot;&gt;Главная → Каталог организаций&lt;/div&gt;
+          &lt;h1&gt;Каталог организаций&lt;/h1&gt;
+          &lt;p class=&quot;mr-lead&quot;&gt;Выберите тип организации или просмотрите весь каталог.&lt;/p&gt;
+
+          &lt;div class=&quot;mr-category-grid&quot; aria-label=&quot;Типы организаций&quot;&gt;
+          &lt;button class=&quot;mr-category is-selected&quot; type=&quot;button&quot; data-category=&quot;Подрядные организации&quot;&gt;&lt;strong&gt;Подрядные&lt;/strong&gt;&lt;span&gt;116 организаций&lt;/span&gt;&lt;/button&gt;
+          &lt;button class=&quot;mr-category&quot; type=&quot;button&quot; data-category=&quot;Гарантирующие поставщики&quot;&gt;&lt;strong&gt;Гарантирующий поставщик&lt;/strong&gt;&lt;span&gt;12 организаций&lt;/span&gt;&lt;/button&gt;
+          &lt;button class=&quot;mr-category&quot; type=&quot;button&quot; data-category=&quot;Ресурсоснабжающие организации&quot;&gt;&lt;strong&gt;Ресурсоснабжающие&lt;/strong&gt;&lt;span&gt;42 организации&lt;/span&gt;&lt;/button&gt;
+          &lt;button class=&quot;mr-category&quot; type=&quot;button&quot; data-category=&quot;Проектные организации&quot;&gt;&lt;strong&gt;Проектные&lt;/strong&gt;&lt;span&gt;38 организаций&lt;/span&gt;&lt;/button&gt;
+          &lt;button class=&quot;mr-category&quot; type=&quot;button&quot; data-category=&quot;Строительные организации&quot;&gt;&lt;strong&gt;Строительные&lt;/strong&gt;&lt;span&gt;74 организации&lt;/span&gt;&lt;/button&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;mr-two-col&quot;&gt;
+          &lt;aside class=&quot;mr-side&quot; aria-label=&quot;Фильтры каталога&quot;&gt;
+            &lt;h3&gt;Уточнить каталог&lt;/h3&gt;
+            &lt;button type=&quot;button&quot;&gt;Территория: вся Россия&lt;/button&gt;
+            &lt;button type=&quot;button&quot;&gt;Направление: все&lt;/button&gt;
+            &lt;button type=&quot;button&quot;&gt;По рейтингу&lt;/button&gt;
+            &lt;div class=&quot;mr-alert is-success mr-side-alert&quot; role=&quot;note&quot;&gt;
+              &lt;strong&gt;Категорию можно дополнительно фильтровать&lt;/strong&gt;
+              &lt;p&gt;После выбора типа организации пользователь может сузить эту категорию по территории и направлению. Например: подрядные организации Ленинградской области, работающие с электричеством.&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/aside&gt;
+          &lt;div class=&quot;mr-section-block&quot;&gt;
+            &lt;div class=&quot;mr-toolbar&quot;&gt;&lt;h2 id=&quot;mr-catalog-title&quot;&gt;Подрядные организации&lt;/h2&gt;&lt;span class=&quot;mr-count&quot;&gt;116 найдено&lt;/span&gt;&lt;/div&gt;
+            &lt;article class=&quot;mr-org&quot;&gt;&lt;div&gt;&lt;h3&gt;ООО «Каппа»&lt;/h3&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Электричество · Газ&lt;/p&gt;&lt;/div&gt;&lt;span class=&quot;mr-rating&quot;&gt;AAA&lt;/span&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Санкт-Петербург и Ленинградская область&lt;/p&gt;&lt;a class=&quot;mr-open&quot; href=&quot;#&quot;&gt;Открыть карточку →&lt;/a&gt;&lt;/article&gt;
+            &lt;article class=&quot;mr-org&quot;&gt;&lt;div&gt;&lt;h3&gt;ООО «МачЭнерджи»&lt;/h3&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Все пять направлений&lt;/p&gt;&lt;/div&gt;&lt;span class=&quot;mr-rating&quot;&gt;AAA&lt;/span&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Ленинградская область&lt;/p&gt;&lt;a class=&quot;mr-open&quot; href=&quot;#&quot;&gt;Открыть карточку →&lt;/a&gt;&lt;/article&gt;
+            &lt;article class=&quot;mr-org&quot;&gt;&lt;div&gt;&lt;h3&gt;ООО «Альфа»&lt;/h3&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Водоснабжение · Канализация&lt;/p&gt;&lt;/div&gt;&lt;span class=&quot;mr-rating&quot;&gt;CC&lt;/span&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Санкт-Петербург&lt;/p&gt;&lt;a class=&quot;mr-open&quot; href=&quot;#&quot;&gt;Открыть карточку →&lt;/a&gt;&lt;/article&gt;
+          &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;section id=&quot;mr-panel-directions&quot; role=&quot;tabpanel&quot; aria-labelledby=&quot;mr-tab-directions&quot; hidden&gt;
+      &lt;div class=&quot;mr-content&quot;&gt;
+        &lt;div class=&quot;mr-alert is-success mr-page-alert&quot; role=&quot;note&quot;&gt;
+          &lt;strong&gt;Новый публичный раздел: подбор по инженерному направлению&lt;/strong&gt;
+          &lt;p&gt;Здесь организации сгруппированы по ресурсу, с которым они работают: электричество, водоснабжение, канализация, тепло или газ. На общей странице /directions выводятся все направления. После выбора открывается список подходящих организаций с дополнительными фильтрами по территории и типу организации. Страницы направлений — например /directions/electricity — индексируются и продвигаются.&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;mr-preview-label&quot;&gt;Макет новой страницы&lt;/div&gt;
+        &lt;div class=&quot;mr-preview-frame&quot;&gt;
+          &lt;div class=&quot;mr-crumb&quot;&gt;Главная → Направления&lt;/div&gt;
+          &lt;h1&gt;Направления&lt;/h1&gt;
+          &lt;p class=&quot;mr-lead&quot;&gt;Выберите инженерное направление и найдите работающие в нём организации.&lt;/p&gt;
+
+          &lt;div class=&quot;mr-direction-grid&quot; aria-label=&quot;Инженерные направления&quot;&gt;
+          &lt;button class=&quot;mr-direction is-selected&quot; type=&quot;button&quot; data-direction=&quot;Электроснабжение&quot;&gt;&lt;i data-lucide=&quot;zap&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;strong&gt;Электричество&lt;/strong&gt;&lt;span&gt;56 организаций&lt;/span&gt;&lt;/button&gt;
+          &lt;button class=&quot;mr-direction&quot; type=&quot;button&quot; data-direction=&quot;Водоснабжение&quot;&gt;&lt;i data-lucide=&quot;droplet&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;strong&gt;Водоснабжение&lt;/strong&gt;&lt;span&gt;38 организаций&lt;/span&gt;&lt;/button&gt;
+          &lt;button class=&quot;mr-direction&quot; type=&quot;button&quot; data-direction=&quot;Канализация&quot;&gt;&lt;i data-lucide=&quot;waves&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;strong&gt;Канализация&lt;/strong&gt;&lt;span&gt;31 организация&lt;/span&gt;&lt;/button&gt;
+          &lt;button class=&quot;mr-direction&quot; type=&quot;button&quot; data-direction=&quot;Теплоснабжение&quot;&gt;&lt;i data-lucide=&quot;flame&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;strong&gt;Тепло&lt;/strong&gt;&lt;span&gt;27 организаций&lt;/span&gt;&lt;/button&gt;
+          &lt;button class=&quot;mr-direction&quot; type=&quot;button&quot; data-direction=&quot;Газоснабжение&quot;&gt;&lt;i data-lucide=&quot;gauge&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;strong&gt;Газ&lt;/strong&gt;&lt;span&gt;44 организации&lt;/span&gt;&lt;/button&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;mr-two-col&quot;&gt;
+          &lt;aside class=&quot;mr-side&quot; aria-label=&quot;Фильтры направления&quot;&gt;
+            &lt;h3&gt;Уточнить направление&lt;/h3&gt;
+            &lt;button type=&quot;button&quot;&gt;Территория: вся Россия&lt;/button&gt;
+            &lt;button type=&quot;button&quot;&gt;Все типы организаций&lt;/button&gt;
+            &lt;button type=&quot;button&quot;&gt;По рейтингу&lt;/button&gt;
+            &lt;div class=&quot;mr-alert is-success mr-side-alert&quot; role=&quot;note&quot;&gt;
+              &lt;strong&gt;Направление можно дополнительно фильтровать&lt;/strong&gt;
+              &lt;p&gt;После выбора ресурса пользователь может сузить список по территории и типу организации. Например: подрядные организации Ленинградской области, работающие с электричеством.&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/aside&gt;
+          &lt;div class=&quot;mr-section-block&quot;&gt;
+            &lt;div class=&quot;mr-toolbar&quot;&gt;&lt;h2 id=&quot;mr-direction-title&quot;&gt;Организации: Электроснабжение&lt;/h2&gt;&lt;span class=&quot;mr-count&quot;&gt;56 найдено&lt;/span&gt;&lt;/div&gt;
+            &lt;article class=&quot;mr-org&quot;&gt;&lt;div&gt;&lt;h3&gt;ООО «Каппа»&lt;/h3&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Подрядная · Ресурсоснабжающая&lt;/p&gt;&lt;/div&gt;&lt;span class=&quot;mr-rating&quot;&gt;AAA&lt;/span&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Санкт-Петербург и 6 районов&lt;/p&gt;&lt;a class=&quot;mr-open&quot; href=&quot;#&quot;&gt;Открыть карточку →&lt;/a&gt;&lt;/article&gt;
+            &lt;article class=&quot;mr-org&quot;&gt;&lt;div&gt;&lt;h3&gt;ООО «МачЭнерджи»&lt;/h3&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Подрядная · Проектная&lt;/p&gt;&lt;/div&gt;&lt;span class=&quot;mr-rating&quot;&gt;AAA&lt;/span&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Ленинградская область&lt;/p&gt;&lt;a class=&quot;mr-open&quot; href=&quot;#&quot;&gt;Открыть карточку →&lt;/a&gt;&lt;/article&gt;
+            &lt;article class=&quot;mr-org&quot;&gt;&lt;div&gt;&lt;h3&gt;АО «Энергосеть»&lt;/h3&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Ресурсоснабжающая&lt;/p&gt;&lt;/div&gt;&lt;span class=&quot;mr-rating&quot;&gt;A&lt;/span&gt;&lt;p class=&quot;mr-org-meta&quot;&gt;Санкт-Петербург&lt;/p&gt;&lt;a class=&quot;mr-open&quot; href=&quot;#&quot;&gt;Открыть карточку →&lt;/a&gt;&lt;/article&gt;
+          &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;section id=&quot;mr-panel-journey&quot; role=&quot;tabpanel&quot; aria-labelledby=&quot;mr-tab-journey&quot; hidden&gt;
+      &lt;div class=&quot;mr-content&quot;&gt;
+        &lt;div class=&quot;mr-crumb&quot;&gt;Общая логика проекта&lt;/div&gt;
+        &lt;h1&gt;Как пользователь находит организацию&lt;/h1&gt;
+        &lt;p class=&quot;mr-lead&quot;&gt;Разные входы отвечают разным намерениям, но всегда приводят к общей выдаче и одной карточке организации.&lt;/p&gt;
+
+        &lt;div class=&quot;mr-journey-scenario&quot;&gt;
+          &lt;span&gt;Пример задачи пользователя&lt;/span&gt;
+          &lt;strong&gt;Найти подрядчика по электричеству во Всеволожском районе&lt;/strong&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;mr-journey-arrow&quot; aria-hidden=&quot;true&quot;&gt;↓&lt;/div&gt;
+
+        &lt;div class=&quot;mr-entry-grid&quot; aria-label=&quot;Четыре способа начать поиск организации&quot;&gt;
+          &lt;section class=&quot;mr-entry-point&quot;&gt;
+            &lt;strong&gt;Карта и поиск&lt;/strong&gt;
+            &lt;p&gt;Пользователь самостоятельно задаёт территорию, тип организации и направление.&lt;/p&gt;
+            &lt;code&gt;/search&lt;/code&gt;
+          &lt;/section&gt;
+          &lt;section class=&quot;mr-entry-point&quot;&gt;
+            &lt;strong&gt;Каталог&lt;/strong&gt;
+            &lt;p&gt;Сначала выбирает «Подрядные», затем уточняет территорию и направление.&lt;/p&gt;
+            &lt;code&gt;/catalog/contractors&lt;/code&gt;
+          &lt;/section&gt;
+          &lt;section class=&quot;mr-entry-point&quot;&gt;
+            &lt;strong&gt;Направления&lt;/strong&gt;
+            &lt;p&gt;Сначала выбирает «Электричество», затем территорию и тип организации.&lt;/p&gt;
+            &lt;code&gt;/directions/electricity&lt;/code&gt;
+          &lt;/section&gt;
+          &lt;section class=&quot;mr-entry-point is-seo&quot;&gt;
+            &lt;strong&gt;Поисковая система&lt;/strong&gt;
+            &lt;p&gt;Сразу приводит на территориальную страницу с готовым пресетом.&lt;/p&gt;
+            &lt;code&gt;/regions/.../vsevolozhskiy-rayon&lt;/code&gt;
+          &lt;/section&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;mr-journey-arrow&quot; aria-hidden=&quot;true&quot;&gt;↓&lt;/div&gt;
+
+        &lt;div class=&quot;mr-common-result&quot;&gt;
+          &lt;strong&gt;Одинаковая выдача организаций&lt;/strong&gt;
+          &lt;p&gt;Все разделы используют одну базу компаний, территории, типы и направления.&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;mr-journey-arrow&quot; aria-hidden=&quot;true&quot;&gt;↓&lt;/div&gt;
+
+        &lt;div class=&quot;mr-final-card&quot;&gt;
+          &lt;strong&gt;Единая карточка ООО «Каппа»&lt;/strong&gt;
+          &lt;p&gt;Независимо от точки входа пользователь попадает на один постоянный адрес.&lt;/p&gt;
+          &lt;code&gt;/organizations/ooo-kappa&lt;/code&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;mr-alert is-success mr-map-seo-alert&quot; role=&quot;note&quot;&gt;
+          &lt;strong&gt;Почему нужны разные входы&lt;/strong&gt;
+          &lt;p&gt;Один пользователь знает место, другой — тип компании, третий — нужный ресурс. Структура позволяет начать поиск привычным способом, не создавая разные версии карточек организаций.&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;section class=&quot;mr-url-guide&quot; aria-labelledby=&quot;mr-url-guide-title&quot;&gt;
+          &lt;h2 id=&quot;mr-url-guide-title&quot;&gt;Памятка по адресам и индексации&lt;/h2&gt;
+          &lt;p&gt;Какая роль у каждого типа страницы и должна ли она попадать в поисковые системы.&lt;/p&gt;
+          &lt;div class=&quot;mr-url-list&quot;&gt;
+            &lt;div class=&quot;mr-url-row&quot;&gt;&lt;code&gt;/search&lt;/code&gt;&lt;p&gt;Интерактивный подбор и произвольные комбинации фильтров&lt;/p&gt;&lt;span class=&quot;mr-url-status is-noindex&quot;&gt;фильтры не индексируем&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-url-row&quot;&gt;&lt;code&gt;/regions/...&lt;/code&gt;&lt;p&gt;Готовые территориальные пресеты карты и списка организаций&lt;/p&gt;&lt;span class=&quot;mr-url-status is-index&quot;&gt;индексируем&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-url-row&quot;&gt;&lt;code&gt;/catalog&lt;/code&gt;&lt;p&gt;Общий каталог и выбор типа организации&lt;/p&gt;&lt;span class=&quot;mr-url-status is-index&quot;&gt;индексируем&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-url-row&quot;&gt;&lt;code&gt;/catalog/contractors&lt;/code&gt;&lt;p&gt;Отдельная категория организаций&lt;/p&gt;&lt;span class=&quot;mr-url-status is-index&quot;&gt;индексируем&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-url-row&quot;&gt;&lt;code&gt;/directions/electricity&lt;/code&gt;&lt;p&gt;Отдельное инженерное направление&lt;/p&gt;&lt;span class=&quot;mr-url-status is-index&quot;&gt;индексируем&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-url-row&quot;&gt;&lt;code&gt;/organizations/ooo-kappa&lt;/code&gt;&lt;p&gt;Единая постоянная карточка организации&lt;/p&gt;&lt;span class=&quot;mr-url-status is-index&quot;&gt;индексируем&lt;/span&gt;&lt;/div&gt;
+            &lt;div class=&quot;mr-url-row&quot;&gt;&lt;code&gt;/organizations&lt;/code&gt;&lt;p&gt;Технический контейнер адресов карточек&lt;/p&gt;&lt;span class=&quot;mr-url-status is-redirect&quot;&gt;301 → /catalog&lt;/span&gt;&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/section&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    (() =&gt; {
+      const root = document.getElementById(&#x27;mr-three-sections&#x27;);
+      const tabs = [...root.querySelectorAll(&#x27;[role=&quot;tab&quot;]&#x27;)];
+      const panels = [...root.querySelectorAll(&#x27;[role=&quot;tabpanel&quot;]&#x27;)];
+      const navLinks = [...root.querySelectorAll(&#x27;[data-nav]&#x27;)];
+      const windowShell = root.querySelector(&#x27;.mr-window&#x27;);
+
+      function showPanel(name) {
+        tabs.forEach((tab) =&gt; {
+          const active = tab.id === `mr-tab-${name}`;
+          tab.setAttribute(&#x27;aria-selected&#x27;, String(active));
+        });
+        panels.forEach((panel) =&gt; { panel.hidden = panel.id !== `mr-panel-${name}`; });
+        navLinks.forEach((link) =&gt; link.classList.toggle(&#x27;is-active&#x27;, link.dataset.nav === name));
+        windowShell.classList.toggle(&#x27;is-structure-view&#x27;, name === &#x27;structure&#x27; || name === &#x27;journey&#x27;);
+      }
+
+      tabs.forEach((tab) =&gt; tab.addEventListener(&#x27;click&#x27;, () =&gt; showPanel(tab.id.replace(&#x27;mr-tab-&#x27;, &#x27;&#x27;))));
+      navLinks.forEach((link) =&gt; link.addEventListener(&#x27;click&#x27;, (event) =&gt; {
+        event.preventDefault();
+        showPanel(link.dataset.nav);
+      }));
+
+      root.querySelectorAll(&#x27;a[href=&quot;#&quot;]&#x27;).forEach((link) =&gt; {
+        link.addEventListener(&#x27;click&#x27;, (event) =&gt; event.preventDefault());
+      });
+
+      const dropdownTriggers = [...root.querySelectorAll(&#x27;.mr-about-trigger, .mr-demo-about &gt; button&#x27;)];
+      dropdownTriggers.forEach((trigger) =&gt; {
+        trigger.addEventListener(&#x27;click&#x27;, () =&gt; {
+          const menu = trigger.parentElement.querySelector(&#x27;.mr-dropdown&#x27;);
+          const willOpen = menu.hidden;
+          root.querySelectorAll(&#x27;.mr-dropdown&#x27;).forEach((item) =&gt; { item.hidden = true; });
+          dropdownTriggers.forEach((item) =&gt; item.setAttribute(&#x27;aria-expanded&#x27;, &#x27;false&#x27;));
+          menu.hidden = !willOpen;
+          trigger.setAttribute(&#x27;aria-expanded&#x27;, String(willOpen));
+        });
+      });
+
+      root.querySelectorAll(&#x27;[data-category]&#x27;).forEach((button) =&gt; {
+        button.addEventListener(&#x27;click&#x27;, () =&gt; {
+          root.querySelectorAll(&#x27;[data-category]&#x27;).forEach((item) =&gt; item.classList.remove(&#x27;is-selected&#x27;));
+          button.classList.add(&#x27;is-selected&#x27;);
+          root.querySelector(&#x27;#mr-catalog-title&#x27;).textContent = button.dataset.category;
+        });
+      });
+
+      root.querySelectorAll(&#x27;[data-direction]&#x27;).forEach((button) =&gt; {
+        button.addEventListener(&#x27;click&#x27;, () =&gt; {
+          root.querySelectorAll(&#x27;[data-direction]&#x27;).forEach((item) =&gt; item.classList.remove(&#x27;is-selected&#x27;));
+          button.classList.add(&#x27;is-selected&#x27;);
+          root.querySelector(&#x27;#mr-direction-title&#x27;).textContent = `Организации: ${button.dataset.direction}`;
+        });
+      });
+
+    })();
+  &lt;/script&gt;
+&lt;/div&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+  let lastPointerWasTouch = false;
+  let pinnedByTouch = false;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    pinnedByTouch = false;
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handlePointer = (event) =&gt; {
+    lastPointerWasTouch =
+      event.type === &quot;pointerdown&quot; &amp;&amp; event.pointerType === &quot;touch&quot;;
+  };
+  const handleTouchClick = (event) =&gt; {
+    const isTouch = event.pointerType === &quot;touch&quot; || lastPointerWasTouch;
+    lastPointerWasTouch = false;
+    if (!isTouch || event.detail === 0) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (
+      trigger == null ||
+      !trigger.isConnected ||
+      getContent(trigger).length === 0 ||
+      (pinnedByTouch &amp;&amp; activeTrigger === trigger)
+    ) {
+      if (pinnedByTouch) {
+        closeTooltip();
+      }
+      return;
+    }
+    openTooltip(trigger);
+    pinnedByTouch = activeTrigger === trigger;
+    window.setTimeout(() =&gt; {
+      if (activeTrigger === trigger &amp;&amp; !trigger.isConnected) {
+        closeTooltip(false);
+      }
+    }, 0);
+  };
+  const handleLeave = (event) =&gt; {
+    if (pinnedByTouch) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    lastPointerWasTouch = false;
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    lastPointerWasTouch = false;
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerdown&quot;, handlePointer);
+    document.removeEventListener(&quot;pointercancel&quot;, handlePointer);
+    document.removeEventListener(&quot;click&quot;, handleTouchClick);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerdown&quot;, handlePointer);
+  document.addEventListener(&quot;pointercancel&quot;, handlePointer);
+  document.addEventListener(&quot;click&quot;, handleTouchClick);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-tabs&quot;&gt;
+(() =&gt; {
+  const selector = &#x27;.nav[role=&quot;tablist&quot;] [role=&quot;tab&quot;]&#x27;;
+  const disabled = &#x27;:disabled,[aria-disabled=&quot;true&quot;]&#x27;;
+  const selectTab = (selected) =&gt; {
+    const panelId = selected.getAttribute(&quot;aria-controls&quot;);
+    for (const tab of selected.closest(&#x27;[role=&quot;tablist&quot;]&#x27;).querySelectorAll(&#x27;[role=&quot;tab&quot;]&#x27;)) {
+      const active = tab === selected;
+      tab.classList.toggle(&quot;active&quot;, active);
+      tab.setAttribute(&quot;aria-selected&quot;, String(active));
+      const id = tab.getAttribute(&quot;aria-controls&quot;);
+      const panel = id &amp;&amp; document.getElementById(id);
+      if (panel != null) {
+        panel.hidden = id !== panelId;
+        if (!panel.hidden &amp;&amp; selected.id) {
+          panel.setAttribute(&quot;aria-labelledby&quot;, selected.id);
+        }
+      }
+    }
+  };
+  const interact = (event) =&gt; {
+    const tab = event.target?.closest?.(selector);
+    if (event.defaultPrevented || tab == null || tab.matches(disabled)) {
+      return;
+    }
+    if (event.type === &quot;click&quot;) {
+      selectTab(tab);
+      return;
+    }
+    const tabs = Array.from(
+      tab.closest(&#x27;[role=&quot;tablist&quot;]&#x27;).querySelectorAll(&#x27;[role=&quot;tab&quot;]&#x27;),
+    ).filter((candidate) =&gt; !candidate.matches(disabled));
+    const current = tabs.indexOf(tab);
+    let next;
+    if (event.key === &quot;ArrowRight&quot; || event.key === &quot;ArrowDown&quot;) {
+      next = (current + 1) % tabs.length;
+    } else if (event.key === &quot;ArrowLeft&quot; || event.key === &quot;ArrowUp&quot;) {
+      next = (current + tabs.length - 1) % tabs.length;
+    } else if (event.key === &quot;Home&quot;) {
+      next = 0;
+    } else if (event.key === &quot;End&quot;) {
+      next = tabs.length - 1;
+    } else {
+      return;
+    }
+    event.preventDefault();
+    tabs[next].focus();
+    selectTab(tabs[next]);
+  };
+
+  for (const list of document.querySelectorAll(&#x27;.nav[role=&quot;tablist&quot;]&#x27;)) {
+    const selected =
+      list.querySelector(&#x27;[role=&quot;tab&quot;][aria-selected=&quot;true&quot;]&#x27;) ??
+      list.querySelector(&#x27;[role=&quot;tab&quot;].active&#x27;) ??
+      list.querySelector(&#x27;[role=&quot;tab&quot;]&#x27;);
+    if (selected != null) {
+      selectTab(selected);
+    }
+  }
+  document.addEventListener(&quot;click&quot;, interact);
+  document.addEventListener(&quot;keydown&quot;, interact);
+  window.addEventListener(&quot;pagehide&quot;, () =&gt; {
+    document.removeEventListener(&quot;click&quot;, interact);
+    document.removeEventListener(&quot;keydown&quot;, interact);
+  }, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+</body>
+</html>

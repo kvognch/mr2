@@ -133,28 +133,28 @@ class Contractor extends Model
 
     protected function hasCategory(string $categoryName): bool
     {
+        $rootCategory = ContractorCategory::query()
+            ->where('name', $categoryName)
+            ->first();
+
+        if (! $rootCategory) {
+            return false;
+        }
+
+        $categoryIds = $rootCategory->descendantIds();
+
         if ($this->relationLoaded('categories')) {
-            return $this->categories
-                ->pluck('name')
-                ->contains($categoryName);
+            return $this->categories->pluck('id')->intersect($categoryIds)->isNotEmpty();
         }
 
         return $this->categories()
-            ->where('name', $categoryName)
+            ->whereIn('contractor_categories.id', $categoryIds)
             ->exists();
     }
 
     public function hasContractorCategory(): bool
     {
-        if ($this->relationLoaded('categories')) {
-            return $this->categories
-                ->pluck('name')
-                ->contains('Подрядчик');
-        }
-
-        return $this->categories()
-            ->where('name', 'Подрядчик')
-            ->exists();
+        return $this->hasCategory('Подрядчик');
     }
 
     public function smrResourceTypes(): BelongsToMany

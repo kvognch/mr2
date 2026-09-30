@@ -27,8 +27,31 @@
         <ul class="text_4 flex flex-col gap-6">
             @foreach ($settings['header']['menu'] as $item)
                 @php($itemUrl = $item['url'] ?? '#')
-                <li>
-                    @if ($itemUrl === 'modal:request')
+                @php($itemChildren = is_array($item['children'] ?? null) ? $item['children'] : [])
+                <li x-data="{ expanded: false }">
+                    @if ($itemChildren !== [])
+                        <button
+                            type="button"
+                            class="flex w-full items-center justify-between gap-3 py-1 text-left hover:text-brand-blue"
+                            @click="expanded = !expanded"
+                            :aria-expanded="expanded"
+                        >
+                            <span>{{ $item['label'] }}</span>
+                            <svg viewBox="0 0 20 20" class="size-4 shrink-0 transition-transform" :class="expanded && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m5 7.5 5 5 5-5" /></svg>
+                        </button>
+                        <ul x-show="expanded" x-cloak x-transition class="mt-4 space-y-2 border-l-2 border-brand-blue/20 pl-4">
+                            @foreach ($itemChildren as $child)
+                                @php($childUrl = $child['url'] ?? '#')
+                                <li>
+                                    @if ($childUrl === 'modal:request')
+                                        <button type="button" class="block py-1 text-left text-brand-gray-dark hover:text-brand-blue" @click="mobileMenuOpen = false; requestModalOpen = true">{{ $child['label'] ?? '' }}</button>
+                                    @else
+                                        <a href="{{ $childUrl }}" class="block py-1 text-brand-gray-dark hover:text-brand-blue" @click="mobileMenuOpen = false">{{ $child['label'] ?? '' }}</a>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                    @elseif ($itemUrl === 'modal:request')
                         <button type="button" class="hover:underline underline-offset-1 block py-1 text-left" @click="mobileMenuOpen = false; requestModalOpen = true">{{ $item['label'] }}</button>
                     @elseif ($itemUrl === '#')
                         <a href="#" class="hover:underline underline-offset-1 block py-1" @click="mobileMenuOpen = false">{{ $item['label'] }}</a>

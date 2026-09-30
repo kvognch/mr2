@@ -15,8 +15,31 @@
             <ul class="text_4 hidden lg:flex-base gap-6 3xl:gap-10">
                 @foreach ($settings['header']['menu'] as $item)
                     @php($itemUrl = $item['url'] ?? '#')
-                    <li>
-                        @if ($itemUrl === 'modal:request')
+                    @php($itemChildren = is_array($item['children'] ?? null) ? $item['children'] : [])
+                    <li x-data="{ open: false }" @click.outside="open = false" @keydown.escape.window="open = false" class="relative">
+                        @if ($itemChildren !== [])
+                            <button
+                                type="button"
+                                class="inline-flex items-center gap-1 hover:underline underline-offset-1"
+                                @click="open = !open"
+                                :aria-expanded="open"
+                            >
+                                {{ $item['label'] }}
+                                <svg viewBox="0 0 20 20" class="size-4 transition-transform" :class="open && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m5 7.5 5 5 5-5" /></svg>
+                            </button>
+                            <ul x-show="open" x-cloak x-transition class="absolute left-0 top-full z-50 mt-3 w-max whitespace-nowrap space-y-1 rounded-xl bg-white p-2 lg:text-base 3xl:text-xl shadow-xl">
+                                @foreach ($itemChildren as $child)
+                                    @php($childUrl = $child['url'] ?? '#')
+                                    <li>
+                                        @if ($childUrl === 'modal:request')
+                                            <button type="button" class="block w-full rounded-lg px-3 py-2 text-left hover:underline underline-offset-1" @click="requestModalOpen = true; open = false">{{ $child['label'] ?? '' }}</button>
+                                        @else
+                                            <a href="{{ $childUrl }}" class="block w-full rounded-lg px-3 py-2 hover:underline underline-offset-1" @click="open = false">{{ $child['label'] ?? '' }}</a>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @elseif ($itemUrl === 'modal:request')
                             <button type="button" class="hover:underline underline-offset-1" @click="requestModalOpen = true">{{ $item['label'] }}</button>
                         @elseif ($itemUrl === '#')
                             <a href="#" class="hover:underline underline-offset-1">{{ $item['label'] }}</a>

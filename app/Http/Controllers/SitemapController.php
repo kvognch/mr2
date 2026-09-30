@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Contractor;
 use App\Models\InformationPage;
+use App\Models\ContractorCategory;
+use App\Models\ResourceType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response;
 
@@ -33,7 +35,33 @@ class SitemapController extends Controller
         $urls = [
             ['loc' => route('home')],
             ['loc' => route('search.index')],
+            ['loc' => route('catalog.index')],
+            ['loc' => route('directions.index')],
         ];
+
+        ContractorCategory::query()
+            ->whereNotNull('slug')
+            ->where('slug', '<>', '')
+            ->orderBy('id')
+            ->get(['slug', 'updated_at'])
+            ->each(function (ContractorCategory $category) use (&$urls): void {
+                $urls[] = [
+                    'loc' => route('catalog.category', ['slug' => $category->slug]),
+                    'lastmod' => $category->updated_at?->toAtomString(),
+                ];
+            });
+
+        ResourceType::query()
+            ->whereNotNull('slug')
+            ->where('slug', '<>', '')
+            ->orderBy('id')
+            ->get(['slug', 'updated_at'])
+            ->each(function (ResourceType $resourceType) use (&$urls): void {
+                $urls[] = [
+                    'loc' => route('directions.show', ['slug' => $resourceType->slug]),
+                    'lastmod' => $resourceType->updated_at?->toAtomString(),
+                ];
+            });
 
         InformationPage::query()
             ->where('is_active', true)

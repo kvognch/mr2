@@ -5,13 +5,123 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ResourceType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'abbreviation', 'icon'];
+    protected $fillable = [
+        'name',
+        'abbreviation',
+        'icon',
+        'parent_id',
+        'intro_text',
+        'seo_text',
+        'use_rich_editor',
+        'h1',
+        'meta_title',
+        'meta_description',
+        'slug',
+    ];
+
+    protected $casts = [
+        'use_rich_editor' => 'boolean',
+    ];
+
+    protected static function booted(): void
+    {
+        static::saving(function (self $resourceType): void {
+            $resourceType->slug = static::uniqueSlug(
+                filled($resourceType->slug) ? (string) $resourceType->slug : (string) $resourceType->name,
+                $resourceType->id,
+            );
+
+            static::ensureParentIsNotDescendant($resourceType);
+        });
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
+    /** @return array<int> */
+    public function descendantIds(bool $includeSelf = true): array
+    {
+        $ids = $includeSelf ? [(int) $this->getKey()] : [];
+        $pendingIds = [(int) $this->getKey()];
+        $knownIds = array_fill_keys($pendingIds, true);
+
+        while ($pendingIds !== []) {
+            $childIds = static::query()
+                ->whereIn('parent_id', $pendingIds)
+                ->pluck('id')
+                ->map(fn ($id): int => (int) $id)
+                ->reject(fn (int $id): bool => isset($knownIds[$id]))
+                ->values()
+                ->all();
+
+            foreach ($childIds as $childId) {
+                $knownIds[$childId] = true;
+            }
+
+            $ids = [...$ids, ...$childIds];
+            $pendingIds = $childIds;
+        }
+
+        return array_values(array_unique($ids));
+    }
+
+    public static function uniqueSlug(string $value, ?int $exceptId = null): string
+    {
+        $knownSlugs = [
+            'Газоснабжение' => 'gas-supply',
+            'Наружная канализация' => 'external-sewerage',
+            'Наружный водопровод' => 'external-water-supply',
+            'Теплоснабжение' => 'heat-supply',
+            'Электроснабжение' => 'electricity',
+        ];
+        $base = $knownSlugs[$value] ?? Str::slug(Str::transliterate($value));
+        $base = $base !== '' ? $base : 'direction';
+        $slug = $base;
+        $suffix = 1;
+
+        while (static::query()
+            ->when($exceptId, fn ($query) => $query->where('id', '!=', $exceptId))
+            ->where('slug', $slug)
+            ->exists()) {
+            $slug = $base.'-'.$suffix++;
+        }
+
+        return $slug;
+    }
+
+    private static function ensureParentIsNotDescendant(self $resourceType): void
+    {
+        $parentId = $resourceType->parent_id !== null ? (int) $resourceType->parent_id : null;
+        $visited = [];
+
+        while ($parentId !== null && ! isset($visited[$parentId])) {
+            if ($resourceType->exists && $parentId === (int) $resourceType->getKey()) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'parent_id' => 'Нельзя выбрать дочерний вид родительским.',
+                ]);
+            }
+
+            $visited[$parentId] = true;
+            $parentId = static::query()->whereKey($parentId)->value('parent_id');
+            $parentId = $parentId !== null ? (int) $parentId : null;
+        }
+    }
 
     public function getIconUrlAttribute(): ?string
     {

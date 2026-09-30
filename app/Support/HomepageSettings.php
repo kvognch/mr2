@@ -19,9 +19,18 @@ class HomepageSettings
                 'login_button_text_auth' => 'Личный кабинет',
                 'login_button_url' => '/dashboard',
                 'menu' => [
-                    ['label' => 'О платформе', 'url' => '/'],
-                    ['label' => 'Присоединиться', 'url' => '/'],
-                    ['label' => 'Помощь в подборе', 'url' => 'modal:request'],
+                    ['label' => 'Карта и поиск', 'url' => '/search'],
+                    ['label' => 'Каталог', 'url' => '/catalog'],
+                    ['label' => 'Направления', 'url' => '/directions'],
+                    [
+                        'label' => 'О платформе',
+                        'url' => '#',
+                        'children' => [
+                            ['label' => 'О платформе', 'url' => '/'],
+                            ['label' => 'Присоединиться', 'url' => '/#join-the-platform'],
+                            ['label' => 'Помощь в подборе', 'url' => 'modal:request'],
+                        ],
+                    ],
                 ],
             ],
             'hero' => [
@@ -180,6 +189,22 @@ class HomepageSettings
             $settings[$block] = array_replace_recursive($defaultValue, $decoded);
         }
 
+        $storedHeader = isset($stored['homepage.header'])
+            ? json_decode((string) $stored['homepage.header'], true)
+            : null;
+        $storedMenu = is_array($storedHeader) && is_array($storedHeader['menu'] ?? null)
+            ? $storedHeader['menu']
+            : null;
+        $hasNestedMenu = is_array($storedMenu) && collect($storedMenu)->contains(
+            fn ($item): bool => is_array($item) && ! empty($item['children']) && is_array($item['children']),
+        );
+
+        // Existing installations may still have the old flat menu saved in settings.
+        // Use the new default structure until the nested menu is saved from the admin page.
+        $settings['header']['menu'] = $hasNestedMenu
+            ? array_values(array_filter($storedMenu, 'is_array'))
+            : $defaults['header']['menu'];
+
         if (
             isset($settings['header']['login_button_text'])
             && (($settings['header']['login_button_text_guest'] ?? null) === ($defaults['header']['login_button_text_guest'] ?? null))
@@ -211,6 +236,12 @@ class HomepageSettings
         $defaults = static::defaults();
         $current = static::all();
         $merged = array_replace_recursive($current, $data);
+
+        if (is_array($data['header']['menu'] ?? null)) {
+            // Repeaters submit their rows with generated keys. Replace the list so removed
+            // entries do not survive as stale rows after a settings save.
+            $merged['header']['menu'] = array_values($data['header']['menu']);
+        }
 
         foreach ($defaults as $block => $defaultValue) {
             $payload = $merged[$block] ?? $defaultValue;

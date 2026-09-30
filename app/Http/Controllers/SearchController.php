@@ -19,28 +19,43 @@ class SearchController extends Controller
         $territoryParentIds = $this->buildTerritoryParentMap();
         $territoryTree = $this->buildActiveTerritoryTree();
         $territoryDescendants = $this->buildDescendantsMap($territoryTree);
+        $categoryParentIds = ContractorCategory::query()->pluck('parent_id', 'id')
+            ->mapWithKeys(fn ($parentId, $id): array => [(int) $id => $parentId !== null ? (int) $parentId : null])
+            ->all();
+        $resourceTypeParentIds = ResourceType::query()->pluck('parent_id', 'id')
+            ->mapWithKeys(fn ($parentId, $id): array => [(int) $id => $parentId !== null ? (int) $parentId : null])
+            ->all();
 
         $contractors = Contractor::query()
-            ->with(['categories:id,name', 'rating:id,name,sort_order', 'territories:id,name', 'smrResourceTypes:id', 'pirResourceTypes:id'])
+            ->with(['categories:id,name,parent_id', 'rating:id,name,sort_order', 'territories:id,name', 'smrResourceTypes:id', 'pirResourceTypes:id'])
             ->where('status', 'approved')
             ->orderBy('short_name')
             ->get();
 
-        $contractorItems = $contractors->map(function (Contractor $contractor) use ($territoryParentIds, $territoryDescendants): array {
+        $contractorItems = $contractors->map(function (Contractor $contractor) use ($territoryParentIds, $territoryDescendants, $categoryParentIds, $resourceTypeParentIds): array {
             return [
                 'id' => $contractor->id,
                 'short_name' => $contractor->short_name,
                 'slug' => $contractor->slug,
                 'rating_name' => (string) ($contractor->rating?->name ?? ''),
                 'rating_sort_order' => (int) ($contractor->rating?->sort_order ?? 9999),
-                'category_ids' => $contractor->categories->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
+                'category_ids' => $this->scopeIds(
+                    $contractor->categories->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
+                    $categoryParentIds,
+                ),
                 'territory_scope_ids' => ContractorTerritoryScope::forAssignments(
                     $contractor->territories->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
                     $territoryParentIds,
                     $territoryDescendants,
                 ),
-                'smr_resource_ids' => $contractor->smrResourceTypes->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
-                'pir_resource_ids' => $contractor->pirResourceTypes->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
+                'smr_resource_ids' => $this->scopeIds(
+                    $contractor->smrResourceTypes->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
+                    $resourceTypeParentIds,
+                ),
+                'pir_resource_ids' => $this->scopeIds(
+                    $contractor->pirResourceTypes->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
+                    $resourceTypeParentIds,
+                ),
                 'business_segments' => collect($contractor->business_segments ?? [])
                     ->map(fn ($segment) => (string) $segment)
                     ->filter()
@@ -77,6 +92,25 @@ class SearchController extends Controller
             'territoryDescendants' => $territoryDescendants,
             'yandexMapsApiKey' => (string) env('YANDEX_MAPS_API_KEY', ''),
         ]);
+    }
+
+    /** @param array<int> $categoryIds @param array<int, int|null> $parentIds @return array<int> */
+    private function scopeIds(array $assignedIds, array $parentIds): array
+    {
+        $scopeIds = [];
+
+        foreach ($assignedIds as $categoryId) {
+            $visited = [];
+            $currentId = $categoryId;
+
+            while ($currentId > 0 && ! isset($visited[$currentId])) {
+                $visited[$currentId] = true;
+                $scopeIds[] = $currentId;
+                $currentId = $parentIds[$currentId] ?? 0;
+            }
+        }
+
+        return array_values(array_unique($scopeIds));
     }
 
     /**

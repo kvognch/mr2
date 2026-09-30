@@ -585,10 +585,12 @@ class ContractorResource extends Resource
             return false;
         }
 
-        return ContractorCategory::query()
-            ->whereIn('id', $categoryIds)
+        $rootCategory = ContractorCategory::query()
             ->where('name', $categoryName)
-            ->exists();
+            ->first();
+
+        return $rootCategory !== null
+            && $categoryIds->intersect($rootCategory->descendantIds())->isNotEmpty();
     }
 
     protected static function shouldShowContractorWorkFields(mixed $categoryIds): bool
@@ -602,10 +604,7 @@ class ContractorResource extends Resource
             return true;
         }
 
-        return ContractorCategory::query()
-            ->whereIn('id', $categoryIds)
-            ->where('name', 'Подрядчик')
-            ->exists()
+        return static::hasCategorySelected($categoryIds, 'Подрядчик')
             || ! static::hasTariffCategorySelected($categoryIds);
     }
 

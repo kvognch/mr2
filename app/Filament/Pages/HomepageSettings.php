@@ -68,9 +68,22 @@ class HomepageSettings extends Page implements HasForms
                                     ->label('Ссылка')
                                     ->helperText('Для открытия попапа заявки укажите modal:request')
                                     ->required(),
+                                Repeater::make('children')
+                                    ->label('Вложенные пункты')
+                                    ->addActionLabel('Добавить вложенный пункт')
+                                    ->schema([
+                                        TextInput::make('label')->label('Название')->required(),
+                                        TextInput::make('url')
+                                            ->label('Ссылка')
+                                            ->helperText('Для открытия попапа заявки укажите modal:request')
+                                            ->required(),
+                                    ])
+                                    ->columns(2)
+                                    ->defaultItems(0)
+                                    ->collapsible(),
                             ])
                             ->columns(2)
-                            ->defaultItems(3)
+                            ->defaultItems(4)
                             ->collapsible(),
                     ])
                     ->collapsible()
