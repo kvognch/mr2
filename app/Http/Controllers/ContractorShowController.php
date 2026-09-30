@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Contractor;
 use App\Models\ContractorReview;
-use App\Models\GeoUnit;
 use App\Models\ResourceType;
 use App\Support\ContractorSeo;
+use App\Support\ContractorTerritoryDisplay;
 use App\Support\HomepageSettings;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\View;
 
 class ContractorShowController extends Controller
@@ -42,7 +41,10 @@ class ContractorShowController extends Controller
         $hasGuaranteeingSupplierCategory = $contractor->hasGuaranteeingSupplierCategory();
         $hasResourceSupplyingCategory = $contractor->hasResourceSupplyingCategory();
         $hasContractorCategory = $contractor->hasContractorCategory();
-        $territoriesText = $this->getDisplayedTerritories($contractor->territories)
+        $displayedTerritories = ContractorTerritoryDisplay::forAssignments(
+            collect([(int) $contractor->id => $contractor->territories]),
+        )->get((int) $contractor->id, collect());
+        $territoriesText = $displayedTerritories
             ->pluck('name')
             ->implode(', ');
         $ratingText = (string) ($contractor->rating?->name ?? 'ААА');
@@ -187,73 +189,4 @@ class ContractorShowController extends Controller
         return preg_match('#^https?://#i', $url) ? $url : "https://{$url}";
     }
 
-    private function getDisplayedTerritories(Collection $territories): Collection
-    {
-        $territories = $territories->values();
-
-        if ($territories->isEmpty()) {
-            return $territories;
-        }
-
-        $selectedIds = $territories
-            ->pluck('id')
-            ->map(fn ($id): int => (int) $id)
-            ->filter(fn (int $id): bool => $id > 0)
-            ->unique()
-            ->values()
-            ->all();
-        $selectedIdSet = array_fill_keys($selectedIds, true);
-        $unitsById = $territories
-            ->keyBy(fn (GeoUnit $territory): int => (int) $territory->id)
-            ->all();
-        $pendingParentIds = $territories
-            ->pluck('parent_id')
-            ->filter()
-            ->map(fn ($id): int => (int) $id)
-            ->reject(fn (int $id): bool => isset($unitsById[$id]))
-            ->unique()
-            ->values()
-            ->all();
-
-        while ($pendingParentIds !== []) {
-            $parents = GeoUnit::query()
-                ->whereIn('id', $pendingParentIds)
-                ->get(['id', 'parent_id']);
-            $nextParentIds = [];
-
-            foreach ($parents as $parent) {
-                $parentId = (int) $parent->id;
-                $unitsById[$parentId] = $parent;
-
-                if ($parent->parent_id !== null) {
-                    $nextParentId = (int) $parent->parent_id;
-
-                    if (! isset($unitsById[$nextParentId])) {
-                        $nextParentIds[] = $nextParentId;
-                    }
-                }
-            }
-
-            $pendingParentIds = array_values(array_unique($nextParentIds));
-        }
-
-        return $territories
-            ->filter(function (GeoUnit $territory) use ($selectedIdSet, $unitsById): bool {
-                $parentId = $territory->parent_id !== null ? (int) $territory->parent_id : null;
-                $visited = [];
-
-                while ($parentId !== null && ! isset($visited[$parentId])) {
-                    if (isset($selectedIdSet[$parentId])) {
-                        return false;
-                    }
-
-                    $visited[$parentId] = true;
-                    $parent = $unitsById[$parentId] ?? null;
-                    $parentId = $parent?->parent_id !== null ? (int) $parent->parent_id : null;
-                }
-
-                return true;
-            })
-            ->values();
-    }
 }

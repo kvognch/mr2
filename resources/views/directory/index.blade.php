@@ -191,6 +191,7 @@ x-data="{ mobileMenuOpen: false, requestModalOpen: false, ratingInfoModalOpen: f
 
                         @forelse ($organizations as $organization)
                             @php($organizationResources = $organization->smrResourceTypes->merge($organization->pirResourceTypes)->unique('id'))
+                            @php($organizationTerritories = $displayedTerritories->get((int) $organization->id, collect()))
                             <article class="rounded-2xl bg-white p-5 shadow-sm sm:p-6">
                                 <div class="flex flex-wrap items-start justify-between gap-4">
                                     <div class="min-w-0 space-y-2">
@@ -212,8 +213,8 @@ x-data="{ mobileMenuOpen: false, requestModalOpen: false, ratingInfoModalOpen: f
                                     @endforeach
                                 </div>
 
-                                @if ($organization->territories->isNotEmpty())
-                                    <p class="mt-4 text-sm/5 text-brand-gray-dark">{{ $organization->territories->pluck('name')->unique()->implode(', ') }}</p>
+                                @if ($organizationTerritories->isNotEmpty())
+                                    <p class="mt-4 text-sm/5 text-brand-gray-dark">{{ $organizationTerritories->pluck('name')->implode(', ') }}</p>
                                 @endif
 
                                 <a href="{{ route('organizations.show', ['slug' => $organization->slug]) }}" class="mt-4 inline-flex items-center gap-2 text-sm/5 font-semibold text-brand-blue hover:underline">

@@ -7,6 +7,7 @@ use App\Models\ContractorCategory;
 use App\Models\GeoUnit;
 use App\Models\Rating;
 use App\Models\ResourceType;
+use App\Support\ContractorTerritoryDisplay;
 use App\Support\HomepageSettings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -130,6 +131,11 @@ class DirectoryController extends Controller
         $organizations = $this->organizationsQuery($categoryIds, $resourceIds, $territoryIds, $selectedRatingId, $sortOrder)
             ->paginate(12)
             ->withQueryString();
+        $displayedTerritories = ContractorTerritoryDisplay::forAssignments(
+            $organizations->getCollection()->mapWithKeys(
+                fn (Contractor $organization): array => [(int) $organization->id => $organization->territories],
+            ),
+        );
 
         $topicCards = collect($topicLevels)->map(function (array $level) use ($isCatalog, $activeTopicIds, $selectedTopicId): array {
             $cards = $level['topics']->map(function (ContractorCategory|ResourceType $topic) use ($isCatalog, $activeTopicIds, $selectedTopicId): array {
@@ -194,6 +200,7 @@ class DirectoryController extends Controller
             'rootResourceTypes' => $rootResourceTypes,
             'topicCards' => $topicCards,
             'organizations' => $organizations,
+            'displayedTerritories' => $displayedTerritories,
             'territoryOptions' => $territoryOptions,
             'selectedTerritoryPath' => $selectedTerritoryPath,
             'categoryDropdownOptions' => $categoryDropdownOptions,
