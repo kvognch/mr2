@@ -1,0 +1,411 @@
+# MR2: crawling rules for search, catalog and directions.
+# Each named bot has a complete independent group; '*' is not inherited.
+# Functional filters and pagination are blocked for every listed bot.
+# External tracking parameters are not application filters.
+# Keep CSS/JS version parameters id and v accessible.
+
+User-agent: *
+
+# Admin panel and its query parameters
+Disallow: /dashboard$
+Disallow: /dashboard?
+Disallow: /dashboard/
+
+# Internal API, including parent_id, level and region_id
+Disallow: /api$
+Disallow: /api?
+Disallow: /api/
+
+# Search: text, region, territory, categories, resources, work and segment
+Disallow: /*?q=
+Disallow: /*?*&q=
+Disallow: /*?r=
+Disallow: /*?*&r=
+Disallow: /*?d=
+Disallow: /*?*&d=
+Disallow: /*?t=
+Disallow: /*?*&t=
+Disallow: /*?cat=
+Disallow: /*?*&cat=
+Disallow: /*?res=
+Disallow: /*?*&res=
+Disallow: /*?work=
+Disallow: /*?*&work=
+Disallow: /*?seg=
+Disallow: /*?*&seg=
+
+# Catalog and directions: categories, resources, rating and legacy territory
+Disallow: /*?organization_type=
+Disallow: /*?*&organization_type=
+Disallow: /*?direction_id=
+Disallow: /*?*&direction_id=
+Disallow: /*?rating_id=
+Disallow: /*?*&rating_id=
+Disallow: /*?territory_id=
+Disallow: /*?*&territory_id=
+
+# Cascading territory filter: URL-encoded and literal brackets, any depth
+Disallow: /*?territory_path%5B
+Disallow: /*?*&territory_path%5B
+Disallow: /*?territory_path[
+Disallow: /*?*&territory_path[
+
+# Sorting in search, catalog and directions
+Disallow: /*?sort=
+Disallow: /*?*&sort=
+
+# Strict variant: pagination is also blocked
+Disallow: /*?page=
+Disallow: /*?*&page=
+
+# Tracking duplicates: Clean-param is not used by Google.
+# Campaign tracking
+Disallow: /*?utm_source=
+Disallow: /*?*&utm_source=
+Disallow: /*?utm_medium=
+Disallow: /*?*&utm_medium=
+Disallow: /*?utm_campaign=
+Disallow: /*?*&utm_campaign=
+Disallow: /*?utm_term=
+Disallow: /*?*&utm_term=
+Disallow: /*?utm_content=
+Disallow: /*?*&utm_content=
+Disallow: /*?utm_id=
+Disallow: /*?*&utm_id=
+Disallow: /*?utm_source_platform=
+Disallow: /*?*&utm_source_platform=
+Disallow: /*?utm_creative_format=
+Disallow: /*?*&utm_creative_format=
+Disallow: /*?utm_marketing_tactic=
+Disallow: /*?*&utm_marketing_tactic=
+
+# Yandex and advertising tracking
+Disallow: /*?yclid=
+Disallow: /*?*&yclid=
+Disallow: /*?ysclid=
+Disallow: /*?*&ysclid=
+Disallow: /*?ymclid=
+Disallow: /*?*&ymclid=
+Disallow: /*?etext=
+Disallow: /*?*&etext=
+Disallow: /*?yadclid=
+Disallow: /*?*&yadclid=
+Disallow: /*?yadordid=
+Disallow: /*?*&yadordid=
+Disallow: /*?clid=
+Disallow: /*?*&clid=
+Disallow: /*?erid=
+Disallow: /*?*&erid=
+Disallow: /*?_openstat=
+Disallow: /*?*&_openstat=
+Disallow: /*?ym_debug=
+Disallow: /*?*&ym_debug=
+
+# Other advertising and search tracking
+Disallow: /*?gclid=
+Disallow: /*?*&gclid=
+Disallow: /*?dclid=
+Disallow: /*?*&dclid=
+Disallow: /*?gbraid=
+Disallow: /*?*&gbraid=
+Disallow: /*?wbraid=
+Disallow: /*?*&wbraid=
+Disallow: /*?fbclid=
+Disallow: /*?*&fbclid=
+Disallow: /*?msclkid=
+Disallow: /*?*&msclkid=
+Disallow: /*?srsltid=
+Disallow: /*?*&srsltid=
+
+
+User-agent: Googlebot
+
+# Admin panel and its query parameters
+Disallow: /dashboard$
+Disallow: /dashboard?
+Disallow: /dashboard/
+
+# Internal API, including parent_id, level and region_id
+Disallow: /api$
+Disallow: /api?
+Disallow: /api/
+
+# Search: text, region, territory, categories, resources, work and segment
+Disallow: /*?q=
+Disallow: /*?*&q=
+Disallow: /*?r=
+Disallow: /*?*&r=
+Disallow: /*?d=
+Disallow: /*?*&d=
+Disallow: /*?t=
+Disallow: /*?*&t=
+Disallow: /*?cat=
+Disallow: /*?*&cat=
+Disallow: /*?res=
+Disallow: /*?*&res=
+Disallow: /*?work=
+Disallow: /*?*&work=
+Disallow: /*?seg=
+Disallow: /*?*&seg=
+
+# Catalog and directions: categories, resources, rating and legacy territory
+Disallow: /*?organization_type=
+Disallow: /*?*&organization_type=
+Disallow: /*?direction_id=
+Disallow: /*?*&direction_id=
+Disallow: /*?rating_id=
+Disallow: /*?*&rating_id=
+Disallow: /*?territory_id=
+Disallow: /*?*&territory_id=
+
+# Cascading territory filter: URL-encoded and literal brackets, any depth
+Disallow: /*?territory_path%5B
+Disallow: /*?*&territory_path%5B
+Disallow: /*?territory_path[
+Disallow: /*?*&territory_path[
+
+# Sorting in search, catalog and directions
+Disallow: /*?sort=
+Disallow: /*?*&sort=
+
+# Strict variant: pagination is also blocked
+Disallow: /*?page=
+Disallow: /*?*&page=
+
+# Tracking duplicates: Clean-param is not used by Google.
+# Campaign tracking
+Disallow: /*?utm_source=
+Disallow: /*?*&utm_source=
+Disallow: /*?utm_medium=
+Disallow: /*?*&utm_medium=
+Disallow: /*?utm_campaign=
+Disallow: /*?*&utm_campaign=
+Disallow: /*?utm_term=
+Disallow: /*?*&utm_term=
+Disallow: /*?utm_content=
+Disallow: /*?*&utm_content=
+Disallow: /*?utm_id=
+Disallow: /*?*&utm_id=
+Disallow: /*?utm_source_platform=
+Disallow: /*?*&utm_source_platform=
+Disallow: /*?utm_creative_format=
+Disallow: /*?*&utm_creative_format=
+Disallow: /*?utm_marketing_tactic=
+Disallow: /*?*&utm_marketing_tactic=
+
+# Yandex and advertising tracking
+Disallow: /*?yclid=
+Disallow: /*?*&yclid=
+Disallow: /*?ysclid=
+Disallow: /*?*&ysclid=
+Disallow: /*?ymclid=
+Disallow: /*?*&ymclid=
+Disallow: /*?etext=
+Disallow: /*?*&etext=
+Disallow: /*?yadclid=
+Disallow: /*?*&yadclid=
+Disallow: /*?yadordid=
+Disallow: /*?*&yadordid=
+Disallow: /*?clid=
+Disallow: /*?*&clid=
+Disallow: /*?erid=
+Disallow: /*?*&erid=
+Disallow: /*?_openstat=
+Disallow: /*?*&_openstat=
+Disallow: /*?ym_debug=
+Disallow: /*?*&ym_debug=
+
+# Other advertising and search tracking
+Disallow: /*?gclid=
+Disallow: /*?*&gclid=
+Disallow: /*?dclid=
+Disallow: /*?*&dclid=
+Disallow: /*?gbraid=
+Disallow: /*?*&gbraid=
+Disallow: /*?wbraid=
+Disallow: /*?*&wbraid=
+Disallow: /*?fbclid=
+Disallow: /*?*&fbclid=
+Disallow: /*?msclkid=
+Disallow: /*?*&msclkid=
+Disallow: /*?srsltid=
+Disallow: /*?*&srsltid=
+
+
+User-agent: Googlebot-Image
+
+# Admin panel and its query parameters
+Disallow: /dashboard$
+Disallow: /dashboard?
+Disallow: /dashboard/
+
+# Internal API, including parent_id, level and region_id
+Disallow: /api$
+Disallow: /api?
+Disallow: /api/
+
+# Search: text, region, territory, categories, resources, work and segment
+Disallow: /*?q=
+Disallow: /*?*&q=
+Disallow: /*?r=
+Disallow: /*?*&r=
+Disallow: /*?d=
+Disallow: /*?*&d=
+Disallow: /*?t=
+Disallow: /*?*&t=
+Disallow: /*?cat=
+Disallow: /*?*&cat=
+Disallow: /*?res=
+Disallow: /*?*&res=
+Disallow: /*?work=
+Disallow: /*?*&work=
+Disallow: /*?seg=
+Disallow: /*?*&seg=
+
+# Catalog and directions: categories, resources, rating and legacy territory
+Disallow: /*?organization_type=
+Disallow: /*?*&organization_type=
+Disallow: /*?direction_id=
+Disallow: /*?*&direction_id=
+Disallow: /*?rating_id=
+Disallow: /*?*&rating_id=
+Disallow: /*?territory_id=
+Disallow: /*?*&territory_id=
+
+# Cascading territory filter: URL-encoded and literal brackets, any depth
+Disallow: /*?territory_path%5B
+Disallow: /*?*&territory_path%5B
+Disallow: /*?territory_path[
+Disallow: /*?*&territory_path[
+
+# Sorting in search, catalog and directions
+Disallow: /*?sort=
+Disallow: /*?*&sort=
+
+# Strict variant: pagination is also blocked
+Disallow: /*?page=
+Disallow: /*?*&page=
+
+# Tracking duplicates: Clean-param is not used by Google.
+# Campaign tracking
+Disallow: /*?utm_source=
+Disallow: /*?*&utm_source=
+Disallow: /*?utm_medium=
+Disallow: /*?*&utm_medium=
+Disallow: /*?utm_campaign=
+Disallow: /*?*&utm_campaign=
+Disallow: /*?utm_term=
+Disallow: /*?*&utm_term=
+Disallow: /*?utm_content=
+Disallow: /*?*&utm_content=
+Disallow: /*?utm_id=
+Disallow: /*?*&utm_id=
+Disallow: /*?utm_source_platform=
+Disallow: /*?*&utm_source_platform=
+Disallow: /*?utm_creative_format=
+Disallow: /*?*&utm_creative_format=
+Disallow: /*?utm_marketing_tactic=
+Disallow: /*?*&utm_marketing_tactic=
+
+# Yandex and advertising tracking
+Disallow: /*?yclid=
+Disallow: /*?*&yclid=
+Disallow: /*?ysclid=
+Disallow: /*?*&ysclid=
+Disallow: /*?ymclid=
+Disallow: /*?*&ymclid=
+Disallow: /*?etext=
+Disallow: /*?*&etext=
+Disallow: /*?yadclid=
+Disallow: /*?*&yadclid=
+Disallow: /*?yadordid=
+Disallow: /*?*&yadordid=
+Disallow: /*?clid=
+Disallow: /*?*&clid=
+Disallow: /*?erid=
+Disallow: /*?*&erid=
+Disallow: /*?_openstat=
+Disallow: /*?*&_openstat=
+Disallow: /*?ym_debug=
+Disallow: /*?*&ym_debug=
+
+# Other advertising and search tracking
+Disallow: /*?gclid=
+Disallow: /*?*&gclid=
+Disallow: /*?dclid=
+Disallow: /*?*&dclid=
+Disallow: /*?gbraid=
+Disallow: /*?*&gbraid=
+Disallow: /*?wbraid=
+Disallow: /*?*&wbraid=
+Disallow: /*?fbclid=
+Disallow: /*?*&fbclid=
+Disallow: /*?msclkid=
+Disallow: /*?*&msclkid=
+Disallow: /*?srsltid=
+Disallow: /*?*&srsltid=
+
+
+User-agent: Yandex
+
+# Admin panel and its query parameters
+Disallow: /dashboard$
+Disallow: /dashboard?
+Disallow: /dashboard/
+
+# Internal API, including parent_id, level and region_id
+Disallow: /api$
+Disallow: /api?
+Disallow: /api/
+
+# Search: text, region, territory, categories, resources, work and segment
+Disallow: /*?q=
+Disallow: /*?*&q=
+Disallow: /*?r=
+Disallow: /*?*&r=
+Disallow: /*?d=
+Disallow: /*?*&d=
+Disallow: /*?t=
+Disallow: /*?*&t=
+Disallow: /*?cat=
+Disallow: /*?*&cat=
+Disallow: /*?res=
+Disallow: /*?*&res=
+Disallow: /*?work=
+Disallow: /*?*&work=
+Disallow: /*?seg=
+Disallow: /*?*&seg=
+
+# Catalog and directions: categories, resources, rating and legacy territory
+Disallow: /*?organization_type=
+Disallow: /*?*&organization_type=
+Disallow: /*?direction_id=
+Disallow: /*?*&direction_id=
+Disallow: /*?rating_id=
+Disallow: /*?*&rating_id=
+Disallow: /*?territory_id=
+Disallow: /*?*&territory_id=
+
+# Cascading territory filter: URL-encoded and literal brackets, any depth
+Disallow: /*?territory_path%5B
+Disallow: /*?*&territory_path%5B
+Disallow: /*?territory_path[
+Disallow: /*?*&territory_path[
+
+# Sorting in search, catalog and directions
+Disallow: /*?sort=
+Disallow: /*?*&sort=
+
+# Strict variant: pagination is also blocked
+Disallow: /*?page=
+Disallow: /*?*&page=
+
+# Ignore tracking only; functional filters, sort and page are significant.
+# No matching tracking Disallow here: Clean-param consolidates these URLs.
+# Omitted path means that the cleanup applies site-wide.
+Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content&utm_id&utm_source_platform&utm_creative_format&utm_marketing_tactic
+Clean-param: yclid&ysclid&ymclid&etext&yadclid&yadordid&clid&erid&_openstat&ym_debug
+Clean-param: gclid&dclid&gbraid&wbraid&fbclid&msclkid&srsltid
+
+
+Sitemap: https://xn--b1abg0afgbbqbkby.xn--p1ai/sitemap.xml

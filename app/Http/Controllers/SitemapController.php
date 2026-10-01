@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contractor;
-use App\Models\InformationPage;
 use App\Models\ContractorCategory;
+use App\Models\InformationPage;
 use App\Models\ResourceType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response;
@@ -15,7 +15,11 @@ class SitemapController extends Controller
 
     public function index(): Response
     {
-        $sitemaps = [route('sitemap.static')];
+        $sitemaps = [
+            route('sitemap.static'),
+            route('sitemap.catalog'),
+            route('sitemap.directions'),
+        ];
 
         foreach ($this->organizationSitemapParts() as $part) {
             $sitemaps[] = route('sitemap.organizations', ['part' => sprintf('%03d', $part)]);
@@ -35,9 +39,27 @@ class SitemapController extends Controller
         $urls = [
             ['loc' => route('home')],
             ['loc' => route('search.index')],
-            ['loc' => route('catalog.index')],
-            ['loc' => route('directions.index')],
         ];
+
+        InformationPage::query()
+            ->where('is_active', true)
+            ->whereNotNull('body')
+            ->where('body', '<>', '')
+            ->orderBy('id')
+            ->get(['slug', 'updated_at'])
+            ->each(function (InformationPage $page) use (&$urls): void {
+                $urls[] = [
+                    'loc' => route('info.show', ['slug' => $page->slug]),
+                    'lastmod' => $page->updated_at?->toAtomString(),
+                ];
+            });
+
+        return $this->xmlResponse($this->renderUrlSet($urls));
+    }
+
+    public function catalog(): Response
+    {
+        $urls = [['loc' => route('catalog.index')]];
 
         ContractorCategory::query()
             ->whereNotNull('slug')
@@ -51,6 +73,13 @@ class SitemapController extends Controller
                 ];
             });
 
+        return $this->xmlResponse($this->renderUrlSet($urls));
+    }
+
+    public function directions(): Response
+    {
+        $urls = [['loc' => route('directions.index')]];
+
         ResourceType::query()
             ->whereNotNull('slug')
             ->where('slug', '<>', '')
@@ -60,19 +89,6 @@ class SitemapController extends Controller
                 $urls[] = [
                     'loc' => route('directions.show', ['slug' => $resourceType->slug]),
                     'lastmod' => $resourceType->updated_at?->toAtomString(),
-                ];
-            });
-
-        InformationPage::query()
-            ->where('is_active', true)
-            ->whereNotNull('body')
-            ->where('body', '<>', '')
-            ->orderBy('id')
-            ->get(['slug', 'updated_at'])
-            ->each(function (InformationPage $page) use (&$urls): void {
-                $urls[] = [
-                    'loc' => route('info.show', ['slug' => $page->slug]),
-                    'lastmod' => $page->updated_at?->toAtomString(),
                 ];
             });
 

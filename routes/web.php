@@ -35,6 +35,8 @@ Route::get('/directions/{slug}', [DirectoryController::class, 'direction'])->nam
 Route::get('/organizations', fn () => redirect()->route('catalog.index', status: 301))->name('organizations.index');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
 Route::get('/sitemap-static.xml', [SitemapController::class, 'staticMap'])->name('sitemap.static');
+Route::get('/sitemap-catalog.xml', [SitemapController::class, 'catalog'])->name('sitemap.catalog');
+Route::get('/sitemap-directions.xml', [SitemapController::class, 'directions'])->name('sitemap.directions');
 Route::get('/sitemap-organizations-{part}.xml', [SitemapController::class, 'organizations'])
     ->where('part', '[0-9]+')
     ->name('sitemap.organizations');
