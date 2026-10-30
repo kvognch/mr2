@@ -37,6 +37,10 @@ class AdminPanelProvider extends PanelProvider
             ->userMenu(false)
             ->profile(EditProfile::class, isSimple: false)
             ->homeUrl(fn (): string => ContractorResource::getUrl())
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): string => view('shared.partials.favicons')->render(),
+            )
             ->colors([
                 'primary' => Color::generateV3Palette('#1450a3'),
             ])
