@@ -22,6 +22,8 @@ class HomepageSettings
                     ['label' => 'Карта и поиск', 'url' => '/search'],
                     ['label' => 'Каталог', 'url' => '/catalog'],
                     ['label' => 'Направления', 'url' => '/directions'],
+                    ['label' => 'Блог', 'url' => '/blog'],
+                    ['label' => 'Новости', 'url' => '/news'],
                     [
                         'label' => 'О платформе',
                         'url' => '#',
@@ -204,6 +206,15 @@ class HomepageSettings
         $settings['header']['menu'] = $hasNestedMenu
             ? array_values(array_filter($storedMenu, 'is_array'))
             : $defaults['header']['menu'];
+
+        // Apply the editorial links to previously saved menus as well.
+        $menu = array_values(array_filter($settings['header']['menu'], fn (array $item): bool => ! in_array(rtrim((string) parse_url($item['url'] ?? '', PHP_URL_PATH), '/'), ['/blog', '/news'], true)));
+        $position = collect($menu)->search(fn (array $item): bool => rtrim((string) parse_url($item['url'] ?? '', PHP_URL_PATH), '/') === '/directions');
+        array_splice($menu, $position === false ? count($menu) : $position + 1, 0, [
+            ['label' => 'Блог', 'url' => '/blog'],
+            ['label' => 'Новости', 'url' => '/news'],
+        ]);
+        $settings['header']['menu'] = $menu;
 
         if (
             isset($settings['header']['login_button_text'])

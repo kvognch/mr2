@@ -4,7 +4,7 @@ namespace App\Support;
 
 final class PublicSeo
 {
-    private const PAGINATED_ROUTES = ['search.index'];
+    private const PAGINATED_ROUTES = ['search.index', 'blog.index', 'news.index'];
 
     public static function canonicalUrl(): ?string
     {
@@ -24,7 +24,7 @@ final class PublicSeo
     {
         $page = self::isPaginationPage() ? self::pageNumber() : null;
 
-        return $page === null ? $title : $title.' - страница '.$page;
+        return $page === null ? $title : $title.(request()->routeIs('blog.index', 'news.index') ? ' - Страница ' : ' - страница ').$page;
     }
 
     public static function description(string $description): string
@@ -35,6 +35,9 @@ final class PublicSeo
             return $description;
         }
 
+        if (request()->routeIs('blog.index', 'news.index')) {
+            return $description.' - Страница '.$page;
+        }
         $suffix = 'Страница '.$page.'.';
 
         return trim($description) === '' ? $suffix : rtrim($description).' '.$suffix;
@@ -68,6 +71,6 @@ final class PublicSeo
 
         $page = filter_var($value, FILTER_VALIDATE_INT);
 
-        return $page !== false && $page >= 1 ? (int) $page : null;
+        return $page !== false && $page >= (request()->routeIs('blog.index', 'news.index') ? 2 : 1) ? (int) $page : null;
     }
 }

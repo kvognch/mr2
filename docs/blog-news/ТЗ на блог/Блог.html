@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Концепция блога Многоресурсов</title>
+  <style>
+    :root {
+      --navy:#173a68;
+      --blue:#245dad;
+      --blue-2:#3975c8;
+      --pale:#edf4ff;
+      --bg:#f6f7f9;
+      --surface:#fff;
+      --text:#17345f;
+      --muted:#8292a9;
+      --line:#d9e0e8;
+      --green:#2f8a59;
+      --green-bg:#eaf7ef;
+      --orange:#b16a18;
+      --orange-bg:#fff4df;
+      --shadow:0 12px 32px rgba(31,55,91,.08);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:#eef1f5;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,select{font:inherit}
+    button,a{-webkit-tap-highlight-color:transparent}
+    a{color:inherit;text-decoration:none}
+    .concept{max-width:1600px;margin:0 auto;padding:22px}
+    .concept-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin:0 0 18px}
+    .concept-kicker{color:var(--blue);font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+    .concept h1{margin:8px 0 5px;font-size:30px;line-height:1.15}
+    .concept-sub{margin:0;color:#5f718a;font-size:17px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+    .tabs button{min-height:44px;padding:0 17px;border:1px solid #cdd6e1;border-radius:12px;background:#fff;color:var(--text);font-weight:700;cursor:pointer}
+    .tabs button[aria-selected="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+    .explain{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;padding:15px 18px;border-left:4px solid #6aae86;border-radius:12px;background:#eaf7ef;color:#244c35;box-shadow:0 4px 18px rgba(34,84,55,.05)}
+    .explain svg{flex:none;margin-top:2px}
+    .explain strong{display:block;margin-bottom:3px}
+    .explain p{margin:0;line-height:1.5}
+    .preview-label{display:flex;align-items:center;gap:12px;margin:15px 0 10px;color:#667992;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .preview-label:after{content:"";height:1px;background:#ced7e3;flex:1}
+    .site{overflow:hidden;border:1px solid #cfd8e4;border-radius:24px;background:var(--bg);box-shadow:var(--shadow)}
+    .site-header{min-height:92px;padding:0 48px;display:flex;align-items:center;gap:36px;background:#fff;border-bottom:1px solid #eef1f5}
+    .logo{font-size:23px;font-weight:900;letter-spacing:.015em;white-space:nowrap}
+    .nav{display:flex;align-items:center;justify-content:center;gap:34px;flex:1;font-size:16px;font-weight:700}
+    .nav a.active{color:var(--blue)}
+    .cabinet{border:0;border-radius:13px;padding:15px 22px;background:var(--blue);color:#fff;font-weight:800;white-space:nowrap;cursor:pointer}
+    .page{max-width:1450px;margin:0 auto;padding:42px 48px 58px}
+    .crumb{margin-bottom:22px;color:var(--muted);font-size:14px}
+    .crumb span{padding:0 9px;color:#a9b4c2}
+    .hero{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(360px,.82fr);gap:24px;margin-bottom:30px}
+    .hero-main{position:relative;overflow:hidden;min-height:405px;padding:44px;border-radius:var(--radius);background:linear-gradient(135deg,#173a68 0%,#245dad 65%,#4b83ce 100%);color:#fff;transition:background .45s ease}
+    .hero-main.slide-water{background:linear-gradient(135deg,#123c6c 0%,#1f6ca5 62%,#4f9fd1 100%)}
+    .hero-main.slide-gas{background:linear-gradient(135deg,#21365d 0%,#365c9d 62%,#5b88cf 100%)}
+    .hero-main:after{content:"";position:absolute;width:430px;height:430px;border:70px solid rgba(255,255,255,.08);border-radius:50%;right:-210px;bottom:-235px}
+    .hero-copy{transition:opacity .22s ease,transform .22s ease}
+    .hero-main.is-transitioning .hero-copy{opacity:.18;transform:translateY(7px)}
+    .hero-label{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:rgba(255,255,255,.11);font-size:13px;font-weight:800}
+    .hero h2{max-width:760px;margin:24px 0 14px;font-size:42px;line-height:1.08;letter-spacing:-.025em}
+    .hero-main p{max-width:720px;margin:0;color:#dce9fb;font-size:18px;line-height:1.55}
+    .hero-meta{position:absolute;left:44px;bottom:38px;display:flex;gap:20px;align-items:center;color:#dce9fb;font-size:14px}
+    .hero-carousel-controls{position:absolute;right:42px;bottom:34px;z-index:2;display:flex;align-items:center;gap:12px}
+    .hero-counter{color:#dce9fb;font-size:13px;font-weight:800;white-space:nowrap}
+    .hero-dots{display:flex;gap:7px}.hero-dot{width:10px;height:10px;padding:0;border:1px solid rgba(255,255,255,.66);border-radius:50%;background:transparent;cursor:pointer;transition:.2s}.hero-dot.active{width:27px;border-radius:999px;background:#fff}
+    .minimal-hero{position:relative;overflow:hidden;min-height:360px;margin-bottom:28px;padding:42px 46px;border-radius:var(--radius);background:linear-gradient(135deg,#173a68 0%,#245dad 65%,#4b83ce 100%);color:#fff;transition:background .45s ease}
+    .minimal-hero.slide-water{background:linear-gradient(135deg,#123c6c 0%,#1f6ca5 62%,#4f9fd1 100%)}.minimal-hero.slide-gas{background:linear-gradient(135deg,#21365d 0%,#365c9d 62%,#5b88cf 100%)}
+    .minimal-hero:after{content:"";position:absolute;width:530px;height:530px;border:78px solid rgba(255,255,255,.08);border-radius:50%;right:-175px;bottom:-350px}
+    .minimal-hero-copy{position:relative;z-index:1;max-width:900px;transition:opacity .22s ease,transform .22s ease}.minimal-hero.is-transitioning .minimal-hero-copy{opacity:.18;transform:translateY(7px)}
+    .minimal-hero h2{margin:20px 0 13px;font-size:42px;line-height:1.1;letter-spacing:-.025em}.minimal-hero p{margin:0;color:#dce9fb;font-size:18px;line-height:1.5}.minimal-hero .hero-meta{left:46px;bottom:34px}.minimal-hero .hero-carousel-controls{right:46px;bottom:31px}
+    .minimum-filter-block{padding:24px 26px;border:1px solid var(--line);border-radius:18px;background:#fff}.minimum-filter-block h2{margin:0 0 14px;font-size:24px}.minimum-filter-block .direction-row{margin-bottom:14px}.minimum-filter-footer{display:flex;justify-content:space-between;gap:15px;align-items:center}.minimum-filter-footer .filter-row{flex:1}.minimum-news{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.minimum-news-item{padding:20px;border:1px solid var(--line);border-radius:16px;background:#fff}.minimum-news-item time{display:block;margin-bottom:16px;color:var(--blue);font-size:13px;font-weight:850}.minimum-news-item h3{margin:0 0 9px;font-size:18px;line-height:1.35}.minimum-news-item p{margin:0;color:var(--muted);line-height:1.45}.minimum-empty{display:none;grid-column:1/-1;padding:30px;border:1px dashed var(--line);border-radius:15px;background:#fff;color:var(--muted);text-align:center}
+    .hero-side{display:grid;grid-template-rows:auto 1fr;gap:18px}
+    .smart-search{padding:28px;border-radius:var(--radius);background:#fff;border:1px solid var(--line)}
+    .smart-search h3{margin:0 0 7px;font-size:23px}
+    .smart-search p{margin:0 0 20px;color:var(--muted);line-height:1.45}
+    .searchline{display:flex;gap:8px}
+    .searchline input{min-width:0;flex:1;height:52px;padding:0 15px;border:1px solid var(--line);border-radius:12px;color:var(--text);outline:none}
+    .searchline input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(36,93,173,.1)}
+    .icon-button{width:52px;border:0;border-radius:12px;background:var(--blue);color:#fff;cursor:pointer}
+    .navigator-promo{display:flex;flex-direction:column;justify-content:space-between;padding:28px;border-radius:var(--radius);background:var(--green-bg);border:1px solid #cfe7d9}
+    .navigator-promo h3{margin:0 0 8px;font-size:23px}
+    .navigator-promo p{margin:0;color:#547063;line-height:1.5}
+    .text-action{display:inline-flex;align-items:center;gap:8px;margin-top:24px;padding:0;border:0;background:transparent;color:var(--green);font-weight:850;cursor:pointer}
+    .mock-notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 30px}
+    .mock-notes.two{grid-template-columns:1fr 1fr;margin:16px 0 30px}
+    .mock-note{padding:17px 18px;border:1px solid #cfddec;border-left:4px solid var(--blue);border-radius:14px;background:#f7faff}
+    .mock-note.green{border-color:#cde6d7;border-left-color:var(--green);background:var(--green-bg)}
+    .mock-note-kicker{display:block;margin-bottom:6px;color:var(--blue);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .mock-note.green .mock-note-kicker{color:var(--green)}
+    .mock-note h3{margin:0 0 7px;font-size:17px}
+    .mock-note p{margin:0;color:#58708e;font-size:14px;line-height:1.45}
+    .mock-note.green p{color:#547064}
+    .mock-note p + p{margin-top:7px}
+    .mock-note b{color:var(--text)}
+    .mock-note .tech{padding-top:8px;border-top:1px solid rgba(69,103,146,.16);font-size:13px}
+    .mock-note.green .tech{border-top-color:rgba(47,138,89,.18)}
+    .complexity{display:inline-flex;align-items:center;margin-left:5px;padding:2px 7px;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap}
+    .complexity.low{background:#e9f6ee;color:#277c50}.complexity.mid{background:#fff1db;color:#9a5b14}.complexity.high{background:#ffe9e7;color:#ad4641}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin:38px 0 18px}
+    .section-head h2{margin:0;font-size:28px}
+    .section-head p{margin:5px 0 0;color:var(--muted)}
+    .section-head a{color:var(--blue);font-weight:800}
+    .direction-row,.filter-row{display:flex;gap:10px;overflow:auto;padding-bottom:4px}
+    .direction-chip,.filter-chip{border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--text);font-weight:750;white-space:nowrap;cursor:pointer}
+    .direction-chip{display:flex;align-items:center;gap:9px;padding:10px 15px}
+    .filter-chip{padding:9px 14px}
+    .direction-chip.active,.filter-chip.active{border-color:var(--blue);background:var(--pale);color:var(--blue)}
+    .direction-chip svg{width:20px;height:20px}
+    .content-tools{display:flex;justify-content:space-between;gap:18px;align-items:center;margin:22px 0 16px}
+    .region-select{height:42px;padding:0 38px 0 13px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--text)}
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .article-card{display:flex;flex-direction:column;min-height:320px;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#fff}
+    .card-visual{position:relative;height:136px;padding:18px;background:linear-gradient(135deg,#e8f1ff,#f7faff);overflow:hidden}
+    .card-visual.water{background:linear-gradient(135deg,#e5f6ff,#d9eef9)}
+    .card-visual.heat{background:linear-gradient(135deg,#fff0df,#fff8ee)}
+    .card-visual.news{background:linear-gradient(135deg,#eef7ef,#f8fcf9)}
+    .card-visual:after{content:"";position:absolute;width:130px;height:130px;border:26px solid rgba(36,93,173,.08);border-radius:50%;right:-35px;bottom:-65px}
+    .content-type{position:relative;z-index:1;display:inline-flex;padding:6px 9px;border-radius:999px;background:#fff;color:var(--blue);font-size:12px;font-weight:850;box-shadow:0 4px 12px rgba(25,55,91,.06)}
+    .card-body{display:flex;flex-direction:column;flex:1;padding:21px}
+    .card-body h3{margin:0 0 10px;font-size:20px;line-height:1.28}
+    .card-body p{margin:0;color:var(--muted);line-height:1.48}
+    .card-meta{display:flex;justify-content:space-between;gap:10px;margin-top:auto;padding-top:19px;color:#71839b;font-size:13px}
+    .card-meta{align-items:center;flex-wrap:wrap;gap:12px}.card-open{border:0;border-radius:10px;background:#edf4ff;color:#245dad;padding:10px 13px;font-weight:800;cursor:pointer}.card-open:hover,.card-open:focus-visible{background:#245dad;color:#fff}.article-pagination{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:24px 0}.article-pagination button{min-height:42px;padding:0 15px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--text);font-weight:750}.article-pagination button[aria-current="page"]{border-color:var(--blue);background:var(--pale);color:var(--blue)}.pagination-pages{display:flex;gap:7px}.pagination-demo-note{color:#71839b;font-size:13px}
+    .empty{display:none;grid-column:1/-1;padding:36px;text-align:center;border:1px dashed var(--line);border-radius:18px;background:#fff;color:var(--muted)}
+    .updates{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:38px}
+    .updates-panel,.watch-panel{padding:28px;border-radius:20px;background:#fff;border:1px solid var(--line)}
+    .updates-panel h2,.watch-panel h2{margin:0 0 8px;font-size:25px}
+    .updates-panel>p,.watch-panel>p{margin:0 0 20px;color:var(--muted);line-height:1.5}
+    .news-item{display:grid;grid-template-columns:86px 1fr;gap:16px;padding:14px 0;border-top:1px solid #edf0f4}
+    .news-item time{color:var(--blue);font-size:13px;font-weight:800}
+    .news-item strong{display:block;margin-bottom:4px;line-height:1.35}
+    .news-item span{color:var(--muted);font-size:13px}
+    .watch-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .watch-fields label{display:flex;align-items:center;gap:8px;padding:12px;border:1px solid var(--line);border-radius:11px;background:var(--bg);cursor:pointer}
+    .watch-fields input{accent-color:var(--blue)}
+    .primary{height:48px;margin-top:14px;padding:0 18px;border:0;border-radius:12px;background:var(--blue);color:#fff;font-weight:850;cursor:pointer}
+    .watch-status{display:none;margin-top:13px;padding:11px 13px;border-radius:10px;background:var(--green-bg);color:var(--green);font-weight:750}
+    .site-footer{display:grid;grid-template-columns:1.2fr repeat(3,1fr);gap:30px;padding:38px 48px;background:#102b4e;color:#fff}
+    .site-footer h4{margin:0 0 12px}
+    .site-footer p,.site-footer a{display:block;margin:7px 0;color:#b9c9dd;font-size:14px}
+    .panel[hidden]{display:none}
+
+    /* Navigator */
+    .inner-title{max-width:860px;margin-bottom:28px}
+    .inner-title h1{margin:0 0 10px;font-size:44px;line-height:1.08}
+    .inner-title p{margin:0;color:var(--muted);font-size:18px;line-height:1.55}
+    .navigator-shell{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:22px;align-items:start}
+    .steps{display:grid;gap:16px}
+    .step{padding:26px;border:1px solid var(--line);border-radius:18px;background:#fff}
+    .step-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    .step-number{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--pale);color:var(--blue);font-weight:900}
+    .step h2{margin:0;font-size:21px}
+    .option-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .option{min-height:54px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--text);font-weight:750;cursor:pointer}
+    .option.selected{border-color:var(--blue);background:var(--pale);color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
+    .wide-select{width:100%;height:52px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--text)}
+    .route-card{position:sticky;top:18px;overflow:hidden;border:1px solid #cbd8ea;border-radius:20px;background:#fff;box-shadow:var(--shadow)}
+    .route-column{display:grid;gap:16px;align-items:start}
+    .route-top{padding:25px;background:linear-gradient(135deg,#173a68,#2864b7);color:#fff}
+    .route-top span{font-size:13px;color:#d5e4f8}
+    .route-top h2{margin:6px 0 0;font-size:25px}
+    .route-body{padding:22px}
+    .route-line{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid #edf0f4}
+    .route-line:last-of-type{border-bottom:0}
+    .route-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--pale);color:var(--blue);font-weight:900;flex:none}
+    .route-line strong{display:block;margin-bottom:3px}
+    .route-line small{color:var(--muted)}
+    .route-links{display:grid;gap:9px;margin-top:16px}
+    .route-links button{height:45px;border-radius:11px;font-weight:850;cursor:pointer}
+    .route-links .primary{margin:0;border:0;background:var(--blue);color:#fff}
+    .secondary{border:1px solid var(--line);background:#fff;color:var(--blue)}
+
+    /* Article */
+    .article-shell{max-width:1120px;margin:0 auto}.article-layout{display:block}
+    .article{padding:0;border:1px solid var(--line);border-radius:24px;background:#fff;overflow:hidden}
+    .article-hero{position:relative;min-height:420px;padding:50px 54px;overflow:hidden;background:linear-gradient(130deg,#14345e 0%,#2462b8 57%,#5794df 100%);color:#fff}
+    .article-hero{background-image:linear-gradient(90deg,rgba(15,43,80,.95),rgba(20,61,108,.75) 65%,rgba(28,72,118,.4)),url('blog-hero-preview.svg');background-size:cover;background-position:center}
+    .article-hero:after{content:"";position:absolute;width:510px;height:510px;right:-138px;bottom:-270px;border:72px solid rgba(255,255,255,.12);border-radius:50%;box-shadow:0 0 0 72px rgba(255,255,255,.06)}
+    .article-hero>*{position:relative;z-index:1}.article .badge{display:inline-flex;padding:8px 12px;border:1px solid rgba(255,255,255,.3);border-radius:999px;background:rgba(255,255,255,.12);color:#fff;font-size:13px;font-weight:850}
+    .article h1{max-width:680px;margin:20px 0 16px;font-size:48px;line-height:1.08;letter-spacing:-.035em}.article .article-hero .article-lead{max-width:660px;margin:0;color:#e2edff;font-size:20px;line-height:1.5}
+    .article-info{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px;color:#dce9fb;font-size:13px}.article-info span{padding:7px 10px;border-radius:999px;background:rgba(6,28,60,.22)}.verified{color:#cbf6d9!important;font-weight:800}
+    .article-hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;margin-top:24px}.article-hero-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;height:auto;margin:0;padding:12px 15px;border-radius:11px;line-height:1.3;font-weight:850;cursor:pointer}.article-hero-actions .outline-light{border:1px solid rgba(255,255,255,.55);background:transparent;color:#fff}
+    .article-body{padding:36px 54px 48px}.article h2{margin:39px 0 13px;font-size:30px;letter-spacing:-.02em}.article h3{margin:25px 0 8px;font-size:21px}.article p,.article li{font-size:17px;line-height:1.68;color:#344f71}.article ul{padding-left:23px}
+    .article-body{max-width:890px;margin:0 auto}.article-toc{padding:24px 26px;margin:0 0 30px;border:1px solid #d8e5f5;border-radius:16px;background:#f6f9fe}.article .article-toc h2{margin:0 0 14px;font-size:23px}.article-toc ol{margin:0;padding-left:23px}.article-toc li{padding:4px 0}.article-toc a{color:#245dad;text-decoration:underline;text-decoration-color:#abc4e8;text-underline-offset:4px}.article-toc a:hover{color:#173a68}.article-related{margin:34px 0 0;padding:23px 24px;border:1px solid var(--line);border-radius:16px;background:#f8fafc}.article .article-related h2{margin:0 0 10px;font-size:22px}.article-related p{margin:0 0 12px}.article-related-links{display:flex;flex-wrap:wrap;gap:10px}.article-related-links a{padding:10px 13px;border:1px solid #d0dced;border-radius:10px;background:#fff;color:#245dad;font-weight:750}.article-related-links a:hover{background:#edf4ff}
+    .article-design-note{margin:0 0 20px}.article .article-annotation{margin:17px 0 31px}.article .article-annotation h3{margin:0 0 7px;font-size:17px}.article .article-annotation p{font-size:14px;line-height:1.45;color:#58708e}.article .article-annotation.green p{color:#547064}.article .article-annotation b{color:var(--text)}.article .article-annotation .tech{padding-top:8px;border-top:1px solid rgba(69,103,146,.16);font-size:13px}.article .article-annotation.green .tech{border-top-color:rgba(47,138,89,.18)}.article-aside .mock-note{padding:15px}.article-aside .mock-note h3{font-size:16px}.article-aside .mock-note p{font-size:13px}
+    .article-summary{margin:0 0 32px;padding:23px 24px;border:1px solid #cdddf3;border-radius:17px;background:#f2f7ff}.article-summary-head{display:flex;align-items:center;gap:10px;margin-bottom:13px;color:var(--blue);font-size:15px;font-weight:900}.article-summary-head i{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--blue);color:#fff;font-style:normal}.article-summary ul{display:grid;gap:8px;margin:0;padding-left:20px}.article-summary li{font-size:16px;line-height:1.45}
+    .article-note{margin:28px 0;padding:20px 21px;border-left:4px solid var(--blue);border-radius:0 14px 14px 0;background:var(--pale)}.article-note strong{display:block;margin-bottom:5px;color:var(--text)}
+    .article-warning{display:flex;gap:14px;margin:28px 0;padding:19px 20px;border:1px solid #f1d8aa;border-radius:16px;background:#fff7e8}.article-warning i{display:grid;place-items:center;width:30px;height:30px;flex:none;border-radius:50%;background:#f6be52;color:#684200;font-style:normal;font-weight:900}.article-warning strong{display:block;margin:1px 0 4px}.article-warning p{margin:0;font-size:15px;line-height:1.48}
+    .route-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:24px 0 28px;border:1px solid var(--line);border-radius:16px;overflow:hidden}.route-strip button{position:relative;min-height:116px;padding:18px 13px;border:0;border-right:1px solid var(--line);background:#fff;color:var(--text);text-align:left;cursor:pointer;transition:.2s ease}.route-strip button:last-child{border-right:0}.route-strip button:hover{z-index:1;background:#f3f8ff;box-shadow:inset 0 -3px 0 var(--blue);transform:translateY(-2px)}.route-strip small{display:block;margin-bottom:10px;color:var(--blue);font-weight:900}.route-strip strong{font-size:15px;line-height:1.25}
+    .checklist{display:grid;gap:9px;margin:17px 0}.checklist label{display:flex;gap:12px;align-items:flex-start;padding:14px 15px;border:1px solid var(--line);border-radius:13px;background:#fbfcfe;cursor:pointer;transition:.18s ease}.checklist label:hover{transform:translateX(3px);border-color:#adc6e8}.checklist label:has(input:checked){border-color:#abd8be;background:#f0fbf5;color:#37614b;text-decoration:line-through}.checklist input{margin-top:4px;accent-color:var(--green)}
+    .article-visual{position:relative;min-height:265px;margin:29px 0;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#dfeaf9,#9ec4ec)}.article-visual:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(10,48,89,.2),transparent 48%),repeating-linear-gradient(135deg,transparent 0 28px,rgba(255,255,255,.17) 29px 30px)}.visual-network{position:absolute;inset:32px;display:grid;place-items:center;border:2px solid rgba(19,58,104,.36);border-radius:14px}.visual-network:before,.visual-network:after{content:"";position:absolute;border:2px solid rgba(19,58,104,.56);border-radius:50%}.visual-network:before{width:80px;height:80px;left:18%;top:25%}.visual-network:after{width:126px;height:126px;right:17%;bottom:11%}.visual-line{width:64%;height:3px;background:#1e5eaa;transform:rotate(-18deg);box-shadow:0 0 0 7px rgba(255,255,255,.32)}.article-visual figcaption{position:absolute;right:15px;bottom:14px;padding:7px 10px;border-radius:8px;background:rgba(255,255,255,.86);color:#56708f;font-size:12px}
+    .fact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:22px 0}.fact-card{padding:18px;border:1px solid var(--line);border-radius:15px;background:#fbfcfe}.fact-card span{display:block;margin-bottom:7px;color:#71849e;font-size:13px}.fact-card strong{display:block;font-size:22px;line-height:1.15}.fact-card.green{border-color:#cce6d7;background:#f1fbf5}.fact-card.green strong{color:#278355}
+    .next-step{margin-top:36px;padding:28px;border-radius:19px;background:linear-gradient(125deg,#173a68,#2866ba);color:#fff}.next-step h2{margin:0 0 8px;font-size:28px}.next-step p{max-width:610px;margin:0 0 17px;color:#dceaff}.next-step button{min-height:46px;padding:0 16px;border:0;border-radius:11px;background:#fff;color:var(--blue);font-weight:900;cursor:pointer;transition:.2s}.next-step button:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.17)}
+    .faq{margin-top:42px;border-top:1px solid #e5eaf1}.faq h2{margin-bottom:18px}.faq-item{border-bottom:1px solid #e5eaf1}.faq-trigger{display:flex;justify-content:space-between;gap:12px;width:100%;padding:18px 0;border:0;background:transparent;color:var(--text);font:inherit;font-size:17px;font-weight:850;text-align:left;cursor:pointer}.faq-trigger span:last-child{color:var(--blue);font-size:24px;line-height:.8;transition:.2s}.faq-trigger[aria-expanded="true"] span:last-child{transform:rotate(45deg)}.faq-answer{display:none;padding:0 34px 18px 0;color:#59708e;line-height:1.55}.faq-answer.is-open{display:block}
+    .article-aside{position:sticky;top:18px;display:grid;gap:14px}.aside-card{padding:21px;border:1px solid var(--line);border-radius:17px;background:#fff}.aside-card h3{margin:0 0 11px;font-size:18px}.aside-card a{display:block;padding:10px 0;border-bottom:1px solid #edf0f4;color:#617590;font-size:14px;transition:.16s}.aside-card a:hover{padding-left:5px;color:var(--blue)}.aside-card a:last-child{border-bottom:0}.aside-card.cta{background:var(--green-bg);border-color:#cfe7d9}.aside-card.cta p{margin:0 0 14px;color:#567063;line-height:1.45}.aside-card .primary{width:100%;min-height:43px;border:0;border-radius:10px;background:var(--green);color:#fff;font-weight:850;cursor:pointer}.aside-save{display:flex;align-items:center;justify-content:space-between;gap:10px}.aside-save button{padding:9px 11px;border:1px solid #bcd0e9;border-radius:10px;background:#fff;color:var(--blue);font-weight:800;cursor:pointer}.aside-save button.is-saved{border-color:#9fd1b3;background:#effbf4;color:#238653}.progress{position:sticky;top:0;z-index:10;height:5px;background:#e9eef5}.progress span{display:block;width:34%;height:100%;background:linear-gradient(90deg,#1d5baa,#6a9de0);transition:width .25s ease}
+
+    /* Connections */
+    .connection-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:24px}
+    .flow-card{position:relative;min-height:170px;padding:23px;border:1px solid var(--line);border-radius:17px;background:#fff}
+    .flow-card:not(:last-child):after{content:"→";position:absolute;right:-20px;top:68px;z-index:2;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900}
+    .flow-card .flow-num{display:block;margin-bottom:28px;color:var(--blue);font-size:13px;font-weight:900;text-transform:uppercase}
+    .flow-card strong{display:block;margin-bottom:7px;font-size:19px}
+    .flow-card p{margin:0;color:var(--muted);line-height:1.45}
+    .feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:25px}
+    .feature{padding:22px;border-radius:17px;background:#fff;border:1px solid var(--line)}
+    .feature-icon{display:grid;place-items:center;width:42px;height:42px;margin-bottom:16px;border-radius:12px;background:var(--pale);color:var(--blue)}
+    .feature h3{margin:0 0 7px;font-size:18px}
+    .feature p{margin:0;color:var(--muted);line-height:1.48}
+    .recommend{margin-top:25px;padding:25px;border-radius:18px;background:linear-gradient(135deg,#173a68,#245dad);color:#fff}
+    .recommend h2{margin:0 0 8px}
+    .recommend p{margin:0;color:#dce8f7;line-height:1.5}
+
+    /* Concept */
+    .concept-page{padding-top:34px}
+    .concept-intro{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:34px;align-items:center;padding:46px;border-radius:24px;background:linear-gradient(135deg,#173a68 0%,#245dad 70%,#4d84cd 100%);color:#fff}
+    .concept-intro:after{content:"";position:absolute;width:420px;height:420px;right:-220px;bottom:-255px;border:68px solid rgba(255,255,255,.07);border-radius:50%}
+    .concept-copy,.concept-formula{position:relative;z-index:1}
+    .concept-pill{display:inline-flex;padding:7px 11px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:rgba(255,255,255,.1);font-size:13px;font-weight:850}
+    .concept-intro h1{max-width:820px;margin:22px 0 14px;font-size:43px;line-height:1.08;letter-spacing:-.025em}
+    .concept-intro p{max-width:740px;margin:0;color:#dce9fb;font-size:18px;line-height:1.55}
+    .concept-formula{padding:26px;border:1px solid rgba(255,255,255,.2);border-radius:18px;background:rgba(10,38,75,.28);backdrop-filter:blur(6px)}
+    .concept-formula small{display:block;margin-bottom:16px;color:#bdd1eb;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .formula-line{display:flex;align-items:center;gap:11px;padding:13px 0;border-top:1px solid rgba(255,255,255,.14);font-size:18px;font-weight:850}
+    .formula-line:first-of-type{border-top:0}
+    .formula-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#fff;color:var(--blue);flex:none}
+    .concept-center{text-align:center;margin:38px auto 20px;max-width:850px}
+    .concept-center h2{margin:0 0 9px;font-size:30px}
+    .concept-center p{margin:0;color:var(--muted);font-size:17px;line-height:1.5}
+    .user-path{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+    .path-card{position:relative;min-height:218px;padding:22px;border:1px solid var(--line);border-radius:17px;background:#fff}
+    .path-card:not(:last-child):after{content:"→";position:absolute;z-index:2;right:-21px;top:69px;display:grid;place-items:center;width:29px;height:29px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900}
+    .path-number{display:block;margin-bottom:26px;color:var(--blue);font-size:12px;font-weight:900;text-transform:uppercase}
+    .path-card strong{display:block;margin-bottom:7px;font-size:19px}
+    .path-card p{margin:0;color:var(--muted);line-height:1.45}
+    .path-place{display:inline-flex;margin-top:15px;padding:6px 9px;border-radius:8px;background:var(--pale);color:var(--blue);font-size:12px;font-weight:850;line-height:1.35}
+    .concept-values{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+    .value-card{padding:26px;border:1px solid var(--line);border-radius:19px;background:#fff}
+    .value-card.green{background:var(--green-bg);border-color:#cfe7d9}
+    .value-card h3{margin:0 0 13px;font-size:22px}
+    .value-card ul{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+    .value-card li{position:relative;padding-left:25px;color:#506985;line-height:1.45}
+    .value-card li:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:900}
+    .concept-definition{display:flex;justify-content:space-between;align-items:center;gap:28px;margin-top:24px;padding:25px 28px;border-radius:18px;background:#102f56;color:#fff}
+    .concept-definition h2{margin:0 0 7px;font-size:24px}
+    .concept-definition p{margin:0;color:#c9d9ec;font-size:16px;line-height:1.5}
+    .concept-definition .primary{flex:none;background:#fff;color:var(--blue)}
+
+    @media(max-width:1100px){
+      .site-header{padding:0 24px}.nav{gap:18px}.hero{grid-template-columns:1fr}.hero-side{grid-template-columns:1fr 1fr;grid-template-rows:auto}.cards{grid-template-columns:repeat(2,1fr)}
+      .navigator-shell,.article-layout,.concept-intro{grid-template-columns:1fr}.route-card,.article-aside{position:static}.article-aside{grid-template-columns:1fr 1fr}.connection-flow,.user-path,.mock-notes,.minimum-news{grid-template-columns:repeat(2,1fr)}.flow-card:after,.path-card:after{display:none}.feature-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:760px){
+      .concept{padding:12px}.concept-head{display:block}.site-header{min-height:72px;padding:0 18px}.nav{display:none}.cabinet{margin-left:auto;padding:11px 13px}.page{padding:28px 18px 40px}.hero-main{min-height:430px;padding:28px}.hero h2{font-size:32px}.hero-meta{left:28px;right:28px;bottom:28px;flex-wrap:wrap}.hero-carousel-controls{right:28px;bottom:28px}.hero-meta{right:130px}.minimal-hero{min-height:410px;padding:28px}.minimal-hero h2{font-size:32px}.minimal-hero .hero-meta{left:28px;right:130px;bottom:28px}.minimal-hero .hero-carousel-controls{right:28px;bottom:28px}.hero-side,.cards,.updates,.article-aside,.feature-grid,.minimum-news{grid-template-columns:1fr}.content-tools,.minimum-filter-footer{align-items:flex-start;flex-direction:column}.minimum-filter-footer .filter-row{max-width:100%}.option-grid{grid-template-columns:1fr 1fr}.article{padding:0}.article-hero,.article-body{padding:28px 22px}.article h1,.inner-title h1{font-size:32px}.article-lead{font-size:18px}.route-strip{grid-template-columns:1fr 1fr}.route-strip button:nth-child(2){border-right:0}.route-strip button:nth-child(-n+2){border-bottom:1px solid var(--line)}.fact-grid{grid-template-columns:1fr}.connection-flow{grid-template-columns:1fr}.site-footer{grid-template-columns:1fr 1fr;padding:30px 20px}.watch-fields{grid-template-columns:1fr}
+      .concept-page{padding-top:18px}.concept-intro{padding:28px}.concept-intro h1{font-size:32px}.user-path,.concept-values,.mock-notes,.mock-notes.two{grid-template-columns:1fr}.concept-definition{align-items:flex-start;flex-direction:column}.concept-definition .primary{width:100%}
+    }
+    .spec{max-width:1320px;margin:auto;padding:42px 48px 64px;color:#243b5b}
+    .spec-intro{background:#173a68;color:#fff;border-radius:22px;padding:32px 36px;margin-bottom:24px}
+    .spec-intro .spec-kicker{color:#a9cbff}.spec-intro h1{font-size:34px;margin:10px 0}.spec-intro p{line-height:1.6;color:#dce9fb;max-width:900px;margin:0}
+    .spec-kicker{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#245dad}
+    .spec-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px;align-items:start}
+    .spec-nav{position:sticky;top:18px;padding:18px;background:#fff;border:1px solid #d9e2ed;border-radius:16px}
+    .spec-nav strong{display:block;margin-bottom:10px;font-size:14px}.spec-nav a{display:block;padding:8px 10px;border-radius:8px;color:#526b8b;font-size:14px;line-height:1.35}.spec-nav a:hover,.spec-nav a:focus-visible{background:#edf4ff;color:#245dad}
+    .spec-content{min-width:0;display:grid;gap:20px}.spec-section{scroll-margin-top:18px;background:#fff;border:1px solid #d9e2ed;border-radius:18px;padding:28px}
+    .spec-section h2{font-size:25px;margin:8px 0 12px}.spec-section h3{font-size:19px;margin:0 0 9px;color:#173a68}.spec-section h4{font-size:15px;margin:16px 0 6px;color:#173a68}.spec-section p,.spec-section li{line-height:1.65;font-size:15px}.spec-section p{margin:8px 0}.spec-section ul,.spec-section ol{padding-left:22px;margin:8px 0 0}.spec-section li+li{margin-top:4px}
+    .spec-lead{color:#617691}.spec-card{padding:20px;border:1px solid #e1e8f0;border-radius:14px;background:#fbfcfe;margin-top:14px}.spec-card p{margin:6px 0}.spec-card b{color:#173a68}
+    .spec-alert{padding:15px 18px;border-radius:12px;background:#eaf7ef;border-left:4px solid #55a876;color:#27523a;margin-top:14px;line-height:1.55}.spec-alert.amber{background:#fff5e5;border-color:#df9d40;color:#704914}
+    .spec-implementation{margin:10px 0 22px;padding:18px 20px;border:1px solid #d2e2f5;border-left:4px solid #5b92d7;border-radius:12px;background:#f0f6fd;color:#354f70}.spec-implementation strong{display:block;color:#1f548e;margin-bottom:6px}.spec-implementation ul{margin:6px 0 0;padding-left:20px}.spec-implementation li{font-size:14px;line-height:1.6}
+    .spec-table-wrap{overflow-x:auto;margin-top:16px}.spec-table{width:100%;border-collapse:collapse;font-size:14px;min-width:570px}.spec-table th,.spec-table td{padding:12px;border-bottom:1px solid #e1e8f0;text-align:left;vertical-align:top;line-height:1.5}.spec-table th{background:#eff5fc;color:#244c80}.spec-table tr:last-child td{border-bottom:0}
+    .spec-models{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}.spec-model{padding:17px 18px;border:1px solid #dce6f2;border-radius:12px;background:#f7faff}.spec-model strong{display:block;color:#173a68;font-size:16px}.spec-model p{margin:6px 0 0;color:#526b8b;font-size:14px;line-height:1.5}.spec-model small{display:inline-block;margin-top:9px;color:#245dad;font-weight:750}@media(max-width:600px){.spec-models{grid-template-columns:1fr}}
+    .spec-tag{display:inline-block;padding:5px 9px;border-radius:8px;background:#e8f1ff;color:#245dad;font-size:12px;font-weight:800}.spec-tag.second{background:#eaf7ef;color:#278052}.spec-checks{list-style:none!important;padding-left:0!important}.spec-checks li{position:relative;padding-left:26px}.spec-checks li:before{content:'✓';position:absolute;left:0;color:#2f8a59;font-weight:800}
+    .spec-code{font-family:ui-monospace,SFMono-Regular,monospace;font-size:.9em;background:#edf3fb;color:#245dad;padding:2px 5px;border-radius:4px}.spec-jump{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.spec-jump a{padding:10px 14px;border:1px solid #a3c7fa;border-radius:10px;color:#fff;font-weight:700}.spec-jump a:hover{background:rgba(255,255,255,.1)}
+    .hero-main,.minimal-hero,.hero-main.slide-water,.hero-main.slide-gas,.minimal-hero.slide-water,.minimal-hero.slide-gas{background-image:linear-gradient(90deg,rgba(15,43,80,.96),rgba(20,61,108,.76) 65%,rgba(28,72,118,.4)),url('blog-hero-preview.svg');background-size:cover;background-position:center}
+    .hero-main,.minimal-hero{padding-bottom:34px}.hero-copy,.minimal-hero-copy{position:relative;z-index:1}.hero-meta,.minimal-hero .hero-meta{position:static;display:flex;flex-wrap:wrap;margin-top:22px;gap:12px 20px}.hero-action{display:inline-flex;align-items:center;justify-content:center;margin-top:22px;padding:12px 18px;border:1px solid rgba(255,255,255,.65);border-radius:10px;background:#fff;color:#173a68;font-weight:800;cursor:pointer}.hero-action:hover{background:#eaf2ff}.hero-main:after,.minimal-hero:after{pointer-events:none}.hero-carousel-controls,.minimal-hero .hero-carousel-controls{bottom:34px}
+    .blog-filters{padding:24px 26px;margin:0 0 24px;border:1px solid var(--line);border-radius:18px;background:#fff}.blog-filters h2{margin:0 0 14px;font-size:24px}.blog-filters .direction-row{margin-bottom:22px}.blog-filter-divider{height:1px;background:#e5ebf2;margin-bottom:20px}.blog-filter-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:12px}.blog-filter-heading h3{margin:0;font-size:19px;color:var(--navy)}.blog-filter-region{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:#6d809a}.blog-filters .filter-row{margin:0}.spec-example{display:block;margin:10px 0;padding:12px 14px;background:#edf4ff;border-radius:9px;color:#204c87;font-family:ui-monospace,SFMono-Regular,monospace;font-size:13px;overflow-wrap:anywhere}
+    .blog-filter-bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,250px);gap:24px;align-items:start}.blog-filter-group h3,.blog-filter-region-label{display:block;margin:0 0 12px;color:var(--navy);font-size:17px;font-weight:800;line-height:1.3}.blog-filter-group .filter-row{align-items:center;flex-wrap:wrap;overflow:visible;padding-bottom:0}.blog-filter-region-group .region-select{display:block;width:100%;height:46px}.blog-filter-group .filter-chip{min-height:46px}
+    @media(max-width:800px){.blog-filter-bottom{grid-template-columns:1fr;gap:18px}.blog-filter-region-group{max-width:320px}}@media(max-width:600px){.blog-filters{padding:20px 18px}.blog-filter-group .filter-row{gap:8px}.blog-filter-region-group{max-width:none}}
+    @media(max-width:600px){.hero-main,.minimal-hero{padding-bottom:78px}.hero-meta,.minimal-hero .hero-meta{position:static;margin-top:20px}.hero-carousel-controls,.minimal-hero .hero-carousel-controls{bottom:28px}}
+    @media(max-width:900px){.spec{padding:28px 20px}.spec-layout{grid-template-columns:1fr}.spec-nav{position:static;display:flex;gap:4px;flex-wrap:wrap}.spec-nav strong{width:100%}.spec-section{padding:22px}.spec-intro{padding:25px}.spec-intro h1{font-size:28px}}
+  </style>
+</head>
+<body>
+  <main class="concept">
+    <div class="concept-head">
+      <div>
+        <div class="concept-kicker">Концепция информационного раздела</div>
+        <h1>Блог Многоресурсов</h1>
+        <p class="concept-sub">Не лента публикаций, а помощник по подключению к инженерной инфраструктуре.</p>
+      </div>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Макеты блога">
+      <button type="button" role="tab" aria-selected="true" data-panel="concept">1. Концепция</button>
+      <button type="button" role="tab" aria-selected="false" data-panel="home">2. Главная блога (максимальный вариант)</button>
+      <button type="button" role="tab" aria-selected="false" data-panel="minimum">3. Главная блога (минимум для работы)</button>
+      <button type="button" role="tab" aria-selected="false" data-panel="navigator">4. Навигатор задачи</button>
+      <button type="button" role="tab" aria-selected="false" data-panel="article">5. Страница статьи</button>
+      <button type="button" role="tab" aria-selected="false" data-panel="connections">6. Связь с сервисом</button>
+      <button type="button" role="tab" aria-selected="false" data-panel="spec">7. ТЗ для разработчика</button>
+    </div>
+
+    <div class="explain" id="panel-explain">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div><strong>Концепция блога</strong><p>Блог помогает понять задачу, пройти её по шагам и перейти к подходящим организациям — без разрыва между информацией и сервисом.</p></div>
+    </div>
+    <div class="preview-label">Интерактивный макет публичной части</div>
+
+    <section class="site">
+      <header class="site-header">
+        <a class="logo" href="#">МНОГОРЕСУРСОВ</a>
+        <nav class="nav" aria-label="Основная навигация">
+          <a href="#">Карта и поиск</a><a href="#">Каталог</a><a href="#">Направления</a><a href="#" class="active">Блог</a><a href="#">О платформе⌄</a>
+        </nav>
+        <button class="cabinet" type="button">Личный кабинет</button>
+      </header>
+
+      <section class="panel" id="panel-concept">
+        <div class="page concept-page">
+          <div class="crumb">Презентация идеи <span>/</span> Концепция блога</div>
+          <section class="concept-intro">
+            <div class="concept-copy">
+              <span class="concept-pill">Практический информационный раздел</span>
+              <h1>Блог помогает решить задачу, а не просто прочитать статью</h1>
+              <p>Пользователь получает понятную инструкцию по подключению инженерных ресурсов, готовит документы и сразу переходит к организациям, которые могут помочь в его регионе.</p>
+            </div>
+            <div class="concept-formula">
+              <small>Формула раздела</small>
+              <div class="formula-line"><span class="formula-icon">?</span><span>Вопрос пользователя</span></div>
+              <div class="formula-line"><span class="formula-icon">✓</span><span>Понятный маршрут действий</span></div>
+              <div class="formula-line"><span class="formula-icon">→</span><span>Переход в карту и каталог</span></div>
+            </div>
+          </section>
+
+          <div class="concept-center"><h2>Как это работает для пользователя</h2><p>Контент и основной сервис объединены в один непрерывный путь.</p></div>
+          <div class="user-path">
+            <article class="path-card"><span class="path-number">Шаг 1</span><strong>Находит ответ</strong><p>Через поиск или рубрику блога открывает материал по своей задаче — например, о подключении тепла.</p><span class="path-place">Где: на главной странице блога</span></article>
+            <article class="path-card"><span class="path-number">Шаг 2</span><strong>Получает инструкцию</strong><p>На странице статьи видит этапы, документы, сроки, важные проверки и ссылки на официальные источники.</p><span class="path-place">Где: внутри практической статьи</span></article>
+            <article class="path-card"><span class="path-number">Шаг 3</span><strong>Уточняет задачу</strong><p>В «Навигаторе задачи» выбирает направление, текущий этап и регион расположения объекта.</p><span class="path-place">Где: в интерактивном навигаторе</span></article>
+            <article class="path-card"><span class="path-number">Шаг 4</span><strong>Находит исполнителя</strong><p>Нажимает «Найти организации» или «Показать на карте». Сервис открывает каталог или карту с уже заполненными фильтрами.</p><span class="path-place">Как: одной кнопкой без повторного выбора</span></article>
+          </div>
+
+          <div class="concept-values">
+            <article class="value-card green"><h3>Что получает пользователь</h3><ul><li>ответ простым языком;</li><li>пошаговый план и чек-листы;</li><li>актуальные данные для своего региона;</li><li>подходящие организации без повторного поиска.</li></ul></article>
+            <article class="value-card"><h3>Что получает платформа</h3><ul><li>входящий трафик по практическим запросам;</li><li>переходы из статей в каталог и карточки;</li><li>доверие благодаря проверке материалов;</li><li>дополнительную ценность размещения для организаций.</li></ul></article>
+          </div>
+
+          <section class="concept-definition">
+            <div><h2>Коротко: что это за блог</h2><p>Это не новостное СМИ и не склад SEO-текстов. Это база практических маршрутов, связанная с картой, направлениями и каталогом организаций.</p></div>
+            <button class="primary" type="button" data-go="home">Посмотреть главную блога →</button>
+          </section>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-home" hidden>
+        <div class="page">
+          <div class="crumb">Главная <span>/</span> Блог</div>
+          <div class="hero">
+            <article class="hero-main" id="hero-carousel" aria-label="Карусель главных материалов">
+              <div class="hero-copy" id="hero-copy">
+                <span class="hero-label" id="hero-label">Электроснабжение · Подключение</span>
+                <h2 id="hero-title">Как подключить объект к электрическим сетям</h2>
+                <p id="hero-description">От определения сетевой организации до договора и фактической подачи напряжения — с документами, сроками и переходом к подходящим организациям.</p>
+                <div class="hero-meta" id="hero-meta"><span>Обновлено 18 октября 2026</span><span>Санкт-Петербург</span></div>
+                <button class="hero-action" type="button" data-go="article">Читать статью →</button>
+              </div>
+              <div class="hero-carousel-controls"><span class="hero-counter" id="hero-counter">1 / 3</span><div class="hero-dots" aria-label="Выбор материала"><button class="hero-dot active" type="button" aria-label="Материал 1" data-hero-slide="0"></button><button class="hero-dot" type="button" aria-label="Материал 2" data-hero-slide="1"></button><button class="hero-dot" type="button" aria-label="Материал 3" data-hero-slide="2"></button></div></div>
+            </article>
+            <div class="hero-side">
+              <div class="smart-search">
+                <h3>Найдите точный ответ</h3>
+                <p>Поиск по инструкциям, документам, тарифам и изменениям.</p>
+                <div class="searchline"><input id="article-search" type="search" placeholder="Например, получить техусловия"><button class="icon-button" type="button" aria-label="Найти">⌕</button></div>
+              </div>
+              <div class="navigator-promo">
+                <div><h3>Не знаете, с чего начать?</h3><p>Ответьте на три вопроса. Навигатор соберёт маршрут именно для вашей задачи.</p></div>
+                <button class="text-action" type="button" data-go="navigator">Собрать маршрут <span>→</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mock-notes">
+            <article class="mock-note"><span class="mock-note-kicker">Аннотация к блоку</span><h3>Главные материалы</h3><p><b>Как работает:</b> редактор выбирает статьи для карусели и задаёт их порядок и время переключения. Кнопка под описанием открывает статью.</p><p><b>Зачем:</b> пользователь сразу видит важные материалы и может перейти к полному тексту.</p><p class="tech"><b>Технически:</b> настройки карусели хранятся в админке; изображение и данные берутся из карточки статьи. <span class="complexity mid">Сложность: средняя</span></p></article>
+            <article class="mock-note"><span class="mock-note-kicker">Аннотация к блоку</span><h3>«Найдите точный ответ»</h3><p><b>Как работает:</b> поиск находит статьи по словам из заголовка, текста, тегов, направления и региона.</p><p><b>Зачем:</b> помогает прийти к ответу по своему вопросу, не перебирая все материалы вручную.</p><p class="tech"><b>Технически:</b> Laravel-эндпоинт ищет по индексированным полям статей; для старта — полнотекстовый поиск PostgreSQL, при росте базы — Laravel Scout с поисковым сервисом. <span class="complexity mid">Сложность: средняя</span></p></article>
+            <article class="mock-note green"><span class="mock-note-kicker">Аннотация к блоку</span><h3>«Не знаете, с чего начать?»</h3><p><b>Как работает:</b> кнопка открывает «Навигатор задачи» с тремя вопросами: направление, этап, регион.</p><p><b>Зачем:</b> превращает неопределённый запрос в готовый маршрут со статьями и организациями.</p><p class="tech"><b>Технически:</b> вопросы, варианты и правила выдачи хранятся в БД. После ответов Laravel собирает фильтры и возвращает подходящие статьи, новости и ссылки в каталог. <span class="complexity mid">Сложность: средняя</span></p></article>
+          </div>
+
+          <section class="blog-filters" aria-label="Фильтры статей">
+          <h2>Выберите направление</h2>
+          <div class="direction-row" id="direction-filters">
+            <button class="direction-chip active" data-direction="all"><span>Все направления</span></button>
+            <button class="direction-chip" data-direction="electric"><span>ϟ</span><span>Электроснабжение</span></button>
+            <button class="direction-chip" data-direction="heat"><span>♨</span><span>Теплоснабжение</span></button>
+            <button class="direction-chip" data-direction="water"><span>◯</span><span>Водопровод</span></button>
+            <button class="direction-chip" data-direction="sewer"><span>⌁</span><span>Канализация</span></button>
+            <button class="direction-chip" data-direction="gas"><span>◇</span><span>Газоснабжение</span></button>
+          </div>
+
+          <div class="blog-filter-divider"></div>
+          <div class="blog-filter-bottom"><div class="blog-filter-group"><h3>Выберите рубрику</h3>
+            <div class="filter-row" id="type-filters">
+              <button class="filter-chip active" data-type="all">Все материалы</button>
+              <button class="filter-chip" data-type="guide">Подключение</button>
+              <button class="filter-chip" data-type="docs">Документы</button>
+              <button class="filter-chip" data-type="works">Проектирование и стройка</button>
+            </div>
+          </div><div class="blog-filter-region-group"><label class="blog-filter-region-label" for="region-select">Регион</label><select class="region-select" id="region-select"><option value="all">Все регионы</option><option value="spb">Санкт-Петербург</option><option value="lo">Ленинградская область</option></select></div></div>
+          </section>
+
+          <div class="mock-notes two">
+            <article class="mock-note"><span class="mock-note-kicker">Первый уровень подбора</span><h3>Направления</h3><p><b>Как работает:</b> пользователь выбирает ресурс — электричество, тепло, воду, канализацию или газ. Список ниже остаётся только с материалами по этому направлению.</p><p><b>Зачем:</b> сразу отсеивает нерелевантную информацию и связывает блог с разделом «Направления».</p><p class="tech"><b>Технически:</b> статья связывается с тем же справочником направлений, что карта и каталог, через Laravel-модель и промежуточную таблицу. <span class="complexity low">Сложность: низкая</span></p></article>
+            <article class="mock-note"><span class="mock-note-kicker">Второй уровень подбора</span><h3>Рубрика и регион</h3><p><b>Как работает:</b> рубрика уточняет тему статьи, регион выбирает материалы для территории. Статьи с общей информацией показываются для любого региона. Фильтры работают вместе.</p><p><b>Зачем:</b> пользователь быстрее находит подходящий материал по направлению и своей задаче.</p><p class="tech"><b>Технически:</b> рубрики — отдельный справочник; регион и направление берутся из существующих справочников. Laravel применяет выбранные параметры к выдаче. <span class="complexity mid">Сложность: средняя</span></p></article>
+          </div>
+
+          <div class="cards" id="article-cards">
+            <article class="article-card" data-dir="electric" data-type="guide" data-region="spb" data-title="Как подключить электричество к земельному участку">
+              <div class="card-visual"><span class="content-type">Подключение</span></div>
+              <div class="card-body"><h3>Как подключить электричество к земельному участку</h3><p>Куда обращаться, какие документы подготовить и из каких этапов состоит присоединение.</p><div class="card-meta"><span>Обновлено 18.10.2026</span><button class="card-open" type="button" data-open-article>Читать статью →</button></div></div>
+            </article>
+            <article class="article-card" data-dir="water sewer" data-type="docs" data-title="Документы для подключения водопровода и канализации">
+              <div class="card-visual water"><span class="content-type">Документы</span></div>
+              <div class="card-body"><h3>Документы для подключения водопровода и канализации</h3><p>Готовый перечень для первичной заявки и получения условий подключения.</p><div class="card-meta"><span>Обновлено 16.10.2026</span><button class="card-open" type="button" data-open-article>Читать статью →</button></div></div>
+            </article>
+            <article class="article-card" data-dir="heat" data-type="guide" data-title="Как подключить объект к тепловым сетям">
+              <div class="card-visual heat"><span class="content-type">Подключение</span></div>
+              <div class="card-body"><h3>Как подключить объект к тепловым сетям</h3><p>Как определить организацию, подготовить заявку и проверить условия подключения.</p><div class="card-meta"><span>Обновлено 15.10.2026</span><button class="card-open" type="button" data-open-article>Читать статью →</button></div></div>
+            </article>
+            <article class="article-card" data-dir="gas" data-type="guide" data-region="lo" data-title="Газификация объекта: маршрут заявителя">
+              <div class="card-visual"><span class="content-type">Подключение</span></div>
+              <div class="card-body"><h3>Газификация объекта: маршрут заявителя</h3><p>Как определить газораспределительную организацию и пройти этапы подключения.</p><div class="card-meta"><span>Обновлено 12.10.2026</span><button class="card-open" type="button" data-open-article>Читать статью →</button></div></div>
+            </article>
+            <article class="article-card" data-dir="water sewer heat electric gas" data-type="works" data-title="Как проверить подрядчика наружных сетей">
+              <div class="card-visual news"><span class="content-type">Проектирование и стройка</span></div>
+              <div class="card-body"><h3>Как проверить подрядчика наружных сетей</h3><p>СРО, опыт, документы и вопросы, которые стоит задать до заключения договора.</p><div class="card-meta"><span>Обновлено 10.10.2026</span><button class="card-open" type="button" data-open-article>Читать статью →</button></div></div>
+            </article>
+            <article class="article-card" data-dir="electric heat water sewer gas" data-type="docs" data-title="Технические условия: что проверить до подписания">
+              <div class="card-visual"><span class="content-type">Документы</span></div>
+              <div class="card-body"><h3>Технические условия: что проверить до подписания</h3><p>Точки подключения, мероприятия сторон, сроки и основания для корректировки.</p><div class="card-meta"><span>Обновлено 08.10.2026</span><button class="card-open" type="button" data-open-article>Читать статью →</button></div></div>
+            </article>
+            <div class="empty" id="empty-state">По выбранным параметрам материалы пока не найдены.</div>
+          </div>
+
+          <div class="article-pagination" aria-label="Пример навигации по статьям"><div class="pagination-pages"><button type="button" aria-current="page">1</button><button type="button" disabled>2</button><button type="button" disabled>3</button></div><span class="pagination-demo-note">Пример навигации</span><button type="button" disabled>Показать ещё</button></div>
+
+          <div class="mock-notes" style="grid-template-columns:1fr;margin-top:16px;margin-bottom:0">
+            <article class="mock-note"><span class="mock-note-kicker">Результат подбора</span><h3>Плитка статей</h3><p><b>Как работает:</b> карточки обновляются после выбора фильтров. На карточке видны превью, рубрика, название, описание и дата обновления; переход выполняется только кнопкой «Читать статью».</p><p><b>Зачем:</b> пользователь быстро понимает тему и актуальность материала.</p><p class="tech"><b>Технически:</b> Laravel выводит опубликованные статьи по фильтрам и поддерживает пагинацию и «Показать ещё». <span class="complexity low">Сложность: низкая</span></p></article>
+          </div>
+
+          <div class="updates">
+            <section class="updates-panel"><h2>Изменения в Санкт-Петербурге</h2><p>Новости автоматически связаны с регионом и направлениями.</p>
+              <div class="news-item"><time>20 ОКТ</time><div><strong>Обновлён порядок подачи заявок на подключение</strong><span>Электроснабжение · Официальный источник</span></div></div>
+              <div class="news-item"><time>16 ОКТ</time><div><strong>Установлены новые параметры платы за подключение</strong><span>Теплоснабжение · Тарифы</span></div></div>
+              <div class="news-item"><time>12 ОКТ</time><div><strong>Изменена зона деятельности сетевой организации</strong><span>Водоснабжение · Организации</span></div></div>
+            </section>
+            <section class="watch-panel"><h2>Следить за изменениями</h2><p>Пользователь выбирает регион и темы, а сервис собирает персональную ленту важных обновлений.</p>
+              <div class="watch-fields"><label><input type="checkbox" checked> Тарифы</label><label><input type="checkbox" checked> Правила подключения</label><label><input type="checkbox"> Новые организации</label><label><input type="checkbox"> Изменения зон работы</label></div>
+              <button class="primary" id="watch-button" type="button">Сохранить интересы</button><div class="watch-status" id="watch-status">Интересы сохранены. В личном кабинете появится персональная лента.</div>
+            </section>
+          </div>
+          <div class="mock-notes two" style="margin-top:16px">
+            <article class="mock-note"><span class="mock-note-kicker">Локальная актуальность</span><h3>Изменения в регионе</h3><p><b>Как работает:</b> в блок попадают новости, которым присвоены регион и направление: тарифы, правила подключения, изменения зон работы и инфраструктуры. Клик ведёт в полную новость с источником.</p><p><b>Зачем:</b> пользователь видит только те изменения, которые могут повлиять на его задачу.</p><p class="tech"><b>Технически:</b> у новости сохраняются регион, направление, тип события, дата публикации и приоритет. Laravel выводит последние подходящие новости, а закреплённые ставит выше. <span class="complexity low">Сложность: низкая</span></p></article>
+            <article class="mock-note green"><span class="mock-note-kicker">Персонализация после входа</span><h3>«Следить за изменениями»</h3><p><b>Как работает:</b> авторизованный пользователь сохраняет интересующие темы и регион в личном кабинете. Сервис формирует для него персональную ленту; уведомления — следующий этап развития.</p><p><b>Зачем:</b> возвращает пользователя в сервис, когда появляется действительно важное изменение.</p><p class="tech"><b>Технически:</b> настройки сохраняются в таблице предпочтений пользователя: регионы, направления и типы новостей. Лента строится по этим связям; email-уведомления добавляются через очереди Laravel позже. <span class="complexity high">Сложность: средняя, высокая с уведомлениями</span></p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-minimum" hidden>
+        <div class="page">
+          <div class="crumb">Главная <span>/</span> Блог</div>
+          <section class="minimal-hero" id="minimum-hero-carousel" aria-label="Карусель главных материалов">
+            <div class="minimal-hero-copy" id="minimum-hero-copy">
+              <span class="hero-label" id="minimum-hero-label">Электроснабжение · Подключение</span>
+              <h2 id="minimum-hero-title">Как подключить объект к электрическим сетям</h2>
+              <p id="minimum-hero-description">От определения сетевой организации до договора и фактической подачи напряжения — с документами, сроками и переходом к подходящим организациям.</p>
+              <div class="hero-meta" id="minimum-hero-meta"><span>Обновлено 18 октября 2026</span><span>Санкт-Петербург</span></div>
+              <button class="hero-action" type="button" data-go="article">Читать статью →</button>
+            </div>
+            <div class="hero-carousel-controls"><span class="hero-counter" id="minimum-hero-counter">1 / 3</span><div class="hero-dots" aria-label="Выбор материала"><button class="hero-dot active" type="button" aria-label="Материал 1" data-minimum-hero-slide="0"></button><button class="hero-dot" type="button" aria-label="Материал 2" data-minimum-hero-slide="1"></button><button class="hero-dot" type="button" aria-label="Материал 3" data-minimum-hero-slide="2"></button></div></div>
+          </section>
+
+          <section class="blog-filters" aria-label="Фильтры статей">
+            <h2>Выберите направление</h2>
+            <div class="direction-row" id="minimum-direction-filters">
+              <button class="direction-chip active" data-minimum-direction="all">Все направления</button>
+              <button class="direction-chip" data-minimum-direction="electric">ϟ Электроснабжение</button>
+              <button class="direction-chip" data-minimum-direction="heat">♨ Теплоснабжение</button>
+              <button class="direction-chip" data-minimum-direction="water">◯ Водопровод</button>
+              <button class="direction-chip" data-minimum-direction="sewer">⌁ Канализация</button>
+              <button class="direction-chip" data-minimum-direction="gas">◇ Газоснабжение</button>
+            </div>
+            <div class="blog-filter-divider"></div>
+            <div class="blog-filter-bottom"><div class="blog-filter-group"><h3>Выберите рубрику</h3>
+            <div class="filter-row" id="minimum-type-filters"><button class="filter-chip active" data-minimum-type="all">Все материалы</button><button class="filter-chip" data-minimum-type="guide">Подключение</button><button class="filter-chip" data-minimum-type="docs">Документы</button><button class="filter-chip" data-minimum-type="works">Проектирование и стройка</button></div>
+            </div><div class="blog-filter-region-group"><label class="blog-filter-region-label" for="minimum-region-select">Регион</label><select class="region-select" id="minimum-region-select"><option value="all">Все регионы</option><option value="spb">Санкт-Петербург</option><option value="lo">Ленинградская область</option></select></div></div>
+          </section>
+
+          <div class="section-head"><div><h2>Статьи</h2><p>Выдача меняется после выбора направления, типа материала и региона.</p></div></div>
+          <div class="cards" id="minimum-article-cards">
+            <article class="article-card" data-minimum-dir="electric" data-minimum-type="guide" data-minimum-region="spb"><div class="card-visual"><span class="content-type">Подключение</span></div><div class="card-body"><h3>Как подключить электричество к земельному участку</h3><p>Куда обращаться, какие документы подготовить и из каких этапов состоит присоединение.</p><div class="card-meta"><span>Обновлено 18.10.2026</span><button class="card-open" type="button" data-open-article>Читать статью →</button></div></div></article>
+            <article class="article-card" data-minimum-dir="water sewer" data-minimum-type="docs" data-minimum-region="all"><div class="card-visual water"><span class="content-type">Документы</span></div><div class="card-body"><h3>Документы для подключения водопровода и канализации</h3><p>Готовый перечень для первичной заявки и получения условий подключения.</p><div class="card-meta"><span>Обновлено 16.10.2026</span><button class="card-open" type="button" data-open-article>Читать статью →</button></div></div></article>
+            <article class="article-card" data-minimum-dir="gas" data-minimum-type="guide" data-minimum-region="lo"><div class="card-visual news"><span class="content-type">Подключение</span></div><div class="card-body"><h3>Газификация объекта: маршрут заявителя</h3><p>Как определить газораспределительную организацию и пройти этапы подключения.</p><div class="card-meta"><span>Обновлено 15.10.2026</span><button class="card-open" type="button" data-open-article>Читать статью →</button></div></div></article>
+            <div class="minimum-empty" id="minimum-empty">По выбранным фильтрам материалов пока нет.</div>
+          </div>
+
+          <div class="article-pagination" aria-label="Пример навигации по статьям"><div class="pagination-pages"><button type="button" aria-current="page">1</button><button type="button" disabled>2</button><button type="button" disabled>3</button></div><span class="pagination-demo-note">Пример навигации</span><button type="button" disabled>Показать ещё</button></div>
+
+          <div class="section-head"><div><h2>Новости</h2><p>Последние изменения для выбранного региона.</p></div></div>
+          <section class="minimum-news"><article class="minimum-news-item"><time>20 ОКТ · Санкт-Петербург</time><h3>Обновлён порядок подачи заявок на подключение</h3><p>Электроснабжение · Официальный источник</p></article><article class="minimum-news-item"><time>16 ОКТ · Санкт-Петербург</time><h3>Установлены новые параметры платы за подключение</h3><p>Теплоснабжение · Тарифы</p></article><article class="minimum-news-item"><time>12 ОКТ · Ленинградская область</time><h3>Изменена зона деятельности сетевой организации</h3><p>Водоснабжение · Организации</p></article></section>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-navigator" hidden>
+        <div class="page">
+          <div class="crumb">Главная <span>/</span> Блог <span>/</span> Навигатор задачи</div>
+          <div class="inner-title"><h1>Соберите маршрут подключения</h1><p>Три ответа превращают общий блог в персональную подборку: что прочитать, что подготовить и к кому обратиться.</p></div>
+          <div class="navigator-shell">
+            <div class="steps">
+              <section class="step"><div class="step-head"><span class="step-number">1</span><h2>Что нужно подключить?</h2></div><div class="option-grid" data-option-group="resource"><button class="option selected" data-value="электроснабжение">Электричество</button><button class="option" data-value="теплоснабжение">Тепло</button><button class="option" data-value="водоснабжение">Водопровод</button><button class="option" data-value="канализацию">Канализация</button><button class="option" data-value="газоснабжение">Газ</button></div></section>
+              <article class="mock-note"><span class="mock-note-kicker">Аннотация к шагу 1</span><h3>Выбор направления</h3><p><b>Как работает:</b> пользователь указывает ресурс, который нужно подключить. Выбор становится основным параметром всей дальнейшей подборки.</p><p><b>Зачем:</b> сервис сразу исключает статьи и организации по другим инженерным направлениям.</p><p class="tech"><b>Технически:</b> вариант хранит ID общего справочника направлений. Laravel передаёт этот ID в запрос подборки статей, новостей, каталога и карты. <span class="complexity low">Сложность: низкая</span></p></article>
+              <section class="step"><div class="step-head"><span class="step-number">2</span><h2>На каком вы этапе?</h2></div><div class="option-grid" data-option-group="task"><button class="option selected" data-value="Начинаю подключение">Начинаю подключение</button><button class="option" data-value="Получаю техусловия">Получаю техусловия</button><button class="option" data-value="Ищу проектировщика">Ищу проектировщика</button><button class="option" data-value="Ищу подрядчика">Ищу подрядчика</button><button class="option" data-value="Проверяю стоимость">Проверяю стоимость</button></div></section>
+              <article class="mock-note"><span class="mock-note-kicker">Аннотация к шагу 2</span><h3>Выбор этапа задачи</h3><p><b>Как работает:</b> пользователь выбирает, что делает сейчас: начинает подключение, получает техусловия, ищет проектировщика или подрядчика.</p><p><b>Зачем:</b> материалы подбираются не только по ресурсу, но и по конкретному следующему действию.</p><p class="tech"><b>Технически:</b> этапы — отдельный справочник, связанный со статьями и правилами выдачи. Laravel применяет его как дополнительный фильтр к выбранному направлению. <span class="complexity mid">Сложность: средняя</span></p></article>
+              <section class="step"><div class="step-head"><span class="step-number">3</span><h2>Где находится объект?</h2></div><select class="wide-select" id="nav-region"><option value="Санкт-Петербурге">Санкт-Петербург</option><option value="Ленинградской области">Ленинградская область</option><option value="Москве">Москва</option></select></section>
+              <article class="mock-note"><span class="mock-note-kicker">Аннотация к шагу 3</span><h3>Выбор территории</h3><p><b>Как работает:</b> пользователь выбирает регион объекта. Сервис показывает локальные правила, новости и организации, работающие на этой территории.</p><p><b>Зачем:</b> подключение зависит от конкретной территории, а не от юридического адреса организации.</p><p class="tech"><b>Технически:</b> используется существующий справочник территорий. ID региона добавляется к запросу и переносится в ссылки на каталог и карту. <span class="complexity low">Сложность: низкая</span></p></article>
+            </div>
+            <div class="route-column"><aside class="route-card"><div class="route-top"><span>Ваш маршрут</span><h2 id="route-title">Электроснабжение в Санкт-Петербурге</h2></div><div class="route-body">
+              <div class="route-line"><span class="route-icon">1</span><div><strong>Пошаговая инструкция</strong><small id="route-guide">Как начать подключение к электрическим сетям</small></div></div>
+              <div class="route-line"><span class="route-icon">2</span><div><strong>Перечень документов</strong><small>Чек-лист для первичной заявки</small></div></div>
+              <div class="route-line"><span class="route-icon">3</span><div><strong>Актуальные изменения</strong><small>Тарифы и правила для выбранного региона</small></div></div>
+              <div class="route-line"><span class="route-icon">4</span><div><strong>К кому обратиться</strong><small>РСО, гарантирующие поставщики и подрядчики</small></div></div>
+              <div class="route-links"><button class="primary" type="button">Открыть готовый маршрут</button><button class="secondary" type="button">Показать организации на карте</button></div>
+            </div></aside><article class="mock-note green"><span class="mock-note-kicker">Аннотация к результату</span><h3>Готовый маршрут</h3><p><b>Как работает:</b> после трёх ответов карточка обновляет заголовок и показывает статьи, документы, изменения и подходящие типы организаций.</p><p><b>Зачем:</b> пользователь получает не разрозненный список, а последовательность следующих шагов и готовые переходы в сервис.</p><p class="tech"><b>Технически:</b> Laravel принимает три параметра, применяет правила выдачи и формирует ссылки с фильтрами на блог, каталог и карту. <span class="complexity mid">Сложность: средняя</span></p></article></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-article" hidden>
+        <div class="progress"><span></span></div>
+        <div class="page">
+          <div class="article-shell"><div class="crumb">Блог <span>/</span> Электроснабжение <span>/</span> Подключение объекта</div>
+          <article class="mock-note green article-design-note"><span class="mock-note-kicker">Главная аннотация к макету</span><h3>Оформление статьи — не финальный дизайн</h3><p>Это концепт структуры, визуального характера и функциональных блоков. Финальная композиция, изображения, иконки и детали адаптируются дизайнером после согласования бренд-системы и реальных материалов.</p><p class="tech"><b>Как устроить админку:</b> обложка статьи формируется из отдельных полей; всё содержимое после обложки редактор собирает в одном HTML-поле. <span class="complexity low">Этап: концепция</span></p></article>
+          <div class="article-layout">
+            <article class="article">
+              <header class="article-hero">
+                <span class="badge">Электроснабжение · Подключение</span>
+                <h1>Как подключить объект к электрическим сетям</h1>
+                <p class="article-lead">Понятный маршрут от определения сетевой организации до договора и фактической подачи напряжения.</p>
+                <div class="article-info"><span>Обновлено 18 октября 2026</span></div>
+                <div class="article-hero-actions"><button class="primary" type="button" data-go="navigator">Собрать маршрут для объекта</button><button class="outline-light" type="button" data-article-save>♡ Сохранить статью</button></div>
+              </header>
+              <div class="article-body">
+                <article class="mock-note article-annotation"><span class="mock-note-kicker">Аннотация к hero</span><h3>Обложка статьи и быстрые действия</h3><p><b>Как работает:</b> изображение-превью используется фоном; поверх него — направление и рубрика, название, описание и дата обновления.</p><p><b>Кнопки:</b> «Собрать маршрут» открывает навигатор, «Сохранить статью» добавляет материал в сохранённое пользователя. Обе функции относятся ко второму этапу; здесь показана их демонстрация.</p><p class="tech"><b>Технически:</b> данные берутся из полей статьи в админке; сохранение привязывается к аккаунту. <span class="complexity low">Обложка: низкая сложность</span></p></article>
+                <nav class="article-toc" aria-label="Содержание статьи"><h2>Содержание</h2><ol><li><a href="#article-step-1">Определить сетевую организацию</a></li><li><a href="#article-step-2">Подготовить документы</a></li><li><a href="#article-step-3">Подать заявку и проверить условия</a></li><li><a href="#article-faq">Частые вопросы</a></li></ol></nav>
+                <section class="article-summary">
+                  <div class="article-summary-head"><i>✓</i> Главное за минуту</div>
+                  <ul><li>Сначала определите сетевую организацию по месту расположения объекта.</li><li>Подготовьте документы и подайте заявку на технологическое присоединение.</li><li>До подписания договора проверьте точку подключения, сроки и стоимость работ.</li><li>После технических условий может потребоваться проектировщик или подрядчик.</li></ul>
+                </section>
+
+                <h2 id="article-step-1">1. Определите сетевую организацию</h2>
+                <p>Подключение выполняет организация, чьи сети расположены рядом с объектом. Юридический адрес компании сам по себе не определяет, куда подавать заявку: важна территория, на которой организация вправе подключать новые объекты.</p>
+                <div class="route-strip" aria-label="Этапы маршрута"><button type="button"><small>Этап 1</small><strong>Определить организацию</strong></button><button type="button"><small>Этап 2</small><strong>Подготовить документы</strong></button><button type="button"><small>Этап 3</small><strong>Получить условия</strong></button><button type="button"><small>Этап 4</small><strong>Выполнить работы</strong></button></div>
+                <div class="article-note"><strong>Не хотите определять самостоятельно?</strong> Укажите адрес объекта — сервис покажет организации, работающие на этой территории, уже с выбранным направлением «Электроснабжение».</div>
+
+                <figure class="article-visual"><div class="visual-network"><span class="visual-line"></span></div><figcaption>Схема: объект → ближайшая сеть → организация</figcaption></figure>
+
+                <h2 id="article-step-2">2. Подготовьте документы</h2>
+                <p>Набор зависит от заявителя и объекта. Отмечайте готовые позиции: при следующем входе в статью сервис сможет показать ваш прогресс.</p>
+                <div class="checklist" id="article-checklist"><label><input type="checkbox"> Документ, подтверждающий право на объект или участок</label><label><input type="checkbox"> План расположения энергопринимающих устройств</label><label><input type="checkbox"> Паспорт или реквизиты юридического лица</label><label><input type="checkbox"> Требуемая максимальная мощность</label></div>
+                <div class="article-warning"><i>!</i><div><strong>Важная проверка</strong><p>Не указывайте мощность «на глаз»: после заключения договора изменить параметры может быть сложнее и дороже.</p></div></div>
+
+                <h2 id="article-step-3">3. Подайте заявку и проверьте условия</h2>
+                <p>После получения проекта договора проверьте точку подключения, распределение работ между сторонами, сроки и расчёт платы. Сохраните документ и сравните его с требованиями выбранной организации.</p>
+                <div class="fact-grid"><div class="fact-card"><span>Проверить в договоре</span><strong>срок, точку и цену</strong></div><div class="fact-card green"><span>Следующее действие</span><strong>подобрать исполнителя</strong></div></div>
+
+                <section class="faq" id="article-faq"><h2>Частые вопросы</h2>
+                  <div class="faq-item"><button class="faq-trigger" type="button" aria-expanded="false">Можно ли подать заявку до начала строительства? <span>+</span></button><div class="faq-answer">Да, заявку обычно подают, когда определены расположение объекта и требуемая мощность. Конкретный набор документов зависит от ситуации.</div></div>
+                  <div class="faq-item"><button class="faq-trigger" type="button" aria-expanded="false">Как понять, куда именно обращаться? <span>+</span></button><div class="faq-answer">Проверьте территорию деятельности и расположение сетей. В сервисе этот шаг можно начать с адреса объекта и карты организаций.</div></div>
+                  <div class="faq-item"><button class="faq-trigger" type="button" aria-expanded="false">Нужен ли подрядчик сразу? <span>+</span></button><div class="faq-answer">Не всегда. Сначала изучите технические условия: из них будет понятно, нужны ли проектирование и строительно-монтажные работы.</div></div>
+                </section>
+                <section class="next-step"><h2>Следующий шаг — подготовить объект к подключению</h2><p>После технических условий могут потребоваться проектирование и строительно-монтажные работы. Откройте готовую выборку подрядчиков: направление и регион уже будут подставлены.</p><button type="button" data-go="navigator">Найти организации по задаче →</button></section>
+                <article class="mock-note article-annotation"><span class="mock-note-kicker">Аннотация к следующему действию</span><h3>Настраиваемый переход к карте</h3><p><b>Как работает:</b> редактор настраивает заголовок, пояснение и кнопку блока для конкретной статьи. Кнопка переводит пользователя на карту для поиска организаций.</p><p><b>Зачем:</b> после прочтения статьи пользователь может перейти к практическому действию и найти подходящие организации на карте.</p><p class="tech"><b>Технически:</b> ссылка на карту может содержать нужные параметры поиска, например направление и категорию организации; регион добавляется, только если он задан. <span class="complexity low">Сложность: низкая</span></p></article>
+                <section class="article-related"><h2>Организации по теме статьи</h2><p>Перейдите к подходящей категории каталога.</p><div class="article-related-links"><a href="#">Ресурсоснабжающие организации →</a><a href="#">Подрядчики →</a></div></section>
+              </div>
+            </article>
+          </div></div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-connections" hidden>
+        <div class="page">
+          <div class="crumb">Концепция <span>/</span> Связь блога с сервисом</div>
+          <div class="inner-title"><h1>Статья должна приводить к действию</h1><p>Блог связывает информационный запрос пользователя с уже созданными сущностями сервиса: направлениями, территориями, категориями и карточками организаций.</p></div>
+          <div class="connection-flow">
+            <article class="flow-card"><span class="flow-num">Точка входа</span><strong>Запрос пользователя</strong><p>«Как подключить тепло к объекту в Санкт-Петербурге?»</p></article>
+            <article class="flow-card"><span class="flow-num">Контент</span><strong>Практическая статья</strong><p>Шаги, документы, сроки, стоимость и официальные источники.</p></article>
+            <article class="flow-card"><span class="flow-num">Готовый пресет</span><strong>Каталог и карта</strong><p>Теплоснабжение + Санкт-Петербург + нужный тип организации.</p></article>
+            <article class="flow-card"><span class="flow-num">Результат</span><strong>Карточка организации</strong><p>Контакты, территория, форма заявки и подтверждённые возможности.</p></article>
+          </div>
+          <div class="feature-grid">
+            <article class="feature"><div class="feature-icon">⌕</div><h3>Умный поиск по ситуации</h3><p>Ищет не только совпадения слов, а материалы, документы и организации по задаче пользователя.</p></article>
+            <article class="feature"><div class="feature-icon">✓</div><h3>Интерактивные чек-листы</h3><p>Пользователь отмечает документы и сохраняет прогресс в личном кабинете.</p></article>
+            <article class="feature"><div class="feature-icon">↻</div><h3>Контроль актуальности</h3><p>У каждого материала есть дата проверки, официальный источник и сигнал о необходимости обновления.</p></article>
+            <article class="feature"><div class="feature-icon">◎</div><h3>Персональная лента</h3><p>Регион и направления формируют подборку тарифов, правил и изменений зон деятельности.</p></article>
+            <article class="feature"><div class="feature-icon">→</div><h3>Контекстный переход</h3><p>Фильтры из статьи автоматически переносятся в каталог и поиск — повторно выбирать их не нужно.</p></article>
+            <article class="feature"><div class="feature-icon">⚑</div><h3>Материалы организаций</h3><p>Компании публикуют кейсы и новости, но они проходят модерацию и явно помечаются как материалы компании.</p></article>
+          </div>
+          <div class="recommend"><h2>Самая сильная функция — «Навигатор задачи»</h2><p>Он превращает блог из SEO-раздела в полезный инструмент. Пользователь получает не только статью, а персональный маршрут с документами, изменениями и подходящими организациями. Для первой версии достаточно трёх параметров: направление, этап и регион.</p></div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-spec" hidden>
+        <div class="spec">
+          <header class="spec-intro"><span class="spec-kicker">Рабочий документ · Laravel</span><h1>Техническое задание: блог</h1><p>Два этапа разработки, требования к страницам и админке, связи с сервисом. Макет показывает концепцию; окончательное оформление статьи уточняется дизайнером.</p><div class="spec-jump"><a href="#spec-stage1">Этап 1 — запуск</a><a href="#spec-stage2">Этап 2 — расширение</a></div></header>
+          <div class="spec-layout">
+            <nav class="spec-nav" aria-label="Содержание технического задания"><strong>Содержание</strong><a href="#spec-overview">Общая задача</a><a href="#spec-models">Сущности и связи</a><a href="#spec-stage1">Этап 1 · Главная</a><a href="#spec-article">Этап 1 · Статья</a><a href="#spec-admin">Этап 1 · Админка</a><a href="#spec-stage2">Этап 2 · Возможности</a></nav>
+            <div class="spec-content">
+              <section class="spec-section" id="spec-overview"><span class="spec-kicker">Обзор</span><h2>Что создаём</h2><p>Блог помогает разобраться в подключении и инженерных сетях и перейти к подходящим организациям. Он использует существующие направления и территории и связан с каталогом, картой и отдельным разделом новостей.</p><div class="spec-table-wrap"><table class="spec-table"><thead><tr><th>Функциональность</th><th>Этап 1 · минимум</th><th>Этап 2 · расширение</th></tr></thead><tbody><tr><td>Главная, карусель, фильтры и карточки статей</td><td>Внедрить</td><td>—</td></tr><tr><td>Статья, админка и SEO</td><td>Внедрить</td><td>—</td></tr><tr><td>Новости на главной</td><td>Последние новости при готовности раздела</td><td>—</td></tr><tr><td>Поиск и навигатор</td><td>—</td><td>Внедрить</td></tr><tr><td>Сохранение статей, интересы, чек-листы</td><td>—</td><td>Внедрить</td></tr></tbody></table></div><div class="spec-alert amber"><b>Уточнение по макету:</b> новости — отдельный раздел и блок, а не рубрика статей. Дополнительные рубрики блога утверждаются отдельно.</div></section>
+
+              <section class="spec-section" id="spec-models"><span class="spec-kicker">Общая структура данных</span><h2>Сущности и связи</h2><p class="spec-lead">Схема показывает, какие данные нужны блогу и как они связаны с существующим сервисом. Конкретную структуру таблиц и моделей Laravel разработчик определяет с учётом текущей реализации.</p><div class="spec-models"><article class="spec-model"><strong>Статья</strong><p>Относится к одной рубрике, может быть связана с несколькими направлениями и регионами, выбрана для карусели и иметь настроенный CTA-блок.</p><small>Основная сущность блога</small></article><article class="spec-model"><strong>Рубрика блога</strong><p>Объединяет статьи по теме: подключение, документы, проектирование и строительство.</p><small>Отдельный справочник блога</small></article><article class="spec-model"><strong>Направление</strong><p>Электроснабжение, теплоснабжение, водоснабжение, канализация или газоснабжение; одна статья может относиться к нескольким направлениям.</p><small>Существующий справочник сервиса</small></article><article class="spec-model"><strong>Регион</strong><p>Статья может быть привязана к одному или нескольким регионам. Если регион не выбран, статья считается универсальной.</p><small>Существующий справочник территорий</small></article></div><div class="spec-alert"><b>Общие связи:</b> используем существующие направления и регионы, не создавая для блога их копии. Рубрики блога ведутся отдельно.</div></section>
+
+              <section class="spec-section" id="spec-stage1"><span class="spec-tag">ЭТАП 1 · МИНИМУМ ДЛЯ ЗАПУСКА</span><h2>Главная блога</h2><p class="spec-lead">Порядок блоков: карусель → направления → рубрика и регион → статьи → новости.</p>
+                <article class="spec-card"><h3>1. Карусель статей</h3><p><b>Пользователь видит сверху вниз:</b></p><ul><li>фоновое изображение — картинка превью статьи;</li><li>направление и рубрику;</li><li>название статьи;</li><li>краткое описание;</li><li>дату обновления и регион, если они указаны;</li><li>кнопку «Читать статью» под описанием и данными статьи.</li></ul><p><b>Поведение:</b> автопереключение с заданным интервалом и ручной выбор слайда. Кнопка открывает выбранную статью. Один слайд — без переключателей; нет статей — блок скрыт.</p></article>
+                <div class="spec-implementation"><strong>Настройка в админке</strong><p>В разделе «Блог → Главная блога» редактор вручную выбирает опубликованные статьи для карусели, задаёт их порядок и время переключения. Данные для слайдов берутся из карточек статей.</p><p>Карусель оформляется как настройка главной страницы блога, а не как отдельный тип публикаций: создавать копии статей для слайдов не требуется.</p></div>
+                <article class="spec-card"><h3>2. Направления</h3><p><b>Источник:</b> использовать существующий справочник категорий направлений сервиса: электроснабжение, теплоснабжение, водоснабжение, канализация и газоснабжение. Кнопки и значения для фильтра формируются из этого справочника; статья связывается с одной или несколькими его записями.</p><p><b>URL:</b> при выборе направления в адрес добавляется параметр с устойчивым идентификатором или существующим slug соответствующей записи. Например:</p><code class="spec-example">/blog?direction=elektrosnabzhenie</code><p>Здесь <span class="spec-code">direction</span> — имя параметра, <span class="spec-code">elektrosnabzhenie</span> — пример slug направления из справочника. При выборе «Все направления» параметр убирается.</p><div class="spec-alert amber">Примеры URL — предлагаемый формат; реальные имена параметров и значения необходимо согласовать с разработчиком по текущей структуре справочника.</div></article>
+                <div class="spec-implementation"><strong>Рекомендуемая реализация</strong><p>При редактировании статьи редактор выбирает одно или несколько направлений из существующего справочника сервиса. Для связи статей с направлениями можно использовать промежуточную таблицу: одна статья может относиться к нескольким направлениям, а одно направление — содержать много статей.</p><p>На главной Laravel получает направления из того же справочника и выводит кнопки фильтра. При выборе направления сервис читает параметр URL и выбирает опубликованные статьи, связанные с ним. При выборе «Все направления» ограничение по направлению не применяется; остальные выбранные фильтры сохраняются.</p></div>
+                <article class="spec-card"><h3>3. Рубрика и регион</h3><p><b>Рубрики:</b> «Подключение», «Документы», «Проектирование и строительство». Это отдельный расширяемый справочник блога; «Все материалы» сбрасывает выбор и не хранится как рубрика.</p><p><b>Регион:</b> используется существующий справочник территорий. Статья без выбранного региона считается общей: например, инструкция по федеральным правилам. Если пользователь выбрал Санкт-Петербург, такая статья показывается вместе со статьями, привязанными к Санкт-Петербургу. При выборе «Все регионы» выводятся все статьи.</p><p><b>URL и комбинации:</b> при выборе фильтров адрес дополняется параметрами рубрики и региона; они могут использоваться вместе с параметром направления. Например:</p><code class="spec-example">/blog?direction=elektrosnabzhenie&amp;rubric=podklyuchenie&amp;region=sankt-peterburg</code><p>Значение <span class="spec-code">direction</span> берётся из справочника направлений, <span class="spec-code">rubric</span> — из справочника рубрик блога, <span class="spec-code">region</span> — из справочника территорий. Названия параметров и slug приведены для примера; разработчик использует реальные идентификаторы или согласованные slug существующих записей.</p><p>Сервис показывает статьи, которые одновременно подходят по всем выбранным условиям. При сбросе одного фильтра его параметр удаляется из URL, остальные сохраняются. Если статей нет — сообщение и возможность сбросить фильтры.</p></article>
+                <div class="spec-implementation"><strong>Рекомендуемая реализация рубрик</strong><p>В разделе админки «Блог» создать отдельный справочник рубрик. Для каждой рубрики хранить название, устойчивый идентификатор или slug, порядок отображения и состояние: показывать в фильтре или нет. Редактор управляет рубриками в этом справочнике.</p><p>При создании или редактировании статьи редактор выбирает одну рубрику из справочника; связь сохраняется вместе со статьёй. Laravel выводит доступные рубрики как кнопки фильтра и по выбранному значению отбирает опубликованные статьи этой рубрики совместно с другими активными фильтрами. «Все материалы» снимает ограничение по рубрике.</p></div>
+                <article class="spec-card"><h3>4. Карточки статей</h3><p><b>Выводить опубликованные материалы:</b></p><ul><li>изображение-превью или заглушку;</li><li>рубрику;</li><li>название статьи;</li><li>описание-превью;</li><li>дату обновления в нижнем левом углу, если она указана;</li><li>кнопку перехода в статью в нижней части карточки.</li></ul><p><b>Переход:</b> статья открывается только по кнопке; остальные области карточки не кликабельны.</p><p><b>Выдача:</b> по умолчанию сначала новые статьи. На одной странице — 12 карточек: на компьютере — 4 ряда по 3, на экранах средней ширины, например планшетах, — 6 рядов по 2, на телефоне — одна колонка.</p><p><b>Навигация:</b> пагинация открывает выбранную страницу, а кнопка «Показать ещё» добавляет следующие 12 карточек к текущей выдаче. Оба элемента учитывают активные фильтры и не отображаются, если найдено 12 или меньше статей.</p><p><b>SEO для пагинации:</b> начиная со второй страницы, к основным значениям <span class="spec-code">title</span> и <span class="spec-code">description</span> добавляется суффикс « - Страница {номер страницы}». Например: «Блог Многоресурсов - Страница 2». На первой странице суффикс не добавляется.</p></article>
+                <article class="spec-card"><h3>5. Последние новости</h3><p>Показывать опубликованные новости отдельного раздела. Выбран регион — новости региона и федеральные; регион не выбран — последние без ограничения. В карточке: заголовок, дата, регион и направление при наличии; нажатие открывает новость.</p><div class="spec-alert"><b>Зависимость:</b> если раздел новостей ещё не готов, блок скрывается и не задерживает запуск блога.</div></article>
+                <div class="spec-implementation"><strong>Рекомендуемая реализация</strong><p>Брать новости из существующей модели раздела «Новости», без создания отдельной копии для блога. При загрузке главной Laravel выбирает только опубликованные материалы и сортирует их по дате публикации: сначала новые.</p><p>Если выбран регион, к запросу добавляется условие: новости этого региона и федеральные новости, применимые ко всем регионам. Если регион не выбран, ограничение по территории не применяется. При смене региона блок обновляется вместе с фильтром.</p><p>Для каждой карточки использовать поля новости и ссылку на её страницу. Если раздел ещё не подключён или подходящих опубликованных новостей нет, блок не выводится. Количество новостей в блоке определяется при реализации дизайна.</p></div>
+              </section>
+
+              <section class="spec-section" id="spec-article"><span class="spec-tag">ЭТАП 1</span><h2>Страница статьи</h2>
+                <article class="spec-card"><h3>Обложка из полей админки</h3><p><b>Состав обложки:</b></p><ul><li>изображение-превью статьи — оно же используется как фоновая обложка hero; если изображения нет, показывается нейтральная заглушка;</li><li>плашка с направлением и рубрикой;</li><li>название статьи;</li><li>текст превью;</li><li>дата обновления, если она указана.</li></ul><p>Изображение и описание используются также в карточке и карусели статьи. Текст на фоне должен сохранять читаемость.</p><div class="spec-alert"><b>Кнопки на обложке:</b> «Собрать маршрут» и «Сохранить статью» относятся ко второму этапу. До реализации функций кнопки не выводятся.</div></article>
+                <article class="spec-card"><h3>Содержание — одно HTML-поле</h3><p>Всё содержание после обложки редактор размещает в одном HTML-поле. Подготовить стили для заголовков, текста, ссылок, списков, таблиц, изображений с подписями, цитат, кнопок, FAQ и выделенных блоков «Главное», «Важно», «Вывод».</p><p>Состав допустимого HTML и безопасную обработку при сохранении и выводе определить при реализации. Отдельный конструктор блоков в первый этап не входит.</p></article>
+                <article class="spec-card"><h3>Финальный CTA-блок</h3><p>После содержания статьи выводится настраиваемый блок, который предлагает пользователю перейти к поиску организаций на карте. В админке редактор задаёт:</p><ul><li>заголовок блока;</li><li>текст пояснения;</li><li>текст кнопки;</li><li>параметры ссылки на карту: направление, категорию организации и, при необходимости, регион.</li></ul><p>Сервис формирует ссылку на карту с выбранными параметрами. Если регион не задан, он не передаётся. Если блок не настроен, он не выводится. Ниже можно разместить ссылки на подходящие категории каталога.</p></article>
+              </section>
+
+              <section class="spec-section" id="spec-admin"><span class="spec-tag">ЭТАП 1</span><h2>Управление в админке</h2>
+                <article class="spec-card"><h3>1. Главная блога</h3><p>В админке создать страницу <b>«Блог → Главная блога»</b> для настройки главной страницы раздела.</p><h4>Карусель статей</h4><p>Редактор выбирает опубликованные статьи, меняет их порядок и задаёт время автоматического переключения. Изображение, название и остальные данные слайда берутся из статьи; отдельно создавать слайды не нужно.</p><h4>Рубрики блога</h4><p>В разделе админки «Блог → Рубрики» редактор может добавлять и переименовывать рубрики, задавать их порядок в фильтре и отключать отображение в фильтре. Для каждой рубрики сохраняются название и постоянный идентификатор или slug. При редактировании статьи выбирается одна рубрика из этого справочника.</p></article>
+                <article class="spec-card"><h3>2. Статьи</h3><p>В разделе <b>«Блог → Статьи»</b> редактор создаёт и редактирует статьи, сохраняет черновики, публикует материалы и снимает их с публикации.</p>
+                  <h4>Список статей и действия</h4><p>При переходе в раздел редактор видит список статей с названием, рубрикой, статусом и датой публикации. В списке доступны следующие действия:</p><ul><li><b>Добавить статью</b> — открыть форму создания новой статьи;</li><li><b>Редактировать</b> — открыть выбранную статью и изменить её данные;</li><li><b>Выбрать статьи</b> — отметить одну или несколько записей для группового действия;</li><li><b>Снять с публикации</b> — применить статус «Снята с публикации» к выбранным статьям;</li><li><b>Удалить</b> — удалить одну или несколько выбранных статей после подтверждения действия.</li></ul><p>Перед удалением показывается количество выбранных статей и запрос подтверждения.</p>
+                  <h4>Основные поля</h4><div class="spec-table-wrap"><table class="spec-table"><thead><tr><th>Поле</th><th>Назначение</th></tr></thead><tbody>
+                    <tr><td>Название статьи</td><td>Выводится в карточке, карусели и обложке статьи.</td></tr>
+                    <tr><td>ЧПУ (slug)</td><td>Используется для постоянного адреса статьи.</td></tr>
+                    <tr><td>Изображение-превью</td><td>Используется в карточке, карусели и как фон обложки. Если не загружено — показывается заглушка.</td></tr>
+                    <tr><td>Текст превью</td><td>Краткое описание для карточки, карусели и обложки.</td></tr>
+                    <tr><td>Рубрика</td><td>Одна рубрика из справочника блога; участвует в фильтрации и выводится в статье и карточке.</td></tr>
+                    <tr><td>Направления</td><td>Одно или несколько значений из существующего справочника сервиса; используются в фильтре и на обложке.</td></tr>
+                    <tr><td>Регионы</td><td>Один или несколько регионов из существующего справочника. Если регион не выбран, статья считается универсальной.</td></tr>
+                    <tr><td>Дата публикации</td><td>Используется для выдачи: сначала показываются новые статьи.</td></tr>
+                    <tr><td>Дата обновления</td><td>Выводится на карточке и обложке, если указана. Отражает содержательное обновление материала.</td></tr>
+                    <tr><td>Содержание статьи</td><td>Одно HTML-поле для основного текста и его оформления, включая содержание и FAQ.</td></tr>
+                    <tr><td>Title и description</td><td>Редактируемые SEO-поля; если они пусты, формируются автоматически.</td></tr>
+                    <tr><td>Статус</td><td>Черновик, опубликована или снята с публикации.</td></tr>
+                  </tbody></table></div>
+                  <h4>Финальный CTA-блок</h4><p>Для перехода к поиску организаций редактор задаёт заголовок, поясняющий текст, текст кнопки и параметры карты: направление, категорию организации и при необходимости регион. Если блок не настроен, он не выводится.</p>
+                  <div class="spec-alert"><b>Публикация:</b> для публикации необходимы название, ЧПУ, рубрика, содержание и дата публикации. Черновики и снятые с публикации статьи видны только в админке; снятые статьи не отображаются в списках и sitemap. Дата обновления не меняется при техническом сохранении.</div>
+                </article>
+              </section>
+
+              <section class="spec-section" id="spec-stage2"><span class="spec-tag second">ЭТАП 2 · РАСШИРЕНИЕ</span><h2>Дополнительные возможности</h2>
+                <article class="spec-card"><h3>Поиск «Найдите точный ответ»</h3><p><b>Поведение:</b> искать опубликованные статьи по названию, описанию, содержанию, направлениям, рубрикам и заданным ключевым словам; результаты можно дополнительно фильтровать. При отсутствии совпадений — понятное сообщение.</p><p><b>Реализация:</b> выбрать способ поиска под существующую БД и объём; отдельный поисковый движок — при необходимости. Черновики исключаются.</p></article>
+                <article class="spec-card"><h3>Навигатор «Соберите маршрут»</h3><p>Три шага: направление → этап задачи → регион объекта. Результат — подходящие статьи, связанные новости при наличии и переходы в карту или каталог с выбранными параметрами. Этапы и правила выдачи настраиваются, статьи связываются с этапами.</p><p>Если точных материалов нет, показать подходящие универсальные статьи и сообщить о неполной подборке.</p></article>
+                <article class="spec-card"><h3>Изменения в регионе</h3><p>Выводить последние опубликованные новости по региону и направлению. Если регион не выбран — федеральные новости и возможность выбрать регион. Источник — отдельный раздел новостей.</p></article>
+                <article class="spec-card"><h3>Сохранение статей и интересов</h3><p>Авторизованный пользователь сохраняет и удаляет статьи из сохранённых; список доступен в личном кабинете на разных устройствах. Неавторизованному пользователю предлагается войти.</p><p>Интересы — регионы, направления и темы новостей — хранятся в аккаунте и формируют персональную подборку. Уведомления по почте и в мессенджерах рассматриваются отдельно.</p></article>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="site-footer"><div><div class="logo">МНОГОРЕСУРСОВ</div><p>Единая платформа организаций инженерной инфраструктуры.</p></div><div><h4>Разделы</h4><a href="#">Карта и поиск</a><a href="#">Каталог</a><a href="#">Направления</a></div><div><h4>Блог</h4><a href="#">Инструкции</a><a href="#">Документы</a><a href="#">Новости и изменения</a></div><div><h4>Пользователям</h4><a href="#">Помощь в подборе</a><a href="#">Личный кабинет</a></div></footer>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const tabs=[...document.querySelectorAll('.tabs [role="tab"]')];
+      const panels=[...document.querySelectorAll('.panel')];
+      const explain=document.getElementById('panel-explain');
+      const explanations={
+        concept:['Концепция блога','Блог помогает понять задачу, пройти её по шагам и перейти к подходящим организациям — без разрыва между информацией и сервисом.'],
+        home:['Главная блога — максимальный вариант','Расширенная версия: поиск, навигатор задачи, подборка материалов, локальные изменения и персональные интересы пользователя.'],
+        minimum:['Главная блога — минимум для работы','Первая рабочая версия: карусель главных материалов, два уровня фильтров, статьи и новости выбранного региона.'],
+        navigator:['Навигатор задачи','Функциональный центр концепции: три ответа формируют готовый маршрут и переносят выбранные параметры в каталог и карту.'],
+        article:['Страница статьи','Статья содержит проверяемые шаги, интерактивный чек-лист и контекстные переходы к организациям — пользователь не остаётся в информационном тупике.'],
+        connections:['Связь с сервисом','Контент строится на тех же направлениях, территориях и категориях, что каталог. Это обеспечивает внутреннюю перелинковку и практическую ценность.'],
+        spec:['ТЗ для разработчика','Рабочее описание реализации блога на Laravel: первый этап для запуска и второй этап с дополнительными возможностями.']
+      };
+      function show(name){
+        tabs.forEach(t=>t.setAttribute('aria-selected',String(t.dataset.panel===name)));
+        panels.forEach(p=>p.hidden=p.id!==`panel-${name}`);
+        const [title,text]=explanations[name];
+        explain.querySelector('strong').textContent=title;
+        explain.querySelector('p').textContent=text;
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+      tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.panel)));
+      document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.go)));
+      document.addEventListener('click',e=>{if(e.target.closest('[data-open-article]'))show('article')});
+      document.querySelectorAll('a[href="#"]').forEach(a=>a.addEventListener('click',e=>e.preventDefault()));
+
+      const demoArticles=[
+        ['electric','docs','Документы для технологического присоединения','Что подготовить для подачи заявки на подключение электричества.'],
+        ['water','guide','Как подключить объект к водопроводу','Основные этапы и вопросы перед подачей заявки.'],
+        ['sewer','guide','Подключение к канализации: с чего начать','Как подготовить исходные данные и найти организацию.'],
+        ['heat','docs','Технические условия на теплоснабжение','Какие сведения проверить в полученных документах.'],
+        ['gas','docs','Документы для газификации объекта','Перечень сведений и документов для обращения.'],
+        ['electric','works','Проектирование наружных электрических сетей','Что уточнить перед подготовкой проекта.'],
+        ['water','works','Строительство наружного водопровода','Как организовать работы и приёмку сети.'],
+        ['sewer','docs','Документы для подключения канализации','Какие данные понадобятся для рассмотрения заявки.'],
+        ['heat','works','Как выбрать проектировщика тепловых сетей','Проверяем опыт и состав проектных работ.'],
+        ['gas','guide','Подача заявки на подключение газа','Куда обращаться и что указать в заявке.']
+      ];
+      for(const [gridId,minimum] of [['article-cards',false],['minimum-article-cards',true]]){
+        const grid=document.getElementById(gridId),empty=grid.querySelector('.empty,.minimum-empty');
+        demoArticles.forEach(([dir,type,title,description],i)=>{
+          const card=document.createElement('article');card.className='article-card';
+          if(minimum){card.dataset.minimumDir=dir;card.dataset.minimumType=type;card.dataset.minimumRegion='all'}else{card.dataset.dir=dir;card.dataset.type=type;card.dataset.title=title}
+          const rubric=type==='docs'?'Документы':type==='works'?'Проектирование и стройка':'Подключение';
+          card.innerHTML=`<div class="card-visual"><span class="content-type">${rubric}</span></div><div class="card-body"><h3>${title}</h3><p>${description}</p><div class="card-meta"><span>Обновлено ${String(7-i%7).padStart(2,'0')}.10.2026</span><button class="card-open" type="button" data-open-article>Читать статью →</button></div></div>`;
+          grid.insertBefore(card,empty);
+        });
+      }
+      function makePager(panelId,refresh){
+        const root=document.querySelector(`#${panelId} .article-pagination`);let page=1,limit=12;
+        root.innerHTML='<div class="pagination-pages"></div><span class="pagination-demo-note">Демонстрационные материалы</span><button type="button" data-show-more>Показать ещё</button>';
+        return {reset(){page=1;limit=12},render(all,matching){
+          const maxPage=Math.ceil(matching.length/12);all.forEach(c=>c.style.display='none');
+          matching.slice((page-1)*12,(page-1)*12+limit).forEach(c=>c.style.display='flex');
+          root.style.display=matching.length>12?'flex':'none';
+          const pages=root.querySelector('.pagination-pages');pages.replaceChildren();
+          for(let i=1;i<=maxPage;i++){const b=document.createElement('button');b.type='button';b.textContent=i;if(i===page)b.setAttribute('aria-current','page');b.addEventListener('click',()=>{page=i;limit=12;refresh()});pages.appendChild(b)}
+          const more=root.querySelector('[data-show-more]');more.hidden=(page-1)*12+limit>=matching.length;more.onclick=()=>{limit+=12;refresh()};
+        }};
+      }
+      let direction='all',type='all';
+      const cards=[...document.querySelectorAll('#article-cards .article-card')];
+      const search=document.getElementById('article-search');
+      const homePager=makePager('panel-home',filterCards);
+      function filterCards(){
+        const q=search.value.trim().toLowerCase();
+        const region=document.getElementById('region-select').value;
+        const matching=cards.filter(card=>{const matchDir=direction==='all'||card.dataset.dir.split(' ').includes(direction);const matchType=type==='all'||card.dataset.type===type;const matchRegion=region==='all'||!card.dataset.region||card.dataset.region===region;const matchText=!q||card.dataset.title.toLowerCase().includes(q)||card.innerText.toLowerCase().includes(q);return matchDir&&matchType&&matchRegion&&matchText});
+        homePager.render(cards,matching);document.getElementById('empty-state').style.display=matching.length?'none':'block';
+      }
+      document.querySelectorAll('[data-direction]').forEach(b=>b.addEventListener('click',()=>{direction=b.dataset.direction;document.querySelectorAll('[data-direction]').forEach(x=>x.classList.toggle('active',x===b));homePager.reset();filterCards()}));
+      document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>{type=b.dataset.type;document.querySelectorAll('[data-type]').forEach(x=>x.classList.toggle('active',x===b));homePager.reset();filterCards()}));
+      search.addEventListener('input',()=>{homePager.reset();filterCards()});
+      document.getElementById('region-select').addEventListener('change',()=>{homePager.reset();filterCards()});
+      filterCards();
+
+      const heroSlides=[
+        {label:'Электроснабжение · Подключение',title:'Как подключить объект к электрическим сетям',description:'От определения сетевой организации до договора и фактической подачи напряжения — с документами, сроками и переходом к подходящим организациям.',meta:['Обновлено 18 октября 2026','Санкт-Петербург'],theme:''},
+        {label:'Водоснабжение · Документы',title:'Какие документы нужны для подключения объекта к воде',description:'Готовый перечень для первичной заявки: что подготовить, где получить недостающие сведения и что проверить до отправки.',meta:['Обновлено 16 октября 2026','Все регионы'],theme:'slide-water'},
+        {label:'Газоснабжение · Проектирование и строительство',title:'Как выбрать подрядчика для наружных газовых сетей',description:'Какие допуски, опыт и документы проверить до заключения договора на проектирование или строительно-монтажные работы.',meta:['Обновлено 12 октября 2026','Санкт-Петербург'],theme:'slide-gas'}
+      ];
+      const hero=document.getElementById('hero-carousel');
+      const heroCopy=document.getElementById('hero-copy');
+      const heroDots=[...document.querySelectorAll('[data-hero-slide]')];
+      let activeHero=0,heroTimer;
+      function setHero(index){
+        activeHero=index;
+        const slide=heroSlides[index];
+        hero.classList.add('is-transitioning');
+        window.setTimeout(()=>{
+          hero.classList.remove('slide-water','slide-gas');
+          if(slide.theme)hero.classList.add(slide.theme);
+          document.getElementById('hero-label').textContent=slide.label;
+          document.getElementById('hero-title').textContent=slide.title;
+          document.getElementById('hero-description').textContent=slide.description;
+          document.getElementById('hero-meta').innerHTML=slide.meta.map(item=>`<span>${item}</span>`).join('');
+          document.getElementById('hero-counter').textContent=`${index+1} / ${heroSlides.length}`;
+          heroDots.forEach((dot,i)=>dot.classList.toggle('active',i===index));
+          hero.classList.remove('is-transitioning');
+        },180);
+      }
+      function restartHeroTimer(){window.clearInterval(heroTimer);heroTimer=window.setInterval(()=>{if(!document.getElementById('panel-home').hidden)setHero((activeHero+1)%heroSlides.length)},7000)}
+      heroDots.forEach(dot=>dot.addEventListener('click',()=>{setHero(Number(dot.dataset.heroSlide));restartHeroTimer()}));
+      restartHeroTimer();
+
+      const minimumHero=document.getElementById('minimum-hero-carousel');
+      const minimumHeroDots=[...document.querySelectorAll('[data-minimum-hero-slide]')];
+      let activeMinimumHero=0,minimumHeroTimer;
+      function setMinimumHero(index){
+        activeMinimumHero=index;
+        const slide=heroSlides[index];
+        minimumHero.classList.add('is-transitioning');
+        window.setTimeout(()=>{
+          minimumHero.classList.remove('slide-water','slide-gas');
+          if(slide.theme)minimumHero.classList.add(slide.theme);
+          document.getElementById('minimum-hero-label').textContent=slide.label;
+          document.getElementById('minimum-hero-title').textContent=slide.title;
+          document.getElementById('minimum-hero-description').textContent=slide.description;
+          document.getElementById('minimum-hero-meta').innerHTML=slide.meta.map(item=>`<span>${item}</span>`).join('');
+          document.getElementById('minimum-hero-counter').textContent=`${index+1} / ${heroSlides.length}`;
+          minimumHeroDots.forEach((dot,i)=>dot.classList.toggle('active',i===index));
+          minimumHero.classList.remove('is-transitioning');
+        },180);
+      }
+      function restartMinimumHeroTimer(){window.clearInterval(minimumHeroTimer);minimumHeroTimer=window.setInterval(()=>{if(!document.getElementById('panel-minimum').hidden)setMinimumHero((activeMinimumHero+1)%heroSlides.length)},7000)}
+      minimumHeroDots.forEach(dot=>dot.addEventListener('click',()=>{setMinimumHero(Number(dot.dataset.minimumHeroSlide));restartMinimumHeroTimer()}));
+      restartMinimumHeroTimer();
+
+      let minimumDirection='all',minimumType='all';
+      const minimumCards=[...document.querySelectorAll('[data-minimum-dir]')];
+      const minimumRegion=document.getElementById('minimum-region-select');
+      const minimumPager=makePager('panel-minimum',filterMinimumCards);
+      function filterMinimumCards(){
+        const matching=minimumCards.filter(card=>{
+          const directionMatch=minimumDirection==='all'||card.dataset.minimumDir.split(' ').includes(minimumDirection);
+          const typeMatch=minimumType==='all'||card.dataset.minimumType===minimumType;
+          const regionMatch=minimumRegion.value==='all'||card.dataset.minimumRegion==='all'||card.dataset.minimumRegion===minimumRegion.value;
+          return directionMatch&&typeMatch&&regionMatch;
+        });
+        minimumPager.render(minimumCards,matching);document.getElementById('minimum-empty').style.display=matching.length?'none':'block';
+      }
+      document.querySelectorAll('[data-minimum-direction]').forEach(button=>button.addEventListener('click',()=>{minimumDirection=button.dataset.minimumDirection;document.querySelectorAll('[data-minimum-direction]').forEach(item=>item.classList.toggle('active',item===button));minimumPager.reset();filterMinimumCards()}));
+      document.querySelectorAll('[data-minimum-type]').forEach(button=>button.addEventListener('click',()=>{minimumType=button.dataset.minimumType;document.querySelectorAll('[data-minimum-type]').forEach(item=>item.classList.toggle('active',item===button));minimumPager.reset();filterMinimumCards()}));
+      minimumRegion.addEventListener('change',()=>{minimumPager.reset();filterMinimumCards()});
+      filterMinimumCards();
+
+      document.getElementById('watch-button').addEventListener('click',()=>{document.getElementById('watch-status').style.display='block';document.getElementById('watch-button').textContent='Интересы сохранены'});
+      const selections={resource:'электроснабжение',task:'Начинаю подключение'};
+      function updateRoute(){const region=document.getElementById('nav-region').value;document.getElementById('route-title').textContent=`${selections.resource[0].toUpperCase()+selections.resource.slice(1)} в ${region}`;document.getElementById('route-guide').textContent=`${selections.task}: ${selections.resource}`}
+      document.querySelectorAll('[data-option-group]').forEach(group=>group.querySelectorAll('.option').forEach(button=>button.addEventListener('click',()=>{group.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');selections[group.dataset.optionGroup]=button.dataset.value;updateRoute()})));
+      document.getElementById('nav-region').addEventListener('change',updateRoute);
+
+      // Light interactions on the article page: FAQ, saved state and reading progress.
+      document.querySelectorAll('.faq-trigger').forEach(trigger=>trigger.addEventListener('click',()=>{
+        const isOpen=trigger.getAttribute('aria-expanded')==='true';
+        trigger.setAttribute('aria-expanded',String(!isOpen));
+        trigger.nextElementSibling.classList.toggle('is-open',!isOpen);
+      }));
+      document.querySelectorAll('[data-article-save]').forEach(button=>button.addEventListener('click',()=>{
+        document.querySelectorAll('[data-article-save]').forEach(item=>{
+          item.classList.toggle('is-saved');
+          item.textContent=item.classList.contains('is-saved')?(item.dataset.saveCompact?'✓':'✓ Сохранено'):(item.dataset.saveCompact?'♡':'♡ Сохранить статью');
+        });
+      }));
+      window.addEventListener('scroll',()=>{
+        const panel=document.getElementById('panel-article');
+        if(panel.hidden)return;
+        const article=panel.querySelector('.article');
+        const progress=panel.querySelector('.progress span');
+        const total=Math.max(1,article.offsetHeight-window.innerHeight);
+        const amount=Math.max(5,Math.min(100,((window.scrollY-article.offsetTop+150)/total)*100));
+        progress.style.width=`${amount}%`;
+      },{passive:true});
+    })();
+  </script>
+</body>
+</html>

@@ -1,18 +1,18 @@
 <header
-    class="sticky top-0 z-50 bg-white pt-1 pb-1 sm:pt-3 sm:pb-3 lg:pt-6 lg:pb-8 xl:pt-8 2xl:pt-10 3xl:pt-20 transition-[padding,transform,box-shadow] duration-300 ease-in-out"
+    class="sticky top-0 z-50 bg-white pt-1 pb-1 sm:pt-3 sm:pb-3 xl:pt-8 2xl:pt-10 3xl:pt-20 transition-[padding,transform,box-shadow] duration-300 ease-in-out"
     :class="[
         $store.scroll.collapsed ? '!pb-0' : '',
         ($store.scroll.y > 64 || mobileMenuOpen) && 'shadow-lg',
-        $store.scroll.y > 64 && '-translate-y-1 sm:-translate-y-3 lg:-translate-y-6 xl:-translate-y-8 2xl:-translate-y-10 3xl:-translate-y-20'
+        $store.scroll.y > 64 && '-translate-y-1 sm:-translate-y-3 xl:-translate-y-8 2xl:-translate-y-10 3xl:-translate-y-20'
     ]"
 >
-    <nav class="container-base flex-between py-3.75 transition-[padding] duration-300 ease-in-out" :class="$store.scroll.y > 64 ? '!py-3 xs:!py-3.75 3xl:!py-5' : ''">
-        <h4>
+    <nav class="container-base flex-between gap-3 py-3.75 md:!px-5 lg:!px-8 xl:!px-12 2xl:!px-20 transition-[padding] duration-300 ease-in-out" :class="$store.scroll.y > 64 ? '!py-3 xs:!py-3.75 3xl:!py-5' : ''">
+        <h4 class="shrink-0 md:text-sm lg:text-lg xl:text-2xl">
             <a href="/">{{ $settings['header']['brand'] }}</a>
         </h4>
 
-        <div class="flex-base gap-11">
-            <ul class="text_4 hidden lg:flex-base gap-6 3xl:gap-10">
+        <div class="flex-base gap-2 lg:gap-4 xl:gap-6 3xl:gap-11">
+            <ul class="hidden lg:flex-base shrink-0 whitespace-nowrap font-medium md:text-xs md:gap-2 lg:text-base lg:gap-4 xl:text-lg xl:gap-6 2xl:text-xl 2xl:gap-8 3xl:text-2xl 3xl:gap-8">
                 @foreach ($settings['header']['menu'] as $item)
                     @php($itemUrl = $item['url'] ?? '#')
                     @php($itemChildren = is_array($item['children'] ?? null) ? $item['children'] : [])
@@ -27,7 +27,7 @@
                                 {{ $item['label'] }}
                                 <svg viewBox="0 0 20 20" class="size-4 transition-transform" :class="open && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m5 7.5 5 5 5-5" /></svg>
                             </button>
-                            <ul x-show="open" x-cloak x-transition class="absolute left-0 top-full z-50 mt-3 w-max whitespace-nowrap space-y-1 rounded-xl bg-white p-2 lg:text-base 3xl:text-xl shadow-xl">
+                            <ul x-show="open" x-cloak x-transition class="absolute left-0 top-full z-50 mt-3 w-max whitespace-nowrap space-y-1 rounded-xl bg-white p-2 text-xs lg:text-sm xl:text-base 2xl:text-lg 3xl:text-xl shadow-xl">
                                 @foreach ($itemChildren as $child)
                                     @php($childUrl = $child['url'] ?? '#')
                                     <li>
@@ -51,9 +51,9 @@
             </ul>
 
             @if (auth()->check())
-                <a href="{{ $settings['header']['login_button_url'] ?? '/dashboard' }}" class="button_1 !hidden lg:!inline-flex">{{ $settings['header']['login_button_text_auth'] ?? 'Личный кабинет' }}</a>
+                <a href="{{ $settings['header']['login_button_url'] ?? '/dashboard' }}" class="button_1 !hidden lg:!inline-flex shrink-0 whitespace-nowrap md:!text-xs md:!px-3 md:!py-2 lg:!text-sm lg:!px-4 lg:!py-3 xl:!text-base xl:!px-6 3xl:!text-xl">{{ $settings['header']['login_button_text_auth'] ?? 'Личный кабинет' }}</a>
             @else
-                <button type="button" class="button_1 !hidden lg:!inline-flex" @click="authModalOpen = true; authModalMode = 'login'">{{ $settings['header']['login_button_text_guest'] ?? 'Вход / Регистрация' }}</button>
+                <button type="button" class="button_1 !hidden lg:!inline-flex shrink-0 whitespace-nowrap md:!text-xs md:!px-3 md:!py-2 lg:!text-sm lg:!px-4 lg:!py-3 xl:!text-base xl:!px-6 3xl:!text-xl" @click="authModalOpen = true; authModalMode = 'login'">{{ $settings['header']['login_button_text_guest'] ?? 'Вход / Регистрация' }}</button>
             @endif
 
             <div class="relative lg:hidden">

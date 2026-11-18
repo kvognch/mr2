@@ -448,3 +448,34 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 });
+
+// Shared editorial carousel: accessible manual selection and one restartable timer.
+window.editorialCarousel = ({ count, interval }) => ({
+  active: 0,
+  timer: null,
+  motion: null,
+  onVisibility: null,
+  onMotion: null,
+  init() {
+    this.motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    this.onVisibility = () => this.schedule();
+    this.onMotion = () => this.schedule();
+    document.addEventListener('visibilitychange', this.onVisibility);
+    this.motion.addEventListener('change', this.onMotion);
+    this.schedule();
+  },
+  schedule() {
+    window.clearTimeout(this.timer);
+    if (count < 2 || document.hidden || this.motion.matches) return;
+    this.timer = window.setTimeout(() => this.select(this.active + 1), interval);
+  },
+  select(index) {
+    this.active = (index + count) % count;
+    this.schedule();
+  },
+  destroy() {
+    window.clearTimeout(this.timer);
+    document.removeEventListener('visibilitychange', this.onVisibility);
+    this.motion.removeEventListener('change', this.onMotion);
+  },
+});

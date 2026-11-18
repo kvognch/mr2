@@ -5,6 +5,7 @@ use App\Http\Controllers\ContractorExportController;
 use App\Http\Controllers\ContractorShowController;
 use App\Http\Controllers\ContractorTariffController;
 use App\Http\Controllers\DirectoryController;
+use App\Http\Controllers\EditorialController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InfoPageController;
 use App\Http\Controllers\PublicFormController;
@@ -56,3 +57,10 @@ Route::get('/agent/{slug}', fn (string $slug) => redirect()->route('organization
     ->name('agent.show');
 Route::get('/agents/{slug}', fn (string $slug) => redirect()->route('organizations.show', ['slug' => $slug], 301))
     ->name('agents.show');
+
+Route::get('/blog', [EditorialController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [EditorialController::class, 'show'])->name('blog.show');
+Route::get('/news', [EditorialController::class, 'index'])->name('news.index');
+Route::get('/news/{slug}', [EditorialController::class, 'show'])->name('news.show');
+Route::get('/sitemap-blog.xml', [SitemapController::class, 'blog'])->name('sitemap.blog');
+Route::get('/sitemap-news.xml', [SitemapController::class, 'news'])->name('sitemap.news');

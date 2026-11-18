@@ -83,6 +83,8 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()->label('Отзывы'),
                 NavigationGroup::make()->label('Заявки'),
                 NavigationGroup::make()->label('Пользователи'),
+                NavigationGroup::make()->label('Блог'),
+                NavigationGroup::make()->label('Новости'),
                 NavigationGroup::make()->label('Геоданные'),
                 NavigationGroup::make()->label('Настройки')->collapsed(),
             ])

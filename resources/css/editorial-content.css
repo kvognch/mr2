@@ -1,0 +1,78 @@
+/* Только HTML-содержимое статьи. Подключать через принятую сборку проекта. */
+.blog-content {
+  --blog-text: #344f71;
+  --blog-heading: #173a68;
+  --blog-link: #245dad;
+  --blog-line: #d9e4f0;
+  --blog-soft: #f2f7ff;
+  max-width: 780px;
+  margin-inline: auto;
+  color: var(--blog-text);
+  font-size: 17px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+.blog-content > :first-child { margin-top: 0; }
+.blog-content h2, .blog-content h3, .blog-content h4 { color: var(--blog-heading); line-height: 1.25; scroll-margin-top: 24px; }
+.blog-content h2 { margin: 2em 0 .6em; font-size: clamp(1.5rem, 2.3vw, 1.9rem); }
+.blog-content h3 { margin: 1.5em 0 .5em; font-size: 1.25rem; }
+.blog-content h4 { margin: 1.25em 0 .45em; font-size: 1.05rem; }
+.blog-content p { margin: 0 0 1em; }
+.blog-content a { color: var(--blog-link); text-decoration: underline; text-underline-offset: .15em; }
+.blog-content a:hover { color: #173a68; }
+.blog-content a:focus-visible, .blog-content summary:focus-visible { outline: 3px solid #71a7ef; outline-offset: 3px; }
+.blog-content ul, .blog-content ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+.blog-content li + li { margin-top: .35em; }
+.blog-content img { display: block; max-width: 100%; height: auto; border-radius: 14px; }
+.blog-content figure { margin: 1.75em 0; }
+.blog-content figcaption { margin-top: .6em; color: #71839b; font-size: .86em; }
+.blog-content blockquote { margin: 1.5em 0; padding: .9em 1.2em; border-left: 4px solid var(--blog-link); background: var(--blog-soft); }
+.blog-content .blog-table-wrap { max-width: 100%; overflow-x: auto; margin: 1.5em 0; }
+.blog-content table { width: 100%; border-collapse: collapse; }
+.blog-content th, .blog-content td { padding: .7em; border: 1px solid var(--blog-line); text-align: left; vertical-align: top; }
+.blog-content th { background: var(--blog-soft); color: var(--blog-heading); }
+.blog-content .blog-toc, .blog-content .blog-note, .blog-content .blog-summary { margin: 1.5em 0; padding: 1.2em 1.3em; border: 1px solid var(--blog-line); border-radius: 14px; background: var(--blog-soft); }
+.blog-content .blog-toc__title, .blog-content .blog-note__title, .blog-content .blog-summary__title { display: block; margin: 0 0 .6em; color: var(--blog-heading); font-weight: 750; }
+.blog-content .blog-toc ol, .blog-content .blog-summary ul { margin-bottom: 0; }
+.blog-content .blog-note--warning { border-color: #f1d8aa; background: #fff7e8; }
+.blog-content .blog-note--success { border-color: #cce7d6; background: #eef9f2; }
+.blog-content .blog-faq { margin: 1.5em 0; }
+.blog-content .blog-faq details { padding: 1em 0; border-bottom: 1px solid var(--blog-line); }
+.blog-content .blog-faq summary { color: var(--blog-heading); font-weight: 700; cursor: pointer; }
+.blog-content .blog-faq details p { margin: .8em 0 0; }
+@media (max-width: 760px) {
+  .blog-content { font-size: 16px; }
+  .blog-content .blog-toc, .blog-content .blog-note, .blog-content .blog-summary { padding: 1em; }
+}
+
+/* Ориентир: адаптировать к дизайн-системе проекта. Правила ограничены содержимым новости. */
+.news-content { color: #344f71; font-size: 1rem; line-height: 1.7; overflow-wrap: anywhere; }
+.news-content h2, .news-content h3 { color: #19375f; line-height: 1.25; margin: 1.8em 0 .6em; }
+.news-content p, .news-content ul, .news-content ol { margin: 0 0 1.1em; }
+.news-content a { color: #2459a9; text-decoration: underline; text-underline-offset: .16em; }
+.news-content img { display: block; max-width: 100%; height: auto; border-radius: 12px; }
+.news-content figure { margin: 1.5em 0; }
+.news-content figcaption { margin-top: .5em; color: #647791; font-size: .9em; }
+.news-content .news-table-wrap { max-width: 100%; overflow-x: auto; }
+.news-content table { width: 100%; border-collapse: collapse; }
+.news-content th, .news-content td { padding: .65em; border: 1px solid #dce5f0; text-align: left; vertical-align: top; }
+.news-content .news-note { margin: 1.5em 0; padding: 1.15em; border-left: 4px solid #2b5fab; border-radius: 8px; background: #eef4fd; }
+.news-content .news-note strong { display: block; margin-bottom: .35em; color: #19375f; }
+
+/* Additional HTML components from the article/news mockups. */
+.news-content .news-compare { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; margin-block: 1.25rem; }
+.news-content .news-compare > section { min-width: 0; padding: 1.125rem; border: 1px solid #dce5f0; border-radius: .875rem; background: #fafbfc; }
+.news-content .news-compare > .news-compare__after { background: #eaf7ef; border-color: #cae5d5; }
+.news-content .news-compare h3 { font-size: 1.0625rem; margin: 0 0 .625rem; }
+.news-content .news-compare p { margin: 0; }
+.news-content .news-actions { display: grid; gap: .625rem; padding-left: 1.5rem; }
+.news-content .news-actions li { padding: .5rem .625rem; }
+.blog-content .blog-faq details { border: 0; border-bottom: 1px solid #d9e4f0; border-radius: 0; margin: 0; padding: 1rem 0; background: transparent; }
+.blog-content .blog-faq summary { display: flex; justify-content: space-between; gap: 1rem; list-style: none; }
+.blog-content .blog-faq summary::-webkit-details-marker { display: none; }
+.blog-content .blog-faq summary::after { content: '+'; flex-shrink: 0; color: var(--color-brand-blue); font-size: 1.25rem; }
+.blog-content .blog-faq details[open] summary::after { content: '−'; }
+.blog-content .blog-table-wrap table, .news-content .news-table-wrap table { display: table; }
+@media (width < 640px) { .news-content .news-compare { grid-template-columns: 1fr; } }
+.news-content .news-actions li { padding: .625rem .8125rem; border: 1px solid #dce5f0; border-radius: .6875rem; background: #fbfcfe; line-height: 1.5; }
+.news-content .news-actions li + li { margin-top: 0; }

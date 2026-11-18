@@ -1,0 +1,13 @@
+/* Ориентир: адаптировать к дизайн-системе проекта. Правила ограничены содержимым новости. */
+.news-content { color: #344f71; font-size: 1rem; line-height: 1.7; overflow-wrap: anywhere; }
+.news-content h2, .news-content h3 { color: #19375f; line-height: 1.25; margin: 1.8em 0 .6em; }
+.news-content p, .news-content ul, .news-content ol { margin: 0 0 1.1em; }
+.news-content a { color: #2459a9; text-decoration: underline; text-underline-offset: .16em; }
+.news-content img { display: block; max-width: 100%; height: auto; border-radius: 12px; }
+.news-content figure { margin: 1.5em 0; }
+.news-content figcaption { margin-top: .5em; color: #647791; font-size: .9em; }
+.news-content .news-table-wrap { max-width: 100%; overflow-x: auto; }
+.news-content table { width: 100%; border-collapse: collapse; }
+.news-content th, .news-content td { padding: .65em; border: 1px solid #dce5f0; text-align: left; vertical-align: top; }
+.news-content .news-note { margin: 1.5em 0; padding: 1.15em; border-left: 4px solid #2b5fab; border-radius: 8px; background: #eef4fd; }
+.news-content .news-note strong { display: block; margin-bottom: .35em; color: #19375f; }

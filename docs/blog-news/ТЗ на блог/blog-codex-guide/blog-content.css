@@ -1,0 +1,46 @@
+/* Только HTML-содержимое статьи. Подключать через принятую сборку проекта. */
+.blog-content {
+  --blog-text: #344f71;
+  --blog-heading: #173a68;
+  --blog-link: #245dad;
+  --blog-line: #d9e4f0;
+  --blog-soft: #f2f7ff;
+  max-width: 780px;
+  margin-inline: auto;
+  color: var(--blog-text);
+  font-size: 17px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+.blog-content > :first-child { margin-top: 0; }
+.blog-content h2, .blog-content h3, .blog-content h4 { color: var(--blog-heading); line-height: 1.25; scroll-margin-top: 24px; }
+.blog-content h2 { margin: 2em 0 .6em; font-size: clamp(1.5rem, 2.3vw, 1.9rem); }
+.blog-content h3 { margin: 1.5em 0 .5em; font-size: 1.25rem; }
+.blog-content h4 { margin: 1.25em 0 .45em; font-size: 1.05rem; }
+.blog-content p { margin: 0 0 1em; }
+.blog-content a { color: var(--blog-link); text-decoration: underline; text-underline-offset: .15em; }
+.blog-content a:hover { color: #173a68; }
+.blog-content a:focus-visible, .blog-content summary:focus-visible { outline: 3px solid #71a7ef; outline-offset: 3px; }
+.blog-content ul, .blog-content ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+.blog-content li + li { margin-top: .35em; }
+.blog-content img { display: block; max-width: 100%; height: auto; border-radius: 14px; }
+.blog-content figure { margin: 1.75em 0; }
+.blog-content figcaption { margin-top: .6em; color: #71839b; font-size: .86em; }
+.blog-content blockquote { margin: 1.5em 0; padding: .9em 1.2em; border-left: 4px solid var(--blog-link); background: var(--blog-soft); }
+.blog-content .blog-table-wrap { max-width: 100%; overflow-x: auto; margin: 1.5em 0; }
+.blog-content table { width: 100%; border-collapse: collapse; }
+.blog-content th, .blog-content td { padding: .7em; border: 1px solid var(--blog-line); text-align: left; vertical-align: top; }
+.blog-content th { background: var(--blog-soft); color: var(--blog-heading); }
+.blog-content .blog-toc, .blog-content .blog-note, .blog-content .blog-summary { margin: 1.5em 0; padding: 1.2em 1.3em; border: 1px solid var(--blog-line); border-radius: 14px; background: var(--blog-soft); }
+.blog-content .blog-toc__title, .blog-content .blog-note__title, .blog-content .blog-summary__title { display: block; margin: 0 0 .6em; color: var(--blog-heading); font-weight: 750; }
+.blog-content .blog-toc ol, .blog-content .blog-summary ul { margin-bottom: 0; }
+.blog-content .blog-note--warning { border-color: #f1d8aa; background: #fff7e8; }
+.blog-content .blog-note--success { border-color: #cce7d6; background: #eef9f2; }
+.blog-content .blog-faq { margin: 1.5em 0; }
+.blog-content .blog-faq details { padding: 1em 0; border-bottom: 1px solid var(--blog-line); }
+.blog-content .blog-faq summary { color: var(--blog-heading); font-weight: 700; cursor: pointer; }
+.blog-content .blog-faq details p { margin: .8em 0 0; }
+@media (max-width: 760px) {
+  .blog-content { font-size: 16px; }
+  .blog-content .blog-toc, .blog-content .blog-note, .blog-content .blog-summary { padding: 1em; }
+}

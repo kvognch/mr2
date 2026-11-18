@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlogArticle;
 use App\Models\Contractor;
 use App\Models\ContractorCategory;
 use App\Models\InformationPage;
+use App\Models\NewsPublication;
 use App\Models\ResourceType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response;
@@ -19,6 +21,8 @@ class SitemapController extends Controller
             route('sitemap.static'),
             route('sitemap.catalog'),
             route('sitemap.directions'),
+            route('sitemap.blog'),
+            route('sitemap.news'),
         ];
 
         foreach ($this->organizationSitemapParts() as $part) {
@@ -91,6 +95,26 @@ class SitemapController extends Controller
                     'lastmod' => $resourceType->updated_at?->toAtomString(),
                 ];
             });
+
+        return $this->xmlResponse($this->renderUrlSet($urls));
+    }
+
+    public function blog(): Response
+    {
+        return $this->editorialMap('blog', BlogArticle::class);
+    }
+
+    public function news(): Response
+    {
+        return $this->editorialMap('news', NewsPublication::class);
+    }
+
+    private function editorialMap(string $kind, string $model): Response
+    {
+        $urls = [['loc' => route($kind.'.index')]];
+        foreach ($model::published()->orderBy('id')->get() as $item) {
+            $urls[] = ['loc' => $item->public_url, 'lastmod' => ($item->content_updated_at ?? $item->published_at)?->toAtomString()];
+        }
 
         return $this->xmlResponse($this->renderUrlSet($urls));
     }
