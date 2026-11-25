@@ -64,7 +64,7 @@ class ContractorSeoTest extends TestCase
         $this->assertSame('ООО «МР & <тест>»', $dom->evaluate('string(//h1)'));
         $this->assertSame($title, $dom->evaluate('string(//meta[@property="og:title"]/@content)'));
         $this->assertSame($description, $dom->evaluate('string(//meta[@property="og:description"]/@content)'));
-        $this->assertStringEndsWith('наружная канализация, наружный водопровод. Информация об организации, направлениях деятельности и территории работы на МногоРесурсов.', $description);
+        $this->assertStringEndsWith(' по направлению наружная канализация, наружный водопровод. Информация об организации, направлениях деятельности и территории работы на МногоРесурсов.', $description);
         $this->assertStringNotContainsString('Санкт-Петербург', $description);
 
         $company->territories()->detach($city);

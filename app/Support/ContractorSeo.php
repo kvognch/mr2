@@ -43,12 +43,11 @@ final class ContractorSeo
         $activity = implode(' ', array_filter([
             $categoriesText,
             $resourcesText !== '' ? ($categoriesText !== '' ? 'по направлению ' : '').$resourcesText : '',
-            $region,
         ]));
-        $title = implode(' — ', array_filter([$titleName, $activity, 'МногоРесурсов']));
+        $titleActivity = implode(' ', array_filter([$activity, $region]));
+        $title = implode(' — ', array_filter([$titleName, $titleActivity, 'МногоРесурсов']));
 
-        $labels = implode(', ', array_unique([...$categories, ...$resources]));
-        $description = $titleName.($labels !== '' ? ' — '.$labels : '');
+        $description = $titleName.($activity !== '' ? ' — '.$activity : '');
         $description = rtrim($description, '.!? ').'. Информация об организации, направлениях деятельности и территории работы на МногоРесурсов.';
 
         return [

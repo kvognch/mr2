@@ -39,6 +39,7 @@
     @stack('head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
+    <link rel="stylesheet" data-site-custom-css href="{{ route('site.custom-css', ['v' => hash('sha256', (string) ($settings['appearance']['custom_css'] ?? ''))], false) }}">
 </head>
 <body @yield('body-attrs')>
 @yield('content')

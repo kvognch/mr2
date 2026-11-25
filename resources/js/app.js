@@ -1,4 +1,5 @@
 import './bootstrap';
+import './site-custom-css';
 
 window.setBodyScrollLock = (locked) => {
   const body = document.body;

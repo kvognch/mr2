@@ -9,6 +9,7 @@ class HomepageSettings
     public static function defaults(): array
     {
         return [
+            'appearance' => ['custom_css' => ''],
             'google_recaptcha' => [
                 'site_key' => (string) config('services.recaptcha.site_key', ''),
                 'secret_key' => (string) config('services.recaptcha.secret_key', ''),
@@ -242,6 +243,22 @@ class HomepageSettings
         return $settings;
     }
 
+    public static function customCss(): string
+    {
+        $stored = Setting::query()->where('key', 'homepage.appearance')->value('value');
+        $appearance = json_decode((string) $stored, true);
+
+        return (string) ($appearance['custom_css'] ?? '');
+    }
+
+    public static function saveCustomCss(string $css): void
+    {
+        Setting::query()->updateOrCreate(
+            ['key' => 'homepage.appearance'],
+            ['value' => json_encode(['custom_css' => $css], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)],
+        );
+    }
+
     public static function save(array $data): void
     {
         $defaults = static::defaults();
@@ -255,6 +272,10 @@ class HomepageSettings
         }
 
         foreach ($defaults as $block => $defaultValue) {
+            if ($block === 'appearance') {
+                continue;
+            }
+
             $payload = $merged[$block] ?? $defaultValue;
 
             if (! is_array($payload)) {

@@ -12,10 +12,27 @@ use App\Http\Controllers\PublicFormController;
 use App\Http\Controllers\PublicReviewController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Middleware\VerifyCsrfToken;
+use App\Support\HomepageSettings;
 use App\Support\SeoSettings;
+use Illuminate\Http\Request;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/site-custom.css', function (Request $request) {
+    $css = HomepageSettings::customCss();
+    $response = response($css, 200, [
+        'Content-Type' => 'text/css; charset=UTF-8',
+        'Cache-Control' => 'no-cache, must-revalidate',
+        'X-Content-Type-Options' => 'nosniff',
+    ])->setEtag(hash('sha256', $css));
+    $response->isNotModified($request);
+
+    return $response;
+})->withoutMiddleware([StartSession::class, ShareErrorsFromSession::class, VerifyCsrfToken::class])
+    ->name('site.custom-css');
 Route::get('/login', [AuthModalController::class, 'redirectToLogin'])->name('login');
 Route::post('/login', [AuthModalController::class, 'login'])->name('login.attempt');
 Route::get('/register', [AuthModalController::class, 'redirectToRegister'])->name('register');

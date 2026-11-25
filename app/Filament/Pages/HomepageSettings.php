@@ -50,6 +50,23 @@ class HomepageSettings extends Page implements HasForms
     {
         return $schema
             ->components([
+                Section::make('Оформление сайта')
+                    ->key('appearance')
+                    ->schema([
+                        Textarea::make('appearance.custom_css')
+                            ->label('Пользовательские CSS-стили')
+                            ->rows(12)
+                            ->maxLength(65536)
+                            ->helperText('Введите CSS без тегов <style>. Стили применяются ко всем публичным страницам после сохранения.'),
+                    ])
+                    ->collapsible()
+                    ->collapsed()
+                    ->footerActions([
+                        Action::make('save_appearance')
+                            ->label('Сохранить')
+                            ->action(fn () => $this->saveAppearance()),
+                    ]),
+
                 Section::make('Шапка')
                     ->schema([
                         TextInput::make('header.brand')->label('Бренд')->required(),
@@ -175,6 +192,16 @@ class HomepageSettings extends Page implements HasForms
             ->title('Общие настройки сохранены')
             ->success()
             ->send();
+    }
+
+    public function saveAppearance(): void
+    {
+        abort_unless(static::canAccess(), 403);
+
+        $state = $this->validate(['data.appearance.custom_css' => ['nullable', 'string', 'max:65536']]);
+        HomepageSettingsStore::saveCustomCss((string) data_get($state, 'data.appearance.custom_css', ''));
+
+        Notification::make()->title('Стили сохранены')->success()->send();
     }
 
     protected function saveSectionAction(string $name): Action
