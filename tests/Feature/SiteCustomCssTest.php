@@ -37,12 +37,16 @@ class SiteCustomCssTest extends TestCase
         $response = $this->get('/site-custom.css')->assertOk()
             ->assertHeader('Content-Type', 'text/css; charset=UTF-8')
             ->assertHeader('X-Content-Type-Options', 'nosniff')
+            ->assertHeader('X-Site-CSS-Version', hash('sha256', $css))
             ->assertContent($css);
         $etag = $response->headers->get('ETag');
         $this->assertStringContainsString('no-cache', $response->headers->get('Cache-Control'));
         $this->assertNotEmpty($etag);
         $this->get('/site-custom.css', ['If-None-Match' => $etag])->assertStatus(304);
-        $this->call('HEAD', '/site-custom.css')->assertOk()->assertHeader('ETag', $etag)->assertContent('');
+        $this->call('HEAD', '/site-custom.css')->assertOk()
+            ->assertHeader('ETag', $etag)
+            ->assertHeader('X-Site-CSS-Version', hash('sha256', $css))
+            ->assertContent('');
 
         $newCss = 'body { --css-probe: second; }';
         $form->set('data.appearance.custom_css', $newCss)->callAction($saveAppearance)->assertHasNoFormErrors();

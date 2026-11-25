@@ -11,8 +11,8 @@ if (stylesheet) {
 
     try {
       const response = await fetch(endpoint, { method: 'HEAD', cache: 'no-store' });
-      const version = response.headers.get('ETag')?.match(/^(?:W\/)?"([a-f0-9]{64})"$/)?.[1];
-      if (!response.ok || !version || version === new URL(stylesheet.href).searchParams.get('v')) return;
+      const version = response.headers.get('X-Site-CSS-Version');
+      if (!response.ok || !/^[a-f0-9]{64}$/.test(version ?? '') || version === new URL(stylesheet.href).searchParams.get('v')) return;
 
       const next = stylesheet.cloneNode();
       const url = new URL(endpoint);

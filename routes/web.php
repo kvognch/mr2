@@ -23,11 +23,13 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 Route::get('/', HomeController::class)->name('home');
 Route::get('/site-custom.css', function (Request $request) {
     $css = HomepageSettings::customCss();
+    $version = hash('sha256', $css);
     $response = response($css, 200, [
         'Content-Type' => 'text/css; charset=UTF-8',
         'Cache-Control' => 'no-cache, must-revalidate',
         'X-Content-Type-Options' => 'nosniff',
-    ])->setEtag(hash('sha256', $css));
+        'X-Site-CSS-Version' => $version,
+    ])->setEtag($version);
     $response->isNotModified($request);
 
     return $response;
