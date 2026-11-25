@@ -21,7 +21,15 @@ class ContractorsExport implements FromArray, WithEvents, WithHeadings, WithStyl
     public function array(): array
     {
         return Contractor::query()
-            ->with(['categories', 'territories', 'smrResourceTypes', 'pirResourceTypes', 'rating', 'owner'])
+            // The spreadsheet needs dictionary labels, not territory geometries.
+            ->with([
+                'categories:id,name',
+                'territories:id,name',
+                'smrResourceTypes:id,name',
+                'pirResourceTypes:id,name',
+                'rating:id,name',
+                'owner:id,email',
+            ])
             ->orderBy('id')
             ->get()
             ->map(fn (Contractor $contractor): array => array_values(ContractorSpreadsheet::contractorToRow($contractor)))
