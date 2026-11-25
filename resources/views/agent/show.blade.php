@@ -1,7 +1,4 @@
-@extends('layouts.app')
-
-@section('title', $seo['title'])
-@section('meta-description', $seo['description'])
+@extends('layouts.app', ['pageSeo' => $seo])
 @section('body-attrs')
 x-data="{ mobileMenuOpen: false, requestModalOpen: false, ratingInfoModalOpen: false, contractorTerritoryMapModalOpen: false, contractorReviewModalOpen: false, extractInfoModalOpen: false, authModalOpen: false, authModalMode: 'login' }" x-effect="window.setBodyScrollLock(mobileMenuOpen || requestModalOpen || ratingInfoModalOpen || contractorTerritoryMapModalOpen || contractorReviewModalOpen || extractInfoModalOpen || authModalOpen || $store.reviewModalOpen)"
 @endsection

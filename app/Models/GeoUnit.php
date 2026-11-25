@@ -18,6 +18,7 @@ class GeoUnit extends Model
         'source_id',
         'parent_source_id',
         'name',
+        'name_locative',
         'normalized_name',
         'admin_level',
         'level',

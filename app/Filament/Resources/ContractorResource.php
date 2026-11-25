@@ -72,6 +72,8 @@ class ContractorResource extends Resource
                 ->schema([
                     TextInput::make('short_name')
                         ->label('Краткое название')
+                        ->hint(fn (?string $state): ?string => ContractorSeo::nameWarning($state))
+                        ->hintColor('warning')
                         ->required()
                         ->live(onBlur: true)
                         ->afterStateUpdated(function (Get $get, Set $set, mixed $old, mixed $state): void {
@@ -80,6 +82,9 @@ class ContractorResource extends Resource
                         ->maxLength(255),
                     TextInput::make('full_name')
                         ->label('Полное название')
+                        ->live(onBlur: true)
+                        ->hint(fn (?string $state): ?string => ContractorSeo::nameWarning($state))
+                        ->hintColor('warning')
                         ->maxLength(255),
                     Select::make('business_segments')
                         ->label('Сегмент бизнеса')

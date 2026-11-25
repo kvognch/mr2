@@ -68,19 +68,6 @@ class SeoSettings extends Page implements HasForms
                     ])
                     ->collapsible()
                     ->collapsed(),
-                Section::make('Description организаций')
-                    ->schema([
-                        TextInput::make('organizations.description_prefix')
-                            ->label('Начальный текст')
-                            ->required(),
-                        TextInput::make('organizations.description_suffix')
-                            ->label('Конечный текст')
-                            ->required(),
-                    ])
-                    ->columns(2)
-                    ->collapsible()
-                    ->collapsed()
-                    ->footerActions([$this->saveSectionAction()]),
                 Section::make('Robots.txt')
                     ->schema([
                         Textarea::make('robots')

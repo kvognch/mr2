@@ -1,7 +1,7 @@
 <!doctype html>
 @php
-    $metaTitle = \App\Support\PublicSeo::title(trim((string) $__env->yieldContent('title', 'МНОГОРЕСУРСОВ')));
-    $metaDescription = \App\Support\PublicSeo::description(trim((string) $__env->yieldContent('meta-description', '')));
+    $metaTitle = \App\Support\PublicSeo::title(trim((string) ($pageSeo['title'] ?? $__env->yieldContent('title', 'МНОГОРЕСУРСОВ'))));
+    $metaDescription = \App\Support\PublicSeo::description(trim((string) ($pageSeo['description'] ?? $__env->yieldContent('meta-description', ''))));
     $canonicalUrl = \App\Support\PublicSeo::canonicalUrl();
     $ogImage = trim((string) $__env->yieldContent('og-image', '')) ?: asset('assets/images/logo-mr.jpg');
     $ogImageWidth = trim((string) $__env->yieldContent('og-image-width', '1200'));

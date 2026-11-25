@@ -23,7 +23,7 @@ final class ContractorSeo
      */
     public static function defaultsFromData(array $data, ?Contractor $contractor = null): array
     {
-        $name = trim((string) ($data['short_name'] ?? $contractor?->short_name ?? ''));
+        $name = self::displayName((string) ($data['short_name'] ?? $contractor?->short_name ?? ''));
         $titleName = $name !== '' ? $name : 'Организация';
 
         $categoryIds = self::relationIds($data, 'categories', $contractor, 'categories');
@@ -35,28 +35,25 @@ final class ContractorSeo
 
         $categories = self::namesInOrder(ContractorCategory::class, $categoryIds);
         $resources = self::namesInOrder(ResourceType::class, array_values(array_unique($resourceIds)));
-        $regions = self::regionNames($territoryIds);
+        $region = self::regionPhrase($territoryIds);
 
-        $categoriesText = implode(', ', $categories) ?: 'организация';
-        $resourcesText = implode(', ', $resources) ?: 'инженерная инфраструктура';
-        $regionsText = implode(', ', $regions) ?: 'указанная территория';
-        $titleBody = sprintf(
-            '%s - %s по направлению %s в %s',
-            $titleName,
+        $categoriesText = implode(', ', $categories);
+        $resourcesText = implode(', ', $resources);
+
+        $activity = implode(' ', array_filter([
             $categoriesText,
-            $resourcesText,
-            $regionsText,
-        );
-        $settings = OrganizationSeoSettings::all();
-        $description = implode(' ', array_filter([
-            trim((string) ($settings['description_prefix'] ?? '')),
-            $titleBody,
-            trim((string) ($settings['description_suffix'] ?? '')),
-        ], static fn (string $value): bool => $value !== ''));
+            $resourcesText !== '' ? ($categoriesText !== '' ? 'по направлению ' : '').$resourcesText : '',
+            $region,
+        ]));
+        $title = implode(' — ', array_filter([$titleName, $activity, 'МногоРесурсов']));
+
+        $labels = implode(', ', array_unique([...$categories, ...$resources]));
+        $description = $titleName.($labels !== '' ? ' — '.$labels : '');
+        $description = rtrim($description, '.!? ').'. Информация об организации, направлениях деятельности и территории работы на МногоРесурсов.';
 
         return [
             'seo_h1' => $name,
-            'seo_title' => $titleBody.' – Многоресурсов',
+            'seo_title' => $title,
             'seo_description' => $description,
         ];
     }
@@ -69,10 +66,10 @@ final class ContractorSeo
         $defaults = self::defaults($contractor);
 
         return [
-            'h1' => filled($contractor->seo_h1) ? (string) $contractor->seo_h1 : $defaults['seo_h1'],
-            'title' => filled($contractor->seo_title) ? (string) $contractor->seo_title : $defaults['seo_title'],
+            'h1' => filled($contractor->seo_h1) ? self::displayName((string) $contractor->seo_h1) : $defaults['seo_h1'],
+            'title' => filled($contractor->seo_title) ? self::plainText((string) $contractor->seo_title) : $defaults['seo_title'],
             'description' => filled($contractor->seo_description)
-                ? (string) $contractor->seo_description
+                ? self::plainText((string) $contractor->seo_description)
                 : $defaults['seo_description'],
         ];
     }
@@ -127,7 +124,12 @@ final class ContractorSeo
         if (array_key_exists($key, $data)) {
             $value = $data[$key];
         } elseif ($contractor !== null) {
-            $value = $contractor->{$relation}->pluck('id')->all();
+            if ($contractor->relationLoaded($relation)) {
+                $value = $contractor->getRelation($relation)->pluck('id')->all();
+            } else {
+                $related = $contractor->{$relation}();
+                $value = $related->pluck($related->getRelated()->getQualifiedKeyName())->all();
+            }
         } else {
             $value = [];
         }
@@ -157,96 +159,88 @@ final class ContractorSeo
 
         return collect($ids)
             ->map(fn (int $id): ?string => isset($names[$id]) ? (string) $names[$id] : null)
+            ->map(self::seoLabel(...))
             ->filter()
             ->unique()
             ->values()
             ->all();
     }
 
-    /**
-     * @param  array<int>  $selectedIds
-     * @return array<int, string>
-     */
-    private static function regionNames(array $selectedIds): array
+    /** @param array<int, int> $selectedIds */
+    private static function regionPhrase(array $selectedIds): ?string
     {
         if ($selectedIds === []) {
-            return [];
+            return null;
         }
 
-        $unitsById = [];
-        $pendingIds = array_values(array_unique($selectedIds));
+        $region = GeoUnit::query()
+            ->whereKey($selectedIds)
+            ->orderByRaw('CASE WHEN admin_level > 0 THEN 0 ELSE 1 END')
+            ->orderBy('admin_level')
+            ->orderBy('id')
+            ->first(['id', 'name', 'name_locative']);
 
-        while ($pendingIds !== []) {
-            $units = GeoUnit::query()
-                ->select(['id', 'name', 'parent_id', 'admin_level'])
-                ->whereIn('id', $pendingIds)
-                ->get();
-            $nextPendingIds = [];
-
-            foreach ($units as $unit) {
-                $id = (int) $unit->id;
-                $unitsById[$id] = $unit;
-
-                if ($unit->parent_id !== null && ! isset($unitsById[(int) $unit->parent_id])) {
-                    $nextPendingIds[] = (int) $unit->parent_id;
-                }
-            }
-
-            $pendingIds = array_values(array_unique($nextPendingIds));
+        if ($region === null) {
+            return null;
         }
 
-        $regions = [];
+        $phrase = self::plainText((string) $region->name_locative);
+        $name = self::plainText((string) $region->name);
 
-        foreach ($selectedIds as $selectedId) {
-            $currentId = (int) $selectedId;
-            $visited = [];
-
-            while ($currentId > 0 && ! isset($visited[$currentId])) {
-                $visited[$currentId] = true;
-                $unit = $unitsById[$currentId] ?? null;
-
-                if ($unit === null) {
-                    break;
-                }
-
-                if ((int) $unit->admin_level === 4 || $unit->parent_id === null) {
-                    $name = trim((string) $unit->name);
-
-                    if ($name !== '') {
-                        $regions[] = self::formatRegionForTitle($name);
-                    }
-
-                    break;
-                }
-
-                $currentId = (int) $unit->parent_id;
-            }
-        }
-
-        return array_values(array_unique($regions));
+        return $phrase !== '' ? $phrase : ($name !== '' ? 'регион: '.$name : null);
     }
 
-    private static function formatRegionForTitle(string $name): string
+    private static function plainText(string $value): string
     {
-        if (preg_match('/^(.+ая) автономная область$/u', $name, $matches) === 1) {
-            return mb_substr($matches[1], 0, -2).'ой автономной области';
+        return trim(html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    }
+
+    public static function displayName(string $value): string
+    {
+        $value = self::plainText($value);
+
+        return preg_replace_callback(self::SIMPLE_QUOTES, static function (array $parts): string {
+            [, $before, $open, $quoted, $close, $after] = $parts;
+            $paired = ['"' => '"', '„' => '“', '“' => '”'];
+
+            return $paired[$open] === $close ? $before.'«'.$quoted.'»'.$after : $parts[0];
+        }, $value) ?? $value;
+    }
+
+    private const SIMPLE_QUOTES = '/^([^"«»„“”]*)(["„“])([^"«»„“”]+)(["“”])([^"«»„“”]*)$/u';
+
+    public static function nameWarning(?string $value): ?string
+    {
+        $name = self::plainText($value ?? '');
+        $warnings = [];
+
+        if (preg_match('/\p{L}-\h+\p{L}|\p{L}\h+-\p{L}/u', $name)) {
+            $warnings[] = 'Проверьте пробелы рядом с дефисом в названии.';
         }
 
-        if (preg_match('/^(.+ая) область$/u', $name, $matches) === 1) {
-            return mb_substr($matches[1], 0, -2).'ой области';
+        if (preg_match('/["«»„“”]/u', $name)
+            && ! preg_match('/^[^"«»„“”]*«[^"«»„“”]+»[^"«»„“”]*$/u', $name)
+            && self::displayName($name) === $name) {
+            $warnings[] = 'Проверьте вложенные или непарные кавычки в названии.';
         }
 
-        if (preg_match('/^(.+ий) автономный округ$/u', $name, $matches) === 1) {
-            return mb_substr($matches[1], 0, -2).'ом автономном округе';
-        }
+        return $warnings !== [] ? implode(' ', $warnings) : null;
+    }
 
-        if (str_starts_with($name, 'Республика ')) {
-            return 'Республике '.mb_substr($name, mb_strlen('Республика '));
-        }
+    private static function seoLabel(string $name): string
+    {
+        $name = self::plainText($name);
 
-        return match ($name) {
-            'Карелия' => 'Карелии',
-            default => $name,
-        };
+        $singularCategories = [
+            'Гарантирующие поставщики' => 'гарантирующий поставщик',
+            'Ресурсо-снабжающие организации' => 'ресурсо-снабжающая организация',
+            'Подрядчики' => 'подрядчик',
+        ];
+
+        return $singularCategories[$name] ?? preg_replace_callback(
+            '/^(?:Газоснабжение|Наружная|Наружный|Теплоснабжение|Электроснабжение|Гарантирующий|Ресурсо-снабжающая|Ресурсоснабжающая|Подрядчик|Проектирование|Проектировщик(?:и)?|Строительство|Строитель(?:и)?|Монтаж|Монтажные|Инженерные|Изыскания|Обслуживание|Газ|Вода|Канализация|Отопление|Электричество)(?=\s|$)/u',
+            static fn (array $match): string => mb_strtolower($match[0]),
+            $name,
+        );
     }
 }

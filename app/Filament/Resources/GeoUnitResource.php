@@ -47,6 +47,7 @@ class GeoUnitResource extends Resource
             'geo_units.id',
             'geo_units.parent_id',
             'geo_units.name',
+            'geo_units.name_locative',
             'geo_units.is_active',
             'geo_units.resource_schemes',
             'geo_units.source',
@@ -100,6 +101,11 @@ class GeoUnitResource extends Resource
                 ->required()
                 ->maxLength(255)
                 ->visibleOn('create'),
+            TextInput::make('name_locative')
+                ->label('Название для фразы «где?» — с предлогом')
+                ->placeholder('в Санкт-Петербурге')
+                ->helperText('Готовая фраза с предлогом «в», «во» или «на». Поле необязательное.')
+                ->maxLength(255),
             Select::make('parent_id')
                 ->label('Родитель')
                 ->relationship('parent', 'name')

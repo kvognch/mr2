@@ -273,7 +273,7 @@
             <div
               class="space-y-5 bg-white rounded-2xl sm:rounded-brand-3xl p-4 xs:p-6 xl:p-10 min-w-0"
             >
-              <h4>{{ $contractor->full_name ?: $contractor->short_name }}</h4>
+              <h4>{{ \App\Support\ContractorSeo::displayName($contractor->full_name ?: $contractor->short_name) }}</h4>
               <div class="space-y-4 lg:space-y-5">
                 <div class="grid 2xs:grid-cols-2 xs:gap-5 md:gap-10">
                   <p class="text-xs 2xs:text-sm sm:text_1 text-brand-gray-dark">
