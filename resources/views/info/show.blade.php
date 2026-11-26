@@ -16,7 +16,10 @@ x-data="{ mobileMenuOpen: false, requestModalOpen: false, ratingInfoModalOpen: f
                     <h1>{{ filled($page->h1) ? $page->h1 : $page->title }}</h1>
 
                     <div class="space-y-5 bg-white text-brand-dark rounded-2xl sm:rounded-brand-3xl p-4 sm:p-6 xl:p-10 min-w-0">
-                        <div class="info-page-content text_2">
+                        <div @class([
+                            'info-page-content text_2',
+                            'legal-page-content' => in_array($page->slug, ['legal', 'offer', 'privacy-policy'], true),
+                        ])>
                             {!! $page->body !!}
                         </div>
                     </div>

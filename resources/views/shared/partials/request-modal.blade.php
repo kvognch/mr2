@@ -6,7 +6,7 @@
 <div
     x-data="requestModalForm({
         initialSuccessMessage: @js(session('request_modal_success')),
-        initialErrorMessage: @js($requestErrors->first()),
+        initialErrors: @js($requestErrors->getMessages()),
         shouldOpen: @js((bool) $shouldOpenRequestModal),
     })"
     x-init="init()"
@@ -28,6 +28,7 @@
     <div class="relative">
         <form
             method="POST"
+            data-form-notices
             action="{{ route('request.store') }}"
             class="relative max-h-[90vh] overflow-y-auto max-w-125 w-full space-y-4 bg-white rounded-brand-base pt-12 pb-5 xs:pb-6 md:pb-8 px-5 xs:px-6 md:px-8"
             @click.stop
@@ -47,25 +48,33 @@
             <div class="flex-center">
                 <h4 id="request-modal-title" class="text-center">Оставить заявку</h4>
             </div>
-            <div x-show="successMessage" x-cloak class="rounded-brand-base bg-brand-gray-light-2 p-4 text_8 text-brand-dark text-center">
+            <div x-show="successMessage" x-cloak class="form-notice text-center" role="status">
                 <span x-text="successMessage"></span>
             </div>
-            <div x-show="errorMessage" x-cloak class="rounded-brand-base bg-red-50 p-4 text_8 text-red-700">
+            <div x-show="errorMessage" x-cloak class="form-notice form-notice--error" role="alert">
                 <span x-text="errorMessage"></span>
             </div>
             <div x-show="!successMessage" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
-                    <label class="sr-only" for="request-name-1">Имя</label>
-                    <input id="request-name-1" name="name" type="text" required value="{{ old('name') }}" placeholder="Имя*" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4" />
-                    <label class="sr-only" for="request-phone-1">Телефон</label>
-                    <input id="request-phone-1" name="phone" type="tel" required value="{{ old('phone') }}" placeholder="+7 (___) ___-__-__" maxlength="18" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4" data-phone-mask />
+                    <div data-form-field="name">
+                        <label class="sr-only" for="request-name-1">Имя</label>
+                        <input id="request-name-1" name="name" type="text" required value="{{ old('name') }}" placeholder="Имя*" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4" />
+                    </div>
+                    <div data-form-field="phone">
+                        <label class="sr-only" for="request-phone-1">Телефон</label>
+                        <input id="request-phone-1" name="phone" type="tel" required value="{{ old('phone') }}" placeholder="+7 (___) ___-__-__" maxlength="18" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4" data-phone-mask />
+                    </div>
                 </div>
-                <label class="sr-only" for="request-comment-1">Комментарий</label>
-                <textarea id="request-comment-1" name="comment" placeholder="Комментарий" rows="4" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4 resize-none">{{ old('comment') }}</textarea>
+                <div data-form-field="comment">
+                    <label class="sr-only" for="request-comment-1">Комментарий</label>
+                    <textarea id="request-comment-1" name="comment" placeholder="Комментарий" rows="4" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4 resize-none">{{ old('comment') }}</textarea>
+                </div>
                 <input type="hidden" name="source_url" value="{{ url()->current() }}" />
-                <div class="flex-center">
-                    <div class="g-recaptcha" data-sitekey="{{ $settings['google_recaptcha']['site_key'] ?? '' }}" data-theme="light" data-size="normal"></div>
+                <div data-form-field="captcha" data-form-value="g-recaptcha-response" data-form-required="Подтвердите, что вы не робот.">
+                    <div class="g-recaptcha mx-auto w-fit" data-sitekey="{{ $settings['google_recaptcha']['site_key'] ?? '' }}" data-theme="light" data-size="normal" data-callback="clearCompletedCaptchaNotices"></div>
                 </div>
+                @include('shared.partials.privacy-consent')
+
                 <button type="submit" class="button_3 w-full disabled:opacity-60 disabled:cursor-not-allowed" :disabled="isSubmitting">
                     <span x-text="isSubmitting ? 'Отправляем...' : 'Отправить'"></span>
                 </button>

@@ -1,5 +1,9 @@
 import './bootstrap';
+import './cookie-notice';
 import './site-custom-css';
+import { clearCompletedCaptchaNotices, showFormErrors } from './form-notices';
+
+window.clearCompletedCaptchaNotices = clearCompletedCaptchaNotices;
 
 window.setBodyScrollLock = (locked) => {
   const body = document.body;
@@ -199,7 +203,7 @@ document.addEventListener("alpine:init", () => {
     hoverRating: 0,
     isSubmitting: false,
     successMessage: config.initialSuccessMessage || "",
-    errorMessage: config.initialErrorMessage || "",
+    errorMessage: "",
     closeTimer: null,
     resetTimer: null,
 
@@ -212,6 +216,9 @@ document.addEventListener("alpine:init", () => {
 
       if (config.shouldOpen) {
         this.open();
+        this.$nextTick(() => {
+          this.errorMessage = showFormErrors(this.$el.querySelector("form"), config.initialErrors, false);
+        });
       }
     },
 
@@ -234,7 +241,7 @@ document.addEventListener("alpine:init", () => {
         this.hoverRating = 0;
         this.scheduleClose();
       } catch (error) {
-        this.errorMessage = this.extractErrorMessage(error);
+        this.errorMessage = this.extractErrorMessage(error, form);
       } finally {
         this.isSubmitting = false;
       }
@@ -275,13 +282,11 @@ document.addEventListener("alpine:init", () => {
       }, 3000);
     },
 
-    extractErrorMessage(error) {
+    extractErrorMessage(error, form) {
       const errors = error.response?.data?.errors;
 
       if (errors && typeof errors === "object") {
-        const firstError = Object.values(errors).flat().find(Boolean);
-
-        if (firstError) return firstError;
+        return showFormErrors(form, errors);
       }
 
       return error.response?.data?.message || "Не удалось отправить отзыв. Попробуйте еще раз.";
@@ -290,7 +295,7 @@ document.addEventListener("alpine:init", () => {
   Alpine.data("requestModalForm", (config = {}) => ({
     isSubmitting: false,
     successMessage: config.initialSuccessMessage || "",
-    errorMessage: config.initialErrorMessage || "",
+    errorMessage: "",
     closeTimer: null,
     resetTimer: null,
 
@@ -303,6 +308,9 @@ document.addEventListener("alpine:init", () => {
 
       if (config.shouldOpen) {
         this.requestModalOpen = true;
+        this.$nextTick(() => {
+          this.errorMessage = showFormErrors(this.$el.querySelector("form"), config.initialErrors, false);
+        });
       }
     },
 
@@ -324,7 +332,7 @@ document.addEventListener("alpine:init", () => {
         this.resetRecaptcha();
         this.scheduleClose();
       } catch (error) {
-        this.errorMessage = this.extractErrorMessage(error);
+        this.errorMessage = this.extractErrorMessage(error, form);
         this.resetRecaptcha();
       } finally {
         this.isSubmitting = false;
@@ -355,13 +363,11 @@ document.addEventListener("alpine:init", () => {
       }
     },
 
-    extractErrorMessage(error) {
+    extractErrorMessage(error, form) {
       const errors = error.response?.data?.errors;
 
       if (errors && typeof errors === "object") {
-        const firstError = Object.values(errors).flat().find(Boolean);
-
-        if (firstError) return firstError;
+        return showFormErrors(form, errors);
       }
 
       return error.response?.data?.message || "Не удалось отправить заявку. Попробуйте еще раз.";

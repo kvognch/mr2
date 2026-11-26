@@ -21,6 +21,7 @@ class PublicFormController extends Controller
             'comment' => ['nullable', 'string', 'max:2000'],
             'source_url' => ['nullable', 'string', 'max:2048'],
             'g-recaptcha-response' => ['required', 'string'],
+            'privacy_consent' => ['accepted'],
         ]);
 
         $formattedPhone = User::formatPhone($data['phone']);

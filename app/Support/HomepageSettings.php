@@ -146,7 +146,7 @@ class HomepageSettings
                 'group_1_title' => 'Сотрудничество',
                 'group_1_links' => [
                     ['label' => 'О платформе', 'url' => '/'],
-                    ['label' => 'Правовые вопросы', 'url' => '/'],
+                    ['label' => 'Правовые вопросы', 'url' => '/info/legal'],
                     ['label' => 'Присоединиться', 'url' => '/'],
                 ],
                 'group_2_title' => 'Пользователям',

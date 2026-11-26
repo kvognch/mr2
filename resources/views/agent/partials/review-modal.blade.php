@@ -8,7 +8,7 @@
         modal: 'contractor',
         initialRating: @js((int) old('rating', 0)),
         initialSuccessMessage: @js(session('contractor_review_success')),
-        initialErrorMessage: @js($contractorReviewErrors->first()),
+        initialErrors: @js($contractorReviewErrors->getMessages()),
         shouldOpen: @js((bool) $shouldOpenContractorReviewModal),
     })"
     x-init="init()"
@@ -29,7 +29,7 @@
 >
     <div class="relative w-full xs:w-auto">
         <form
-            method="POST"
+            method="POST" data-form-notices
             action="{{ route('reviews.contractor.store', ['contractor' => $contractor->slug]) }}"
             class="relative max-h-[90vh] overflow-y-auto max-w-150 w-full space-y-5 bg-white rounded-brand-base p-5 xs:p-6 md:p-10"
             @click.stop
@@ -49,31 +49,33 @@
 
             <div class="flex-between flex-col items-start sm:flex-row sm:items-center gap-3 mt-5 2xs:mt-8 sm:mt-12">
                 <h4 id="contractor-review-modal-title">Оставьте отзыв</h4>
-                <div class="flex-base gap-1 2xs:gap-1.5 xs:gap-2.5" x-show="!successMessage" @mouseleave="hoverRating = 0">
-                    <template x-for="i in 5" :key="i">
-                        <button type="button" :aria-label="'Оценка ' + i + ' из 5'" class="p-0.5 rounded hover:opacity-80 smooth" @click="rating = i" @mouseenter="hoverRating = i">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="size-5 xs:size-6 lg:size-6">
-                                <path d="M15.9989 2.66663L20.1189 11.0133L29.3322 12.36L22.6655 18.8533L24.2389 28.0266L15.9989 23.6933L7.75886 28.0266L9.33219 18.8533L2.66553 12.36L11.8789 11.0133L15.9989 2.66663Z" :fill="(hoverRating || rating) >= i ? '#1450A3' : 'none'" stroke="#1450A3" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </button>
-                    </template>
+                <div data-form-field="rating" data-form-required="Выберите оценку." class="min-w-0 w-full sm:w-44" x-show="!successMessage">
+                    <div class="flex-base gap-1 2xs:gap-1.5 xs:gap-2.5" @mouseleave="hoverRating = 0">
+                        <template x-for="i in 5" :key="i">
+                            <button type="button" :aria-label="'Оценка ' + i + ' из 5'" class="p-0.5 rounded hover:opacity-80 smooth" @click="rating = i" @mouseenter="hoverRating = i">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="size-5 xs:size-6 lg:size-6">
+                                    <path d="M15.9989 2.66663L20.1189 11.0133L29.3322 12.36L22.6655 18.8533L24.2389 28.0266L15.9989 23.6933L7.75886 28.0266L9.33219 18.8533L2.66553 12.36L11.8789 11.0133L15.9989 2.66663Z" :fill="(hoverRating || rating) >= i ? '#1450A3' : 'none'" stroke="#1450A3" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </button>
+                        </template>
+                    </div>
                 </div>
             </div>
-            <div x-show="successMessage" x-cloak class="rounded-brand-base bg-brand-gray-light-2 p-4 text_8 text-brand-dark text-center">
+            <div x-show="successMessage" x-cloak class="form-notice text-center" role="status">
                 <span x-text="successMessage"></span>
             </div>
-            <div x-show="errorMessage" x-cloak class="rounded-brand-base bg-red-50 p-4 text_8 text-red-700">
+            <div x-show="errorMessage" x-cloak class="form-notice form-notice--error" role="alert">
                 <span x-text="errorMessage"></span>
             </div>
             <div x-show="!successMessage" class="space-y-5">
-                <input type="hidden" name="rating" :value="rating" />
+                <input type="hidden" name="rating" :value="rating || ''" />
 
                 <div class="space-y-3 xs:space-y-6 text-brand-gray-dark">
                     <div class="grid xs:grid-cols-2 gap-4">
-                        <label><input name="author_name" type="text" required value="{{ old('author_name', auth()->user()?->name) }}" placeholder="Имя" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4" /></label>
-                        <label><input name="author_role" type="text" required value="{{ old('author_role') }}" placeholder="Род деятельности" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4" /></label>
-                        <label class="xs:col-span-2"><input name="title" type="text" required value="{{ old('title') }}" placeholder="Обращение в компанию по вопросу" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4" /></label>
-                        <label class="xs:col-span-2"><textarea name="body" required placeholder="Ваш комментарий" class="w-full min-h-45 text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4">{{ old('body') }}</textarea></label>
+                        <div data-form-field="author_name"><input name="author_name" aria-label="Имя" type="text" required value="{{ old('author_name', auth()->user()?->name) }}" placeholder="Имя" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4" /></div>
+                        <div data-form-field="author_role"><input name="author_role" aria-label="Род деятельности" type="text" required value="{{ old('author_role') }}" placeholder="Род деятельности" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4" /></div>
+                        <div data-form-field="title" class="xs:col-span-2"><input name="title" aria-label="Тема отзыва" type="text" required value="{{ old('title') }}" placeholder="Обращение в компанию по вопросу" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4" /></div>
+                        <div data-form-field="body" class="xs:col-span-2"><textarea name="body" aria-label="Текст отзыва" required placeholder="Ваш комментарий" class="w-full min-h-45 text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4">{{ old('body') }}</textarea></div>
                     </div>
                     <label class="flex-base gap-2 cursor-pointer text_9 text-brand-gray-dark">
                         <input name="is_recommended" type="hidden" value="0" />
@@ -83,6 +85,8 @@
                             <span class="peer-checked:text-brand-blue">Рекомендуете компанию?</span>
                     </label>
                 </div>
+
+                @include('shared.partials.privacy-consent')
 
                 <button type="submit" class="button_3 w-full mt-3 lg:mt-6 disabled:opacity-60 disabled:cursor-not-allowed" :disabled="isSubmitting">
                     <span x-text="isSubmitting ? 'Отправляем...' : 'Оставить отзыв'"></span>

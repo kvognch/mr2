@@ -64,6 +64,7 @@ class AuthModalController extends Controller
             'phone' => ['required', 'string', 'max:64', 'regex:' . self::PHONE_REGEX],
             'password' => ['required', 'string', 'confirmed', 'min:8', 'max:255'],
             'g-recaptcha-response' => ['required', 'string'],
+            'privacy_consent' => ['accepted'],
         ]);
 
         $formattedPhone = User::formatPhone($data['phone']);

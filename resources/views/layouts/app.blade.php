@@ -43,6 +43,7 @@
 </head>
 <body @yield('body-attrs')>
 @yield('content')
+@include('shared.partials.cookie-notice')
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @stack('scripts')
 </body>

@@ -21,6 +21,7 @@ class PublicReviewController extends Controller
             'body' => ['required', 'string', 'max:3000'],
             'rating' => ['required', 'integer', 'between:1,5'],
             'is_recommended' => ['nullable', 'boolean'],
+            'privacy_consent' => ['accepted'],
         ]);
 
         ServiceReview::query()->create([
@@ -60,6 +61,7 @@ class PublicReviewController extends Controller
             'body' => ['required', 'string', 'max:3000'],
             'rating' => ['required', 'integer', 'between:1,5'],
             'is_recommended' => ['nullable', 'boolean'],
+            'privacy_consent' => ['accepted'],
         ]);
 
         ContractorReview::query()->create([

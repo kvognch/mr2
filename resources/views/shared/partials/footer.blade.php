@@ -10,7 +10,7 @@
     $footerPhoneHref = is_string($footerPhoneHref) ? $footerPhoneHref : $footerPhoneDisplay;
 @endphp
 
-<footer class="bg-brand-gray-light-2 py-10 sm:py-16 lg:py-20 {{ $footerBorder ? 'border-t border-brand-gray' : '' }}">
+<footer class="bg-brand-gray-light-2 py-10 {{ $footerBorder ? 'border-t border-brand-gray' : '' }}">
     <div class="container-base space-y-10 lg:space-y-14">
         <div class="flex flex-col lg:flex-row justify-between gap-10 lg:gap-0 md:px-32 lg:px-0">
             <h4 class="xs:text-center lg:text-left"><a href="/">{{ $settings['footer']['brand'] }}</a></h4>

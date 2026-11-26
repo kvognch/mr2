@@ -42,6 +42,8 @@
             <form
                 method="POST"
                 action="{{ route('login.attempt') }}"
+                data-form-notices
+                @if ($loginErrors->any()) data-form-errors="{{ json_encode($loginErrors->getMessages(), JSON_THROW_ON_ERROR) }}" @endif
                 class="space-y-4"
                 x-show="authModalMode === 'login'"
             >
@@ -52,40 +54,44 @@
                 </div>
 
                 @if (session('auth_register_success'))
-                    <div class="rounded-brand-base bg-brand-gray-light-2 p-4 text_8 text-brand-dark">
+                    <div class="form-notice" role="status">
                         {{ session('auth_register_success') }}
                     </div>
                 @endif
 
                 @if ($loginErrors->any())
-                    <div class="rounded-brand-base bg-red-50 p-4 text_8 text-red-700">
+                    <div class="form-notice form-notice--error" role="alert" data-form-error-summary>
                         {{ $loginErrors->first() }}
                     </div>
                 @endif
 
                 <div class="space-y-4">
-                    <label class="sr-only" for="auth-login-identifier">Логин</label>
-                    <input
-                        id="auth-login-identifier"
-                        name="identifier"
-                        type="text"
-                        required
-                        value="{{ old('identifier') }}"
-                        placeholder="Логин*"
-                        autocomplete="username"
-                        class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
-                    />
+                    <div data-form-field="identifier">
+                        <label class="sr-only" for="auth-login-identifier">Логин</label>
+                        <input
+                            id="auth-login-identifier"
+                            name="identifier"
+                            type="text"
+                            required
+                            value="{{ old('identifier') }}"
+                            placeholder="Логин*"
+                            autocomplete="username"
+                            class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+                        />
+                    </div>
 
-                    <label class="sr-only" for="auth-login-password">Пароль</label>
-                    <input
-                        id="auth-login-password"
-                        name="password"
-                        type="password"
-                        required
-                        placeholder="Пароль*"
-                        autocomplete="current-password"
-                        class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
-                    />
+                    <div data-form-field="password">
+                        <label class="sr-only" for="auth-login-password">Пароль</label>
+                        <input
+                            id="auth-login-password"
+                            name="password"
+                            type="password"
+                            required
+                            placeholder="Пароль*"
+                            autocomplete="current-password"
+                            class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+                        />
+                    </div>
                 </div>
 
                 <button type="submit" class="button_3 w-full">Войти</button>
@@ -99,6 +105,8 @@
             <form
                 method="POST"
                 action="{{ route('register.store') }}"
+                data-form-notices
+                @if ($registerErrors->any()) data-form-errors="{{ json_encode($registerErrors->getMessages(), JSON_THROW_ON_ERROR) }}" @endif
                 class="space-y-4"
                 x-show="authModalMode === 'register'"
             >
@@ -109,76 +117,88 @@
                 </div>
 
                 @if ($registerErrors->any())
-                    <div class="rounded-brand-base bg-red-50 p-4 text_8 text-red-700">
+                    <div class="form-notice form-notice--error" role="alert" data-form-error-summary>
                         {{ $registerErrors->first() }}
                     </div>
                 @endif
 
                 <div class="space-y-4">
-                    <label class="sr-only" for="auth-register-name">Имя</label>
-                    <input
-                        id="auth-register-name"
-                        name="name"
-                        type="text"
-                        required
-                        value="{{ old('name') }}"
-                        placeholder="Имя*"
-                        autocomplete="name"
-                        class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
-                    />
+                    <div data-form-field="name">
+                        <label class="sr-only" for="auth-register-name">Имя</label>
+                        <input
+                            id="auth-register-name"
+                            name="name"
+                            type="text"
+                            required
+                            value="{{ old('name') }}"
+                            placeholder="Имя*"
+                            autocomplete="name"
+                            class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+                        />
+                    </div>
 
-                    <label class="sr-only" for="auth-register-email">Email</label>
-                    <input
-                        id="auth-register-email"
-                        name="email"
-                        type="email"
-                        required
-                        value="{{ old('email') }}"
-                        placeholder="Email*"
-                        autocomplete="email"
-                        class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
-                    />
+                    <div data-form-field="email">
+                        <label class="sr-only" for="auth-register-email">Email</label>
+                        <input
+                            id="auth-register-email"
+                            name="email"
+                            type="email"
+                            required
+                            value="{{ old('email') }}"
+                            placeholder="Email*"
+                            autocomplete="email"
+                            class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+                        />
+                    </div>
 
-                    <label class="sr-only" for="auth-register-phone">Телефон</label>
-                    <input
-                        id="auth-register-phone"
-                        name="phone"
-                        type="tel"
-                        required
-                        value="{{ old('phone') }}"
-                        placeholder="+7 (___) ___-__-__"
-                        autocomplete="tel"
-                        maxlength="18"
-                        class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
-                        data-phone-mask
-                    />
+                    <div data-form-field="phone">
+                        <label class="sr-only" for="auth-register-phone">Телефон</label>
+                        <input
+                            id="auth-register-phone"
+                            name="phone"
+                            type="tel"
+                            required
+                            value="{{ old('phone') }}"
+                            placeholder="+7 (___) ___-__-__"
+                            autocomplete="tel"
+                            maxlength="18"
+                            class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+                            data-phone-mask
+                        />
+                    </div>
 
-                    <label class="sr-only" for="auth-register-password">Пароль</label>
-                    <input
-                        id="auth-register-password"
-                        name="password"
-                        type="password"
-                        required
-                        placeholder="Пароль*"
-                        autocomplete="new-password"
-                        class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
-                    />
+                    <div data-form-field="password">
+                        <label class="sr-only" for="auth-register-password">Пароль</label>
+                        <input
+                            id="auth-register-password"
+                            name="password"
+                            type="password"
+                            required
+                            placeholder="Пароль*"
+                            autocomplete="new-password"
+                            class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+                        />
+                    </div>
 
-                    <label class="sr-only" for="auth-register-password-confirmation">Подтвердите пароль</label>
-                    <input
-                        id="auth-register-password-confirmation"
-                        name="password_confirmation"
-                        type="password"
-                        required
-                        placeholder="Подтвердите пароль*"
-                        autocomplete="new-password"
-                        class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
-                    />
+                    <div data-form-field="password_confirmation">
+                        <label class="sr-only" for="auth-register-password-confirmation">Подтвердите пароль</label>
+                        <input
+                            id="auth-register-password-confirmation"
+                            name="password_confirmation"
+                            type="password"
+                            required
+                            placeholder="Подтвердите пароль*"
+                            autocomplete="new-password"
+                            class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4"
+                        />
+                    </div>
                 </div>
 
-                <div class="flex-center">
-                    <div class="g-recaptcha" data-sitekey="{{ $settings['google_recaptcha']['site_key'] ?? '' }}" data-theme="light" data-size="normal"></div>
+                <div data-form-field="captcha" data-form-value="g-recaptcha-response" data-form-required="Подтвердите, что вы не робот.">
+                    <div class="g-recaptcha mx-auto w-fit" data-sitekey="{{ $settings['google_recaptcha']['site_key'] ?? '' }}" data-theme="light" data-size="normal" data-callback="clearCompletedCaptchaNotices"></div>
                 </div>
+
+                @include('shared.partials.privacy-consent')
 
                 <button type="submit" class="button_3 w-full">Зарегистрироваться</button>
 

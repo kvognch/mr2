@@ -1,9 +1,8 @@
 <header
-    class="sticky top-0 z-50 bg-white pt-1 pb-1 sm:pt-3 sm:pb-3 xl:pt-8 2xl:pt-10 3xl:pt-20 transition-[padding,transform,box-shadow] duration-300 ease-in-out"
+    class="sticky top-0 z-50 bg-white py-1 sm:py-3 transition-[padding,box-shadow] duration-300 ease-in-out"
     :class="[
-        $store.scroll.collapsed ? '!pb-0' : '',
-        ($store.scroll.y > 64 || mobileMenuOpen) && 'shadow-lg',
-        $store.scroll.y > 64 && '-translate-y-1 sm:-translate-y-3 xl:-translate-y-8 2xl:-translate-y-10 3xl:-translate-y-20'
+        $store.scroll.collapsed && 'py-0!',
+        ($store.scroll.y > 64 || mobileMenuOpen) && 'shadow-lg'
     ]"
 >
     <nav class="container-base flex-between gap-3 py-3.75 md:!px-5 lg:!px-8 xl:!px-12 2xl:!px-20 transition-[padding] duration-300 ease-in-out" :class="$store.scroll.y > 64 ? '!py-3 xs:!py-3.75 3xl:!py-5' : ''">
