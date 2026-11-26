@@ -4,6 +4,7 @@
         <p class="min-w-0 text-sm/5">
             Оставаясь на сайте вы соглашаетесь с тем, что мы используем
             <a href="{{ route('info.show', ['slug' => 'privacy-policy']) }}"
+               target="_blank" rel="noopener noreferrer"
                class="text-brand-blue underline underline-offset-2">cookies</a>
         </p>
         <button type="button" data-cookie-accept class="button_1 shrink-0 rounded-lg! px-3! py-1.5! text-xs/4!">Хорошо</button>
