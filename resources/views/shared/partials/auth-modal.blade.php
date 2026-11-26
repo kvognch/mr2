@@ -194,11 +194,11 @@
                     </div>
                 </div>
 
+                @include('shared.partials.privacy-consent')
+
                 <div data-form-field="captcha" data-form-value="g-recaptcha-response" data-form-required="Подтвердите, что вы не робот.">
                     <div class="g-recaptcha mx-auto w-fit" data-sitekey="{{ $settings['google_recaptcha']['site_key'] ?? '' }}" data-theme="light" data-size="normal" data-callback="clearCompletedCaptchaNotices"></div>
                 </div>
-
-                @include('shared.partials.privacy-consent')
 
                 <button type="submit" class="button_3 w-full">Зарегистрироваться</button>
 

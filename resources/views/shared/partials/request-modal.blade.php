@@ -70,11 +70,11 @@
                     <textarea id="request-comment-1" name="comment" placeholder="Комментарий" rows="4" class="w-full text_9 bg-brand-gray-light-2 rounded-brand-base outline-brand-dark p-4 resize-none">{{ old('comment') }}</textarea>
                 </div>
                 <input type="hidden" name="source_url" value="{{ url()->current() }}" />
+                @include('shared.partials.privacy-consent')
+
                 <div data-form-field="captcha" data-form-value="g-recaptcha-response" data-form-required="Подтвердите, что вы не робот.">
                     <div class="g-recaptcha mx-auto w-fit" data-sitekey="{{ $settings['google_recaptcha']['site_key'] ?? '' }}" data-theme="light" data-size="normal" data-callback="clearCompletedCaptchaNotices"></div>
                 </div>
-                @include('shared.partials.privacy-consent')
-
                 <button type="submit" class="button_3 w-full disabled:opacity-60 disabled:cursor-not-allowed" :disabled="isSubmitting">
                     <span x-text="isSubmitting ? 'Отправляем...' : 'Отправить'"></span>
                 </button>
